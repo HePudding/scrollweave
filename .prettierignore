@@ -1,0 +1,10 @@
+node_modules
+dist
+.scrollweave
+test-results
+playwright-report
+examples/*.html
+THIRD_PARTY*.txt
+docs/licenses
+package-lock.json
+schema

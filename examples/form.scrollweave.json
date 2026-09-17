@@ -1,0 +1,1620 @@
+{
+  "format": "scrollweave",
+  "version": 1,
+  "id": "scrollweave_demo",
+  "name": "FORM / 让灵感顺势而动",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "fit": "contain"
+  },
+  "scroll": {
+    "mode": "exact",
+    "smoothing": 180
+  },
+  "compositions": {
+    "main": {
+      "id": "main",
+      "name": "01 / 产品与横向叙事",
+      "width": 1920,
+      "height": 1080,
+      "background": "#121714",
+      "elements": [
+        {
+          "id": "brand",
+          "name": "品牌标识",
+          "type": "text",
+          "parentId": null,
+          "x": 116,
+          "y": 70,
+          "width": 500,
+          "height": 70,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#f8fafc",
+          "text": "FORM®",
+          "fontSize": 42,
+          "fontWeight": 800,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "eyebrow",
+          "name": "开场标签",
+          "type": "text",
+          "parentId": null,
+          "x": 120,
+          "y": 300,
+          "width": 850,
+          "height": 60,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#c4f36b",
+          "text": "为你的下一个想法而生 / 2026",
+          "fontSize": 27,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "opacity": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0.25,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.06,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.32,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.42,
+                "value": 0,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "title",
+          "name": "主标题 · 淡入上移",
+          "type": "text",
+          "parentId": null,
+          "x": 112,
+          "y": 400,
+          "width": 1060,
+          "height": 330,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#f8fafc",
+          "text": "让灵感\n顺势而动。",
+          "fontSize": 146,
+          "fontWeight": 700,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "y": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 490,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.12,
+                "value": 390,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.3,
+                "value": 390,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.46,
+                "value": 230,
+                "easing": "easeInOut"
+              }
+            ],
+            "opacity": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.1,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.32,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.46,
+                "value": 0,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "subtitle",
+          "name": "产品说明",
+          "type": "text",
+          "parentId": null,
+          "x": 122,
+          "y": 800,
+          "width": 800,
+          "height": 120,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#9faa9e",
+          "text": "一块画布，无限种可能。\n向下滚动，展开你的创作空间。",
+          "fontSize": 30,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "opacity": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.12,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.3,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.42,
+                "value": 0,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "product",
+          "name": "FORM / 创作终端",
+          "type": "group",
+          "parentId": null,
+          "x": 1160,
+          "y": 235,
+          "width": 520,
+          "height": 650,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -9,
+          "opacity": 1,
+          "fill": "transparent",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "x": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 1260,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.16,
+                "value": 1160,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.34,
+                "value": 690,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.5,
+                "value": 640,
+                "easing": "easeInOut"
+              }
+            ],
+            "y": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 310,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.18,
+                "value": 235,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.35,
+                "value": 170,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.51,
+                "value": -750,
+                "easing": "easeInOut"
+              }
+            ],
+            "scaleX": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0.8,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.16,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.34,
+                "value": 1.14,
+                "easing": "easeInOut"
+              }
+            ],
+            "scaleY": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0.8,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.16,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.34,
+                "value": 1.14,
+                "easing": "easeInOut"
+              }
+            ],
+            "rotation": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": -14,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.22,
+                "value": -9,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.38,
+                "value": 0,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "case",
+          "name": "产品外壳",
+          "type": "shape",
+          "parentId": "product",
+          "x": 0,
+          "y": 0,
+          "width": 520,
+          "height": 650,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 52,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "screen",
+          "name": "屏幕",
+          "type": "shape",
+          "parentId": "product",
+          "x": 32,
+          "y": 32,
+          "width": 456,
+          "height": 460,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#243328",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 28,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "screenWord",
+          "name": "产品屏幕标题",
+          "type": "text",
+          "parentId": "product",
+          "x": 70,
+          "y": 90,
+          "width": 370,
+          "height": 300,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#d5f5a6",
+          "text": "Ideas\nin\nmotion.",
+          "fontSize": 87,
+          "fontWeight": 650,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "dial",
+          "name": "控制旋钮",
+          "type": "shape",
+          "parentId": "product",
+          "x": 370,
+          "y": 536,
+          "width": 78,
+          "height": 78,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#243328",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 50,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "model",
+          "name": "产品型号",
+          "type": "text",
+          "parentId": "product",
+          "x": 58,
+          "y": 560,
+          "width": 270,
+          "height": 50,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#243328",
+          "text": "F—01 / STUDIO",
+          "fontSize": 24,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "cardHeading",
+          "name": "横向展示标题",
+          "type": "text",
+          "parentId": null,
+          "x": 120,
+          "y": 148,
+          "width": 1400,
+          "height": 100,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#f8fafc",
+          "text": "把可能，一一展开。",
+          "fontSize": 56,
+          "fontWeight": 600,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "opacity": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.4,
+                "value": 0,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 0.48,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k3",
+                "at": 0.95,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k4",
+                "at": 1,
+                "value": 0.4,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "scrollHint",
+          "name": "滚动提示",
+          "type": "text",
+          "parentId": null,
+          "x": 120,
+          "y": 996,
+          "width": 1500,
+          "height": 40,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#8f9c91",
+          "text": "↓  向下滚动探索                                              FORM — MADE FOR THE WAY YOU THINK",
+          "fontSize": 20,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "cardsInstance",
+          "name": "横向卡片 · 子合成",
+          "type": "composition",
+          "parentId": null,
+          "x": 0,
+          "y": 95,
+          "width": 1920,
+          "height": 920,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "transparent",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "compositionId": "cards",
+          "customData": {},
+          "start": 0.43,
+          "end": 0.96,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "opacity": [
+              {
+                "id": "k0",
+                "at": 0,
+                "value": 0,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k1",
+                "at": 0.09,
+                "value": 1,
+                "easing": "easeInOut"
+              },
+              {
+                "id": "k2",
+                "at": 1,
+                "value": 1,
+                "easing": "easeInOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        }
+      ]
+    },
+    "cards": {
+      "id": "cards",
+      "name": "横向卡片",
+      "width": 1920,
+      "height": 1080,
+      "background": "transparent",
+      "elements": [
+        {
+          "id": "strip",
+          "name": "横向卡片轨道",
+          "type": "group",
+          "parentId": null,
+          "x": 0,
+          "y": 160,
+          "width": 3400,
+          "height": 750,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "transparent",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {
+            "x": [
+              {
+                "id": "key_b3194fc98f19",
+                "at": 0,
+                "value": 130,
+                "easing": "easeOut"
+              },
+              {
+                "id": "key_ef0304df332f",
+                "at": 1,
+                "value": -1420,
+                "easing": "easeOut"
+              }
+            ]
+          },
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "card_0",
+          "name": "卡片 1",
+          "type": "shape",
+          "parentId": "strip",
+          "x": 0,
+          "y": 0,
+          "width": 770,
+          "height": 750,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 36,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "label_0",
+          "name": "卡片标题 1",
+          "type": "text",
+          "parentId": "strip",
+          "x": 58,
+          "y": 68,
+          "width": 630,
+          "height": 100,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "01 / 精确到每一次滚动",
+          "fontSize": 38,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "mark_0",
+          "name": "卡片数字 1",
+          "type": "text",
+          "parentId": "strip",
+          "x": 58,
+          "y": 290,
+          "width": 650,
+          "height": 290,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "Flow.",
+          "fontSize": 150,
+          "fontWeight": 700,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "card_1",
+          "name": "卡片 2",
+          "type": "shape",
+          "parentId": "strip",
+          "x": 830,
+          "y": 0,
+          "width": 770,
+          "height": 750,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#a9b8ff",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 36,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "label_1",
+          "name": "卡片标题 2",
+          "type": "text",
+          "parentId": "strip",
+          "x": 888,
+          "y": 68,
+          "width": 630,
+          "height": 100,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "02 / 让创作自然发生",
+          "fontSize": 38,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "mark_1",
+          "name": "卡片数字 2",
+          "type": "text",
+          "parentId": "strip",
+          "x": 888,
+          "y": 290,
+          "width": 650,
+          "height": 290,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "Make.",
+          "fontSize": 150,
+          "fontWeight": 700,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "card_2",
+          "name": "卡片 3",
+          "type": "shape",
+          "parentId": "strip",
+          "x": 1660,
+          "y": 0,
+          "width": 770,
+          "height": 750,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#f3b79e",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 36,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "label_2",
+          "name": "卡片标题 3",
+          "type": "text",
+          "parentId": "strip",
+          "x": 1718,
+          "y": 68,
+          "width": 630,
+          "height": 100,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "03 / 与 Agent 一起编辑",
+          "fontSize": 38,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "mark_2",
+          "name": "卡片数字 3",
+          "type": "text",
+          "parentId": "strip",
+          "x": 1718,
+          "y": 290,
+          "width": 650,
+          "height": 290,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "Code.",
+          "fontSize": 150,
+          "fontWeight": 700,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "card_3",
+          "name": "卡片 4",
+          "type": "shape",
+          "parentId": "strip",
+          "x": 2490,
+          "y": 0,
+          "width": 770,
+          "height": 750,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#cfdbd2",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 36,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "label_3",
+          "name": "卡片标题 4",
+          "type": "text",
+          "parentId": "strip",
+          "x": 2548,
+          "y": 68,
+          "width": 630,
+          "height": 100,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "04 / 把故事带到任何地方",
+          "fontSize": 38,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "mark_3",
+          "name": "卡片数字 4",
+          "type": "text",
+          "parentId": "strip",
+          "x": 2548,
+          "y": 290,
+          "width": 650,
+          "height": 290,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#18201c",
+          "text": "Share.",
+          "fontSize": 150,
+          "fontWeight": 700,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        }
+      ]
+    },
+    "outro": {
+      "id": "outro",
+      "name": "02 / 行动与收尾",
+      "width": 1920,
+      "height": 1080,
+      "background": "#d2edb1",
+      "elements": [
+        {
+          "id": "outroNote",
+          "name": "收尾标签",
+          "type": "text",
+          "parentId": null,
+          "x": 490,
+          "y": 240,
+          "width": 950,
+          "height": 60,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#485e3d",
+          "text": "你的下一个作品，从这里开始",
+          "fontSize": 32,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "outroTitle",
+          "name": "行动标题",
+          "type": "text",
+          "parentId": null,
+          "x": 300,
+          "y": 370,
+          "width": 1500,
+          "height": 150,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#182618",
+          "text": "让想法，成为作品。",
+          "fontSize": 115,
+          "fontWeight": 650,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "ctaBackground",
+          "name": "按钮背景",
+          "type": "shape",
+          "parentId": null,
+          "x": 700,
+          "y": 600,
+          "width": 520,
+          "height": 110,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#182618",
+          "color": "#f8fafc",
+          "text": "",
+          "fontSize": 64,
+          "fontWeight": 500,
+          "radius": 60,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        },
+        {
+          "id": "cta",
+          "name": "行动按钮",
+          "type": "text",
+          "parentId": null,
+          "x": 700,
+          "y": 600,
+          "width": 520,
+          "height": 110,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#ecf9df",
+          "text": "开始创作  ↗",
+          "fontSize": 35,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": "https://github.com/"
+        },
+        {
+          "id": "footer",
+          "name": "页脚",
+          "type": "text",
+          "parentId": null,
+          "x": 660,
+          "y": 948,
+          "width": 800,
+          "height": 50,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#c4f36b",
+          "color": "#567049",
+          "text": "FORM®  /  一个可编辑的滚动故事",
+          "fontSize": 23,
+          "fontWeight": 500,
+          "radius": 0,
+          "clip": false,
+          "hidden": false,
+          "locked": false,
+          "crop": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "customData": {},
+          "start": 0,
+          "end": 1,
+          "timeOffset": 0,
+          "trim": null,
+          "outside": "hold",
+          "tracks": {},
+          "layout": {
+            "anchor": "top-left",
+            "responsive": "scale"
+          },
+          "href": ""
+        }
+      ]
+    }
+  },
+  "assets": {},
+  "sections": [
+    {
+      "id": "story",
+      "compositionId": "main",
+      "kind": "pin",
+      "scrollDistance": 5200
+    },
+    {
+      "id": "ending",
+      "compositionId": "outro",
+      "kind": "flow",
+      "scrollDistance": 1080
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.scrollweave/
+test-results/
+playwright-report/
+*.log
+
+# Temporary research, verification, and history-recovery artifacts
+tmp/
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+!.env.template
