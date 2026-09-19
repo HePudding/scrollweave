@@ -1,0 +1,39 @@
+{
+  "tools": [
+    "read_project",
+    "workspace_info",
+    "new_project",
+    "open_project",
+    "list_assets",
+    "inspect_asset",
+    "wait_for_asset",
+    "archive_asset",
+    "edit_project",
+    "insert_asset",
+    "move_clips",
+    "trim_clip",
+    "split_clip",
+    "delete_clips",
+    "set_keyframe",
+    "create_compound",
+    "undo",
+    "redo",
+    "set_selection",
+    "set_preview",
+    "list_presets",
+    "apply_preset",
+    "validate_project",
+    "save_project",
+    "export_html",
+    "get_preview_screenshot"
+  ],
+  "workspace": "C:\\Users\\pudding\\AppData\\Local\\Temp\\scrollweave-browser-izoXEi\\initial",
+  "actions": [
+    "wait_for_asset",
+    "insert_asset",
+    "set_keyframe",
+    "get_preview_screenshot",
+    "validate_project"
+  ],
+  "screenshotErrors": []
+}

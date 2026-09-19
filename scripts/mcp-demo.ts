@@ -1,62 +1,84 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 const client = new Client({
-  name: "scrollweave-example-agent",
-  version: "1.0",
+  name: "scrollweave-connection-check",
+  version: "2.0.0",
 });
-const url = process.env.SCROLLWEAVE_URL ?? "http://127.0.0.1:4100";
-const json = (response: any) => {
-  const value = JSON.parse(
-    response.content.find((c: any) => c.type === "text").text,
-  );
-  if (response.isError) throw new Error(JSON.stringify(value));
-  return value;
+const origin = process.env.SCROLLWEAVE_URL ?? "http://127.0.0.1:4100";
+const json = (r: any) => {
+  const text = r.content.find((c: any) => c.type === "text")?.text;
+  if (r.isError) throw Error(text);
+  return JSON.parse(text);
 };
 try {
   await client.connect(
-    new StreamableHTTPClientTransport(new URL(`${url}/mcp`)),
+    new StreamableHTTPClientTransport(new URL(origin + "/mcp")),
   );
-  const before = json(
-    await client.callTool({ name: "read_project", arguments: {} }),
-  );
-  console.log(`Connected to ${before.project.name}, r${before.revision}`);
+  const tools = await client.listTools(),
+    info = json(
+      await client.callTool({ name: "workspace_info", arguments: {} }),
+    ),
+    before = json(
+      await client.callTool({ name: "read_project", arguments: {} }),
+    );
   const changed = json(
     await client.callTool({
       name: "edit_project",
       arguments: {
         expectedRevision: before.revision,
-        label: "MCP 示例事务",
+        label: "MCP 连接验证 · 随后撤销",
         commands: [
           {
             type: "project.update",
-            patch: { name: `${before.project.name} · Agent` },
+            patch: { name: before.project.name.slice(0, 180) + " · MCP" },
           },
         ],
       },
     }),
   );
-  const restored = json(
+  json(
     await client.callTool({
       name: "undo",
       arguments: { expectedRevision: changed.revision },
     }),
   );
-  console.log(`Restored ${restored.project.name}, r${restored.revision}`);
+  const restored = json(
+    await client.callTool({ name: "read_project", arguments: {} }),
+  );
+  if (restored.project.name !== before.project.name)
+    throw Error("撤销未恢复名称");
   const screenshot: any = await client.callTool({
     name: "get_preview_screenshot",
-    arguments: { progress: 0.65 },
+    arguments: {
+      compositionId: before.preview.compositionId,
+      progress: before.preview.progress,
+    },
   });
-  if (screenshot.isError) throw new Error(JSON.stringify(screenshot));
-  fs.mkdirSync(".scrollweave", { recursive: true });
-  fs.writeFileSync(
+  if (screenshot.isError) throw Error(JSON.stringify(screenshot.content));
+  await fs.mkdir(".scrollweave", { recursive: true });
+  await fs.writeFile(
     ".scrollweave/mcp-demo.png",
     Buffer.from(
       screenshot.content.find((c: any) => c.type === "image").data,
       "base64",
     ),
   );
-  console.log(".scrollweave/mcp-demo.png");
+  console.log(
+    JSON.stringify(
+      {
+        connected: true,
+        tools: tools.tools.map((t) => t.name),
+        workspace: info.directory,
+        revision: restored.revision,
+        mutationAndUndoVerified: true,
+        screenshot: ".scrollweave/mcp-demo.png",
+        screenshotInfo: json(screenshot),
+      },
+      null,
+      2,
+    ),
+  );
 } finally {
   await client.close();
 }

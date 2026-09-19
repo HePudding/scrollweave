@@ -80,6 +80,7 @@ type Props = {
   revision: number;
   selected: string[];
   autoKey: boolean;
+  playing?: boolean;
   zoom: number;
   onSelect(ids: string[]): void;
   onCommit(
@@ -95,6 +96,7 @@ export function Canvas({
   revision,
   selected,
   autoKey,
+  playing = false,
   zoom,
   onSelect,
   onCommit,
@@ -118,9 +120,14 @@ export function Canvas({
   useLayoutEffect(() => {
     if (!host.current) return;
     stage.current = mountStage(host.current, project, compositionId);
-    stage.current.draw(progress);
+    stage.current.draw(progress, { playing });
     const find =
-      element && !element.locked
+      element &&
+      selected.length === 1 &&
+      !element.locked &&
+      !project.compositions[compositionId].tracks.find(
+        (t) => t.id === element.trackId,
+      )?.locked
         ? [
             ...stage.current.design.querySelectorAll<HTMLElement>(
               "[data-element-id]",
@@ -136,7 +143,12 @@ export function Canvas({
   useEffect(() => {
     if (!stage.current) return;
     const find =
-      element && !element.locked
+      element &&
+      selected.length === 1 &&
+      !element.locked &&
+      !project.compositions[compositionId].tracks.find(
+        (t) => t.id === element.trackId,
+      )?.locked
         ? [
             ...stage.current.design.querySelectorAll<HTMLElement>(
               "[data-element-id]",
@@ -146,9 +158,9 @@ export function Canvas({
     setTarget(find ?? null);
   }, [selected.join("|"), element?.locked, project]);
   useLayoutEffect(() => {
-    if (!gesture.current) stage.current?.draw(progress);
+    if (!gesture.current) stage.current?.draw(progress, { playing });
     moveable.current?.updateRect();
-  }, [progress, target, zoom]);
+  }, [progress, target, zoom, playing]);
   useEffect(() => {
     const observer = new ResizeObserver(() => moveable.current?.updateRect());
     if (host.current) observer.observe(host.current);
@@ -173,7 +185,7 @@ export function Canvas({
         "画布变换",
         data.revision,
       );
-    stage.current?.draw(progress);
+    stage.current?.draw(progress, { playing });
     moveable.current?.updateRect();
   };
   return (
@@ -216,75 +228,80 @@ export function Canvas({
         ref={host}
         style={{ transform: `scale(${zoom})` }}
       />
-      {element && current && (
-        <Moveable
-          ref={moveable}
-          target={target}
-          draggable
-          resizable
-          rotatable
-          origin={false}
-          snappable
-          snapDirections={{
-            left: true,
-            right: true,
-            center: true,
-            top: true,
-            bottom: true,
-            middle: true,
-          }}
-          onDragStart={(event) => {
-            begin();
-            event.set([current.x, current.y]);
-          }}
-          onDrag={(event) => {
-            event.target.style.transform = event.transform;
-            if (gesture.current)
-              gesture.current.values = {
-                x: event.beforeTranslate[0],
-                y: event.beforeTranslate[1],
-              };
-          }}
-          onDragEnd={() => void end()}
-          onResizeStart={(event) => {
-            begin();
-            event.setMin([8, 8]);
-            event.dragStart && event.dragStart.set([current.x, current.y]);
-          }}
-          onResize={(event) => {
-            event.target.style.width = `${event.width}px`;
-            event.target.style.height = `${event.height}px`;
-            event.target.style.transform = event.drag.transform;
-            if (gesture.current)
-              gesture.current.values = {
-                width: event.width,
-                height: event.height,
-                x: event.drag.beforeTranslate[0],
-                y: event.drag.beforeTranslate[1],
-              };
-          }}
-          onResizeEnd={() => void end()}
-          onRotateStart={(event) => {
-            begin();
-            event.set(current.rotation);
-            event.dragStart && event.dragStart.set([current.x, current.y]);
-          }}
-          onRotate={(event) => {
-            event.target.style.transform = event.drag.transform;
-            if (gesture.current)
-              gesture.current.values = {
-                rotation: event.beforeRotate,
-                x: event.drag.beforeTranslate[0],
-                y: event.drag.beforeTranslate[1],
-              };
-          }}
-          onRotateEnd={() => void end()}
-        />
-      )}
+      {element &&
+        current &&
+        current.visible &&
+        selected.length === 1 &&
+        !playing &&
+        target && (
+          <Moveable
+            ref={moveable}
+            target={target}
+            draggable
+            resizable
+            rotatable
+            origin={false}
+            snappable
+            snapDirections={{
+              left: true,
+              right: true,
+              center: true,
+              top: true,
+              bottom: true,
+              middle: true,
+            }}
+            onDragStart={(event) => {
+              begin();
+              event.set([current.x, current.y]);
+            }}
+            onDrag={(event) => {
+              event.target.style.transform = event.transform;
+              if (gesture.current)
+                gesture.current.values = {
+                  x: event.beforeTranslate[0],
+                  y: event.beforeTranslate[1],
+                };
+            }}
+            onDragEnd={() => void end()}
+            onResizeStart={(event) => {
+              begin();
+              event.setMin([8, 8]);
+              event.dragStart && event.dragStart.set([current.x, current.y]);
+            }}
+            onResize={(event) => {
+              event.target.style.width = `${event.width}px`;
+              event.target.style.height = `${event.height}px`;
+              event.target.style.transform = event.drag.transform;
+              if (gesture.current)
+                gesture.current.values = {
+                  width: event.width,
+                  height: event.height,
+                  x: event.drag.beforeTranslate[0],
+                  y: event.drag.beforeTranslate[1],
+                };
+            }}
+            onResizeEnd={() => void end()}
+            onRotateStart={(event) => {
+              begin();
+              event.set(current.rotation);
+              event.dragStart && event.dragStart.set([current.x, current.y]);
+            }}
+            onRotate={(event) => {
+              event.target.style.transform = event.drag.transform;
+              if (gesture.current)
+                gesture.current.values = {
+                  rotation: event.beforeRotate,
+                  x: event.drag.beforeTranslate[0],
+                  y: event.drag.beforeTranslate[1],
+                };
+            }}
+            onRotateEnd={() => void end()}
+          />
+        )}
       <div className="canvas-caption">
         <span className="live-dot" />
         {project.compositions[compositionId].name}
-        <span>可编辑画布 · {Math.round(progress * 100)}%</span>
+        <span>可编辑画布 · {progress.toFixed(2)} s</span>
       </div>
     </div>
   );

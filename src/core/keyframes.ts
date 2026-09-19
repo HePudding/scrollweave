@@ -1,5 +1,5 @@
 import { uid, type AnimProperty, type Keyframe, type Project } from "./model";
-import { elementRange } from "./evaluate";
+import { elementRange, globalTime, sourceTime, parentTime } from "./evaluate";
 import type { Command } from "./commands";
 
 export type KeySelection = {
@@ -36,7 +36,7 @@ export function readKeys(
         elementId: e.id,
         property: ref.property,
         keyframe: structuredClone(keyframe),
-        position: range.start + keyframe.at * (range.end - range.start),
+        position: globalTime(project, cid, e, keyframe.at),
       },
     ];
   });
@@ -55,8 +55,10 @@ export function moveKeys(
     )!;
     if (e.locked) throw new Error("请先解锁图层");
     const range = elementRange(project, cid, e);
-    const at = round(k.keyframe.at + delta / (range.end - range.start));
-    if (at < 0 || at > 1) throw new Error("关键帧不能移出动画映射区间");
+    const at = round(
+      sourceTime(e, parentTime(project, cid, e, k.position + delta)),
+    );
+    if (!Number.isFinite(at)) throw new Error("关键帧不能移出动画映射区间");
     if (
       e.tracks[k.property]?.some(
         (other) =>
@@ -101,9 +103,9 @@ export function pasteKeys(
     if (e.locked) throw new Error("请先解锁图层");
     const range = elementRange(project, cid, e);
     const at = round(
-      (progress + k.position - first - range.start) / (range.end - range.start),
+      sourceTime(e, parentTime(project, cid, e, progress + k.position - first)),
     );
-    if (at < 0 || at > 1) throw new Error("粘贴后的关键帧超出动画映射区间");
+    if (!Number.isFinite(at)) throw new Error("粘贴后的关键帧超出动画映射区间");
     const existing = e.tracks[k.property]?.find(
       (o) => Math.abs(o.at - at) < 1e-8,
     );

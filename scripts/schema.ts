@@ -4,7 +4,7 @@ import { projectSchema } from "../src/core/model";
 import { commandSchema } from "../src/core/commands";
 fs.mkdirSync("schema", { recursive: true });
 fs.writeFileSync(
-  "schema/project-v1.schema.json",
+  "schema/project-v2.schema.json",
   JSON.stringify(z.toJSONSchema(projectSchema), null, 2),
 );
 fs.writeFileSync(

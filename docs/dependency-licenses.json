@@ -2,6 +2,39 @@
   "generatedFrom": "package-lock.json",
   "packages": [
     {
+      "name": "@asamuzakjp/css-color",
+      "version": "7.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/asamuzaK/cssColor.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@asamuzakjp/dom-selector",
+      "version": "9.2.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/asamuzaK/domSelector.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@bramus/specificity",
+      "version": "2.4.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/bramus/specificity.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@cfcs/core",
       "version": "0.0.6",
       "license": "MIT",
@@ -10,6 +43,72 @@
       "source": "https://github.com/naver/cfcs",
       "licenseFiles": [
         "docs/licenses/cfcs-MIT.txt"
+      ]
+    },
+    {
+      "name": "@csstools/color-helpers",
+      "version": "6.1.1",
+      "license": "MIT-0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "@csstools/css-calc",
+      "version": "3.4.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "@csstools/css-color-parser",
+      "version": "4.2.3",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "@csstools/css-parser-algorithms",
+      "version": "4.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "@csstools/css-syntax-patches-for-csstree",
+      "version": "1.1.14",
+      "license": "MIT-0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "@csstools/css-tokenizer",
+      "version": "4.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/csstools/postcss-plugins.git",
+      "licenseFiles": [
+        "LICENSE.md"
       ]
     },
     {
@@ -56,17 +155,6 @@
       "source": "https://github.com/naver/egjs-component",
       "licenseFiles": [
         "README.md#license"
-      ]
-    },
-    {
-      "name": "@egjs/hammerjs",
-      "version": "2.0.17",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "git://github.com/naver/hammer.js.git",
-      "licenseFiles": [
-        "LICENSE.md"
       ]
     },
     {
@@ -314,6 +402,17 @@
       "source": "git+https://github.com/evanw/esbuild.git",
       "licenseFiles": [
         "node_modules/esbuild/LICENSE.md"
+      ]
+    },
+    {
+      "name": "@exodus/bytes",
+      "version": "1.15.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/ExodusOSS/bytes.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -587,10 +686,10 @@
       ]
     },
     {
-      "name": "@types/hammerjs",
-      "version": "2.0.46",
+      "name": "@types/http-errors",
+      "version": "2.0.5",
       "license": "MIT",
-      "scope": "runtime/editor/server",
+      "scope": "development",
       "installed": true,
       "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "licenseFiles": [
@@ -598,12 +697,23 @@
       ]
     },
     {
-      "name": "@types/http-errors",
-      "version": "2.0.5",
+      "name": "@types/jsdom",
+      "version": "30.0.0",
       "license": "MIT",
       "scope": "development",
       "installed": true,
       "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "undici-types",
+      "version": "8.10.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/nodejs/undici.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -679,6 +789,28 @@
       "version": "2.2.0",
       "license": "MIT",
       "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/tough-cookie",
+      "version": "4.0.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/trusted-types",
+      "version": "2.0.7",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "licenseFiles": [
@@ -913,6 +1045,17 @@
       ]
     },
     {
+      "name": "bidi-js",
+      "version": "1.1.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/lojjic/bidi-js.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
       "name": "body-parser",
       "version": "2.3.0",
       "license": "MIT",
@@ -968,34 +1111,23 @@
       ]
     },
     {
+      "name": "chokidar",
+      "version": "5.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/paulmillr/chokidar.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "classnames",
       "version": "2.5.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/JedWatson/classnames.git",
-      "licenseFiles": [
-        "LICENSE"
-      ]
-    },
-    {
-      "name": "commander",
-      "version": "2.20.3",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "https://github.com/tj/commander.js.git",
-      "licenseFiles": [
-        "LICENSE"
-      ]
-    },
-    {
-      "name": "component-emitter",
-      "version": "1.3.1",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "https://github.com/sindresorhus/component-emitter.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1089,12 +1221,12 @@
       ]
     },
     {
-      "name": "cssfilter",
-      "version": "0.0.10",
+      "name": "css-tree",
+      "version": "3.2.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
-      "source": "https://github.com/leizongmin/js-css-filter.git",
+      "source": "csstree/csstree",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1111,6 +1243,28 @@
       ]
     },
     {
+      "name": "data-urls",
+      "version": "7.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/data-urls.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "whatwg-url",
+      "version": "16.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/whatwg-url.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
       "name": "debug",
       "version": "4.4.3",
       "license": "MIT",
@@ -1119,6 +1273,17 @@
       "source": "git://github.com/debug-js/debug.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "decimal.js",
+      "version": "10.6.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/MikeMcl/decimal.js.git",
+      "licenseFiles": [
+        "LICENCE.md"
       ]
     },
     {
@@ -1141,6 +1306,18 @@
       "source": "git://github.com/lovell/detect-libc.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "dompurify",
+      "version": "3.4.15",
+      "license": "(MPL-2.0 OR Apache-2.0)",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/cure53/DOMPurify.git",
+      "licenseFiles": [
+        "LICENSE",
+        "LICENSE-MPL"
       ]
     },
     {
@@ -1172,6 +1349,17 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "pillarjs/encodeurl",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "entities",
+      "version": "8.1.0",
+      "license": "BSD-2-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/fb55/entities.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1315,6 +1503,17 @@
       "scope": "development",
       "installed": true,
       "source": "git+https://github.com/thecodrr/fdir.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.3",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/101arrowz/fflate",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1472,6 +1671,17 @@
       ]
     },
     {
+      "name": "html-encoding-sniffer",
+      "version": "6.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/html-encoding-sniffer.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
       "name": "http-errors",
       "version": "2.0.1",
       "license": "MIT",
@@ -1527,6 +1737,17 @@
       ]
     },
     {
+      "name": "is-potential-custom-element-name",
+      "version": "1.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/mathiasbynens/is-potential-custom-element-name.git",
+      "licenseFiles": [
+        "LICENSE-MIT.txt"
+      ]
+    },
+    {
       "name": "is-promise",
       "version": "4.0.0",
       "license": "MIT",
@@ -1560,6 +1781,17 @@
       ]
     },
     {
+      "name": "jsdom",
+      "version": "30.1.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/jsdom.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
       "name": "json-schema-traverse",
       "version": "1.0.0",
       "license": "MIT",
@@ -1579,18 +1811,6 @@
       "source": "https://github.com/RemyRylan/json-schema-typed.git",
       "licenseFiles": [
         "LICENSE.md"
-      ]
-    },
-    {
-      "name": "keycharm",
-      "version": "0.4.0",
-      "license": "(Apache-2.0 OR MIT)",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "https://github.com/AlexDM0/keycharm",
-      "licenseFiles": [
-        "LICENSE-APACHE-2.0",
-        "LICENSE-MIT"
       ]
     },
     {
@@ -1728,6 +1948,17 @@
       ]
     },
     {
+      "name": "lru-cache",
+      "version": "11.5.3",
+      "license": "BlueOak-1.0.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+ssh://git@github.com/isaacs/node-lru-cache.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
       "name": "lucide-react",
       "version": "1.47.0",
       "license": "ISC",
@@ -1745,6 +1976,17 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/es-shims/math-intrinsics.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "mdn-data",
+      "version": "2.27.1",
+      "license": "CC0-1.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/mdn/data.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1789,17 +2031,6 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "jshttp/mime-types",
-      "licenseFiles": [
-        "LICENSE"
-      ]
-    },
-    {
-      "name": "moment",
-      "version": "2.31.0",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "github:moment/moment",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1937,6 +2168,17 @@
       ]
     },
     {
+      "name": "parse5",
+      "version": "8.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/inikulin/parse5.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "parseurl",
       "version": "1.3.3",
       "license": "MIT",
@@ -2049,17 +2291,6 @@
       ]
     },
     {
-      "name": "propagating-hammerjs",
-      "version": "3.0.0",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "https://github.com/josdejong/propagating-hammerjs.git",
-      "licenseFiles": [
-        "LICENSE"
-      ]
-    },
-    {
       "name": "proxy-addr",
       "version": "2.0.8",
       "license": "MIT",
@@ -2068,6 +2299,17 @@
       "source": "jshttp/proxy-addr",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "punycode",
+      "version": "2.3.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/mathiasbynens/punycode.js.git",
+      "licenseFiles": [
+        "LICENSE-MIT.txt"
       ]
     },
     {
@@ -2170,6 +2412,17 @@
       ]
     },
     {
+      "name": "readdirp",
+      "version": "5.1.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/paulmillr/readdirp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "require-from-string",
       "version": "2.0.2",
       "license": "MIT",
@@ -2211,6 +2464,17 @@
       "source": "git+https://github.com/ChALkeR/safer-buffer.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "saxes",
+      "version": "6.0.0",
+      "license": "ISC",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/lddubeau/saxes.git",
+      "licenseFiles": [
+        "docs/licenses/saxes-ISC.txt"
       ]
     },
     {
@@ -2338,7 +2602,7 @@
       "name": "source-map-js",
       "version": "1.2.1",
       "license": "BSD-3-Clause",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "7rulnik/source-map-js",
       "licenseFiles": [
@@ -2368,6 +2632,28 @@
       ]
     },
     {
+      "name": "tldts",
+      "version": "7.4.13",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+ssh://git@github.com/remusao/tldts.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "tldts-core",
+      "version": "7.4.13",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+ssh://git@github.com/remusao/tldts.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "toidentifier",
       "version": "1.0.1",
       "license": "MIT",
@@ -2376,6 +2662,28 @@
       "source": "component/toidentifier",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "tough-cookie",
+      "version": "6.0.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/salesforce/tough-cookie.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "tr46",
+      "version": "6.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/tr46.git",
+      "licenseFiles": [
+        "LICENSE.md"
       ]
     },
     {
@@ -2435,6 +2743,17 @@
       ]
     },
     {
+      "name": "undici",
+      "version": "8.10.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/nodejs/undici.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "undici-types",
       "version": "6.21.0",
       "license": "MIT",
@@ -2457,17 +2776,6 @@
       ]
     },
     {
-      "name": "uuid",
-      "version": "14.0.2",
-      "license": "MIT",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "https://github.com/uuidjs/uuid.git",
-      "licenseFiles": [
-        "LICENSE.md"
-      ]
-    },
-    {
       "name": "vary",
       "version": "1.1.2",
       "license": "MIT",
@@ -2479,43 +2787,6 @@
       ]
     },
     {
-      "name": "vis-data",
-      "version": "8.0.5",
-      "license": "(Apache-2.0 OR MIT)",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "git+https://github.com/visjs/vis-data.git",
-      "licenseFiles": [
-        "LICENSE-APACHE-2.0",
-        "LICENSE-MIT"
-      ]
-    },
-    {
-      "name": "vis-timeline",
-      "version": "8.5.4",
-      "license": "(Apache-2.0 OR MIT)",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "git+https://github.com/visjs/vis-timeline.git",
-      "licenseFiles": [
-        "LICENSE.Apache-2.0.txt",
-        "LICENSE.md",
-        "LICENSE.MIT.txt"
-      ]
-    },
-    {
-      "name": "vis-util",
-      "version": "6.0.2",
-      "license": "(Apache-2.0 OR MIT)",
-      "scope": "runtime/editor/server",
-      "installed": true,
-      "source": "git+https://github.com/visjs/vis-util.git",
-      "licenseFiles": [
-        "LICENSE-APACHE-2.0",
-        "LICENSE-MIT"
-      ]
-    },
-    {
       "name": "vite",
       "version": "8.3.0",
       "license": "MIT",
@@ -2524,6 +2795,50 @@
       "source": "git+https://github.com/vitejs/vite.git",
       "licenseFiles": [
         "LICENSE.md"
+      ]
+    },
+    {
+      "name": "w3c-xmlserializer",
+      "version": "5.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "jsdom/w3c-xmlserializer",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "webidl-conversions",
+      "version": "8.0.1",
+      "license": "BSD-2-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/webidl-conversions.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "whatwg-mimetype",
+      "version": "5.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "jsdom/whatwg-mimetype",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "whatwg-url",
+      "version": "17.1.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jsdom/whatwg-url.git",
+      "licenseFiles": [
+        "LICENSE.txt"
       ]
     },
     {
@@ -2549,12 +2864,23 @@
       ]
     },
     {
-      "name": "xss",
-      "version": "1.0.15",
+      "name": "xml-name-validator",
+      "version": "5.0.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "jsdom/xml-name-validator",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "xmlchars",
+      "version": "2.2.0",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
-      "source": "git://github.com/leizongmin/js-xss.git",
+      "source": "https://github.com/lddubeau/xmlchars.git",
       "licenseFiles": [
         "LICENSE"
       ]

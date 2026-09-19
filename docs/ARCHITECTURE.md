@@ -1,52 +1,48 @@
-# 项目格式与运行架构
+# 0.2 数据模型与实现
 
-## 数据格式 v1
+## 保留与替换
 
-项目扩展名是 `.scrollweave.json`。JSON 顶层含 `format: "scrollweave"`、`version: 1`、项目 ID/名称、canvas、scroll、compositions、assets、sections。完整结构见 [JSON Schema](../schema/project-v1.schema.json) 和 [model.ts](../src/core/model.ts)。未知版本直接报错，不猜测迁移。
+保留 React/Vite、Zod、Motion 插值、Moveable 画布手柄、贝塞尔曲线组件、MCP SDK、原子命令、revision 冲突、SSE、共享 DOM 渲染与独立导出。新增 Chokidar 文件监听、DOMPurify+JSDOM SVG 清理、FFmpeg/FFprobe 媒体处理、fflate 打包。
 
-`canvas` 是 1920×1080 的设计规格；`contain` 保留完整画布，`cover` 填满并居中裁切。它不是整张长网页的比例。图层位置、宽高、字体和裁切使用设计坐标。`layout.anchor/responsive` 为后续布局系统预留；本版只执行固定坐标与全局 contain/cover，不将预留字段当作完整约束布局。
+替换固定 0–1 时间、透明度推断色块边界、导入直接创建元素和图层式主入口。移除未再使用的 vis-timeline/vis-data：它们的通用 range/group 表达不再承担本版源取用、显式轨道与片段碰撞语义。时间线用浏览器 Pointer Events 和秒到像素映射；复用成熟插值、媒体解码、画布变换、曲线、文件监听与协议实现。标尺只渲染可见刻度，避免长视频生成几十万个节点。
 
-每个 composition 是可重用定义，元素按数组顺序从底到顶绘制。`parentId` 只能指向同合成中的 group。引用子合成的元素使用 `type: "composition"` 和 `compositionId`。实例拥有自己的变换、区间、轨道；编辑定义会有意更新所有引用，进度和 DOM 实例互相独立。不能循环嵌套；展开后单个合成最多 5000 层、单定义最多 500 元素、最多 100 个合成。
+## Project v2
 
-每个元素的 `start/end` 位于父进度 0–1 内。轨道关键帧使用元素自身的局部进度：
+- Asset：稳定 ID、kind、原始相对 path、清理缓存 cachePath、thumbnail、尺寸、真实 duration、codec/audioCodec、hash、状态与警告。复合素材引用 compositionId。
+- Element / Clip：一次使用，拥有 assetId 或 compositionId、trackId、start/end、sourceIn、speed、独立画布属性与关键帧。保留 Element 命名以兼容命令/扩展层。
+- Composition：明确 duration、由下到上的 tracks、片段 elements。新增内容把 duration 扩展到根片段最大 end，删除不会自动缩短整个作品。
+- Section：时间线 ID、start/end 秒、scrollDistance、pin/flow。end=null 跟随完整时长；页面映射不改片段。
 
-```text
-local = clamp((parentProgress - timeOffset - start) / (end - start), 0, 1)
-```
+`element.tracks` 是动画属性通道；`composition.tracks` 是视觉叠放轨道，两者含义不同。
 
-分组继续向孩子传局部进度；子合成实例把局部进度交给子定义。时间线视图将父组区间组合为当前合成坐标后显示；属性面板的关键帧位置明确使用本地进度。区间外可选择保持首尾状态或隐藏。
+源时钟为 `sourceIn+(parentTime-start)*speed`，关键帧 at 位于该时钟。移动只改变 start/end。左裁边同步加 sourceIn，右裁边不改；分割复制独立属性通道、推进后段 sourceIn。不裁掉“范围外”关键帧，避免插值节奏改变。只有明确变速会重定时。
 
-兼容 v1 的可选字段 `timeOffset`（默认 0）平移素材及其全部关键帧；`trim`（默认 null）是独立的父局部坐标显示窗口 `{start,end}`。非空 trim 覆盖原 outside 可见性规则，只裁内容，不重映射曲线或子合成进度。右边界为半开区间，唯独 end=1 时包含父进度 1，避免分割切点双重显示。没有新字段的旧项目保持原行为。
+同轨放入和移动拒绝碰撞，insert 分割并后移，overwrite 保留覆盖范围两侧，普通 delete 留空。波纹合并删除区间后平移后续片段；跨轨联动遇到穿越的未选片段会拒绝。锁定轨道/片段拒绝编辑。
 
-`element.trim` 只改显示窗口；`element.move` 同步平移窗口与 timeOffset；`element.split` 克隆实例/分组子树并分配互斥显示窗口，保留曲线和图层相对绘制顺序。UI 和 MCP 都走这些命令。没有显式 trim 时，时间线根据 opacity 非零支持区间收起首尾空白；这只是保守的显示范围推导，不重写轨道，不猜测静态水印何时退场。动画映射区间仍可在属性面板高级选项中调整，此操作明确会变速。
+复合片段把选中的顶层子树移入新 Composition，减去共同起点，保留源时钟、曲线、相对位置与叠放。若中间穿插其他未选内容，拒绝会改变层序的封装。共享素材可重复引用，独立副本递归克隆合成图；禁止循环，最多16层/展开5000节点。
 
-关键帧支持 x、y、scaleX、scaleY、rotation、opacity。轨道按 at 排序、禁止重复位置与重复 ID。每一帧的 easing 控制该帧到下一帧，可为 linear/easeIn/easeOut/easeInOut 或四个贝塞尔参数。Motion 插值器按轨道缓存；无时间推进式动画状态，所以回放、倒放和随机跳转一致。
+## 文件管理
 
-素材采用 `data:image/...;base64,...`，支持静态 PNG/JPEG/WebP，拒绝路径和外链。动画图片不在确定性渲染范围内，APNG 与动画 WebP 会被拒绝；GIF 不支持。可以在不同电脑间单文件分享项目，不需要另一个 assets 文件夹或原绝对路径。
+只监听工作目录 assets；忽略临时/隐藏文件，900ms稳定窗口，不跟随符号链接，读取前再做 realpath 边界检查。路径标识现有素材，SHA-256去重事件；同名上传自动加序号。未完成/无效文件只成为错误素材，不破坏整个项目。
 
-## 原生滚动
+SVG 用 DOMPurify 和 XML 解析清理，保留原始 source，渲染清理缓存。移除脚本、事件、外链、foreignObject、嵌入 image、style 和 SVG 内置动画；保留本地渐变/路径引用。通过 img 显示矢量，不栅格化。
 
-sections 定义文档中的纵向排列顺序，同一合成可以用在不同 section。
+图片/视频由独立 FFmpeg 进程处理，参数数组、无 shell、30秒超时。FFprobe读取真实尺寸/时长与编码；生成首个解码帧缩略图。缓存内容寻址，不覆写已使用的缓存 URL。源丢失标记 missing，重关联保留 assetId；源变短保留剪辑并提示超出部分保持末帧。
 
-- `pin`：包装高度为 `scrollDistance + viewportHeight`；内部 viewport 使用 `position: sticky; top: 0`，原生 scrollY 在 scrollDistance 内映射到 0–1，随后 sticky 自然退出。
-- `flow`：内容高度为 scrollDistance，属于普通文档流。局部进度在内容从顶部进入到其底部到达视口底部之间映射；范围是 `max(1, scrollDistance - viewportHeight)`。高度不超过视口时进度区间很短，适合静态收尾。
-- 精确模式直接显示目标进度。
-- 平滑模式只由每个 viewport 持有实际进度：`actual += (target-actual) * (1-exp(-dt/tau))`。新目标从实际进度继续，反向也不会重置。系统减少动态效果偏好会启用精确模式。
+素材更新通过 ProjectStore.syncAsset 覆盖当前和历史快照中的同一素材记录，因此 undo/redo 不会回滚 Agent 的新文件或缓存版本。原文件本身从不被时间线命令写入。
 
-运行时不接管 wheel、不阻止键盘和浏览器滚动条。使用 rAF 采样原生 scrollY。页面预览是一份嵌入 iframe 的同源 HTML，消息把实际显示进度与编辑器播放头同步；来源 ID 防止 SSE 回声把平滑进度反复重置。
+## 渲染与声音
 
-## 命令与持久化
+编辑预览和网页共用 sampleElement、mountStage。普通播放用 requestAnimationFrame 推进秒数；视频依据源时钟 seek/play，允许音量0–1与静音，容器变换由同一个样本驱动。嵌套实例各有独立 DOM/video，内容共享但播放状态不共享。
 
-`src/core/commands.ts` 的 `applyCommands` 在隔离副本上应用整批命令，再整体校验，失败不提交。`ProjectStore` 只有一个 revision，提交、撤销、重做都会递增。默认最多 80 个撤销事务；新修改清空重做。默认值只在创建对象时补入，更新对象不会给未提供字段补默认值。
+滚动把像素距离映射到区间秒数，始终静音；快速拖动时合并视频定位请求，seeked 后处理最新目标。媒体帧加载有延迟，不承诺跨所有编码逐帧零延迟。精确/平滑改变驱动器，不改变求值；平滑状态属于页面区段，不属于素材。
 
-`EditorService` 同时服务 HTTP UI 与 MCP。`edit_project`、`undo`、`redo`、`apply_preset` 必须携带当前 expectedRevision。文本、数值和拖动手势捕获编辑开始时的版本，因此其他 Agent 在编辑期间提交会引发明确冲突。选中与播放头是临时会话状态，不占项目撤销历史。多窗口和多个 MCP 客户端共用同一个会话选择；这不是多人协同系统。
+iframe 用恢复位置握手避免刷新时把默认0秒反向同步到编辑器。播放与滚动位置会同步给服务和 MCP。页面运行错误、媒体失败可在 UI / MCP 截图结果观察。
 
-每次项目提交同步写临时工作区文件，再通过 rename 替换。文件写入错误会作为错误返回；没有云备份。save_project 另外生成可分享项目包；恢复加载的项目仍通过相同验证。服务进程锁阻止两份服务各维护一份相同工作区。
+## 持久化与迁移
 
-## 渲染与导出
+命令在克隆草稿中执行，整批校验后提交；写临时文件再原子 rename，失败恢复内存与历史。expectedRevision 过期拒绝写入。项目包导入前保存原始输入和原项目；导入期间若结构被他人编辑，拒绝覆盖新内容，已经入库的文件保留。
 
-`runtime/render.ts` 的 mountStage 构建持续存在的 DOM 树，draw 只更新变换/透明度/可见性，不随章节进度卸载重建元素；隐藏状态向后代传播。每个实例的 DOM 路径包含所有父实例 ID。只在项目结构发生编辑时重建画布。
+v1 原文件保留并产生 .v1-时间戳.bak。旧普通预览12秒，因此每个旧局部0–1时钟映射为12秒；旧动画起止转换为 rate/sourceIn，旧 offset、trim、hold、键值、曲线和嵌套不直接改成秒。旧分组保留，sourceDuration 负责旧版端点保持。给旧兄弟元素独立轨道以保持叠放。201个采样位置逐属性与旧求值器比对；极端超限/非法项目会明确拒绝，原文件仍在。
 
-`mountPage` 编排原生滚动、sticky 和 viewport 缩放。编辑器原生预览与 HTML 导出都调用同一个 runtime entry。esbuild 把这份代码打包为内联 IIFE，连同 CSS、JSON 和所有素材写入 HTML；项目 JSON 中的 `<` 被转义，文字使用 textContent。链接只允许 http(s)、mailto 和锚点。运行时许可证全文附在 HTML 注释中。没有外部脚本、CDN 或外部字体。
-
-MCP 截图在真实 Chromium 里装载同一导出运行时，在指定合成和进度截 PNG，同时返回 revision 与浏览器错误；失败不会返回模拟图像。默认截图是合成视图，而不是整个编辑器桌面。
+正常源保存是相对 assets 路径。项目 ZIP 含可编辑结构与有效媒体，冷启动重新生成缓存；有引用的缺失/失败素材阻止打包并报错，未使用的无效素材只在打包警告中列出。HTML 导出只保留页面可达内容需要的素材；纯图片/SVG内嵌，含视频时外置到同包 assets。运行时代码不包含 React、编辑器、MCP 或素材处理服务。

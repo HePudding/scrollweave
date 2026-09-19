@@ -5,9 +5,14 @@ declare global {
     ScrollWeave: ReturnType<typeof mountPage>;
     __SW_PROJECT__: Project;
     __SW_ERRORS__: string[];
+    __SW_READY__: boolean;
   }
 }
 window.__SW_ERRORS__ = [];
+window.__SW_READY__ = false;
+window.addEventListener("sw-media-error", (e) =>
+  window.__SW_ERRORS__.push((e as CustomEvent).detail),
+);
 window.addEventListener("error", (e) => window.__SW_ERRORS__.push(e.message));
 const project = JSON.parse(
   document.getElementById("sw-project")!.textContent!,
@@ -29,8 +34,11 @@ window.ScrollWeave = mountPage(
 );
 window.addEventListener("message", (event) => {
   if (event.source !== window.parent || window.parent === window) return;
-  if (event.data?.type === "scrollweave:seek")
+  if (event.data?.type === "scrollweave:seek") {
     window.ScrollWeave.seek(event.data.progress, event.data.sectionId, true);
+    window.__SW_READY__ = true;
+    window.parent.postMessage({ type: "scrollweave:ready" }, "*");
+  }
   if (
     event.data?.type === "scrollweave:mode" &&
     ["exact", "smooth"].includes(event.data.mode)

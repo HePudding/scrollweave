@@ -1,6 +1,6 @@
 {
   "name": "scrollweave",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "build": "tsx scripts/build.ts",
     "start": "node dist/server.mjs",
     "mcp": "tsx server/stdio.ts",
-    "test": "tsx --test tests/core.test.ts tests/persistence.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/persistence.test.ts tests/workspace.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "licenses": "tsx scripts/licenses.ts",
@@ -21,7 +21,11 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
+    "chokidar": "5.0.0",
+    "dompurify": "3.4.15",
     "express": "5.2.1",
+    "fflate": "0.8.3",
+    "jsdom": "30.1.0",
     "lucide-react": "1.47.0",
     "motion": "13.4.0",
     "playwright": "1.63.0",
@@ -29,13 +33,12 @@
     "react-bezier-curve-editor": "2.1.0",
     "react-dom": "19.3.0",
     "react-moveable": "0.56.0",
-    "vis-data": "8.0.5",
-    "vis-timeline": "8.5.4",
     "zod": "4.6.5"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/express": "5.0.6",
+    "@types/jsdom": "30.0.0",
     "@types/node": "22.20.3",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

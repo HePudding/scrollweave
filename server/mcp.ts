@@ -7,7 +7,7 @@ import {
 } from "./service";
 import { ConflictError } from "../src/core/commands";
 export function createMcpServer(service: Pick<EditorService, "run">) {
-  const server = new McpServer({ name: "scrollweave", version: "0.1.0" });
+  const server = new McpServer({ name: "scrollweave", version: "0.2.0" });
   for (const name of Object.keys(schemas) as ToolName[]) {
     server.registerTool(
       name,

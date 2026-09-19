@@ -1,477 +1,680 @@
 import { useEffect, useRef, useState } from "react";
-import { Timeline as VisTimeline, type TimelineOptions } from "vis-timeline";
-import { DataSet } from "vis-data";
-import "vis-timeline/styles/vis-timeline-graph2d.css";
 import {
-  properties,
+  LockKeyhole,
+  Eye,
+  Plus,
+  Magnet,
+  Scissors,
+  Trash2,
+  Layers,
+  Copy,
+  Minus,
+} from "lucide-react";
+import { globalTime, parentTime, sourceTime } from "../core/evaluate";
+import {
+  thumbnailURL,
   type Project,
-  type AnimProperty,
   type Element,
+  type AnimProperty,
+  type Keyframe,
 } from "../core/model";
 import type { Command } from "../core/commands";
-import { clamp, elementRange } from "../core/evaluate";
-import { clipRange, parentRange } from "../core/timing";
-import { keyId, moveKeys, type KeySelection } from "../core/keyframes";
-export type { KeySelection } from "../core/keyframes";
-export const propertyNames: Record<AnimProperty, string> = {
-  x: "位置 X",
-  y: "位置 Y",
-  scaleX: "缩放 X",
-  scaleY: "缩放 Y",
-  rotation: "旋转",
-  opacity: "透明度",
-};
-const extent = 100000;
 type Props = {
   project: Project;
-  compositionId: string;
-  revision: number;
-  progress: number;
+  cid: string;
+  time: number;
   selected: string[];
-  keys: KeySelection[];
-  compact: boolean;
-  snapping: boolean;
-  view: { action: "fit" | "in" | "out"; serial: number };
-  onSeek(p: number): void;
-  onSelect(ids: string[]): void;
-  onKey(keys: KeySelection[]): void;
-  onError(message: string): void;
-  onCommit(
+  revision: number;
+  snap: boolean;
+  mode: "place" | "insert" | "overwrite";
+  linked: boolean;
+  onSnap: () => void;
+  onMode: (mode: "place" | "insert" | "overwrite") => void;
+  onLinked: () => void;
+  onSelect: (ids: string[]) => void;
+  onSeek: (time: number, final?: boolean) => void;
+  onCommit: (
     commands: Command[],
     label: string,
     revision?: number,
-  ): Promise<void>;
+  ) => Promise<void>;
+  onInsert: (assetId: string, trackId: string, at: number) => void;
+  onFiles: (files: File[], trackId: string, at: number) => void;
+  onSplit: () => void;
+  onDelete: (ripple: boolean) => void;
+  onCopy: () => void;
+  onCompound: () => void;
+  onEnter: (id: string) => void;
+  onAddTrack: () => void;
+  onKey: (e: Element, property: AnimProperty, key: Keyframe) => void;
+  onError: (message: string) => void;
 };
-const parseKey = (id: string): KeySelection => {
-  const [, elementId, property, keyframeId] = id.split(":");
-  return { elementId, property: property as AnimProperty, keyframeId };
+type Gesture = {
+  kind: "move" | "left" | "right";
+  id: string;
+  ids: string[];
+  x: number;
+  y: number;
+  scroll: number;
+  revision: number;
+  delta: number;
+  offset: number;
 };
-
-export function Timeline(props: Props) {
-  const host = useRef<HTMLDivElement>(null);
-  const timeline = useRef<VisTimeline | null>(null);
-  const latest = useRef(props);
-  latest.current = props;
-  const items = useRef(new DataSet<any>());
-  const groups = useRef(new DataSet<any>());
-  const syncing = useRef(false);
-  const ignoreClickUntil = useRef(0);
-  const gesture = useRef<{
-    revision: number;
-    project: Project;
-    selection: string[];
-  } | null>(null);
-  const pendingMoves = useRef(new Map<string, any>());
-  const flushTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [staticExpanded, setStaticExpanded] = useState(false);
-  useEffect(() => {
-    setExpanded({});
-    setStaticExpanded(false);
-    const options: TimelineOptions = {
-      start: 0,
-      end: extent,
-      min: -1000,
-      max: extent + 1000,
-      zoomMin: 2000,
-      zoomMax: extent + 2000,
-      showCurrentTime: false,
-      showMajorLabels: false,
-      stack: false,
-      groupOrder: "order",
-      orientation: "top",
-      height: "100%",
-      verticalScroll: true,
-      horizontalScroll: true,
-      horizontalScrollKey: "shiftKey",
-      horizontalScrollInvert: true,
-      zoomKey: "ctrlKey",
-      selectable: true,
-      multiselect: true,
-      editable: {
-        updateTime: true,
-        updateGroup: false,
-        remove: false,
-        add: false,
-      },
-      itemsAlwaysDraggable: { item: true, range: true },
-      margin: { item: 6, axis: 8 },
-      snap: null,
-      format: {
-        minorLabels: (date: any) => `${Math.round((+date / extent) * 100)}%`,
-      },
-      onMoving(item, callback) {
-        ignoreClickUntil.current = performance.now() + 250;
-        const p = latest.current;
-        if (!gesture.current)
-          gesture.current = {
-            revision: p.revision,
-            project: p.project,
-            selection: (timeline.current?.getSelection() ?? []).map(String),
-          };
-        const original = items.current.get(item.id);
-        if (!original) {
-          callback(null);
-          return;
-        }
-        if (p.snapping) {
-          const window = timeline.current!.getWindow();
-          const width =
-            host.current?.querySelector(".vis-panel.vis-center")?.clientWidth ||
-            800;
-          const threshold = ((+window.end - +window.start) / width) * 7;
-          const moving = new Set([
-            ...gesture.current.selection,
-            String(item.id),
-          ]);
-          const points = [
-            0,
-            extent,
-            p.progress * extent,
-            ...items.current
-              .get()
-              .filter((i) => !moving.has(String(i.id)))
-              .flatMap((i) =>
-                i.end !== undefined
-                  ? [+new Date(i.start), +new Date(i.end)]
-                  : [+new Date(i.start)],
-              ),
-          ];
-          const snap = (value: number) => {
-            const nearest = points.reduce(
-              (best, n) =>
-                Math.abs(n - value) < Math.abs(best - value) ? n : best,
-              Infinity,
-            );
-            return Math.abs(nearest - value) < threshold ? nearest : value;
-          };
-          const oldStart = +new Date(original.start),
-            oldEnd =
-              original.end === undefined ? undefined : +new Date(original.end);
-          let start = +new Date(item.start),
-            end = item.end === undefined ? undefined : +new Date(item.end);
-          if (end === undefined) start = snap(start);
-          else if (Math.abs(end - start - (oldEnd! - oldStart)) < 0.5) {
-            const shiftStart = snap(start) - start,
-              shiftEnd = snap(end) - end;
-            const shift =
-              shiftStart !== 0 &&
-              (shiftEnd === 0 || Math.abs(shiftStart) < Math.abs(shiftEnd))
-                ? shiftStart
-                : shiftEnd;
-            start += shift;
-            end += shift;
-          } else if (Math.abs(start - oldStart) > 0.5) start = snap(start);
-          else end = snap(end);
-          item.start = new Date(start);
-          if (end !== undefined) item.end = new Date(end);
-        }
-        callback(item);
-      },
-      onMove(item, callback) {
-        ignoreClickUntil.current = performance.now() + 250;
-        // vis calls this once per selected item. Collect a gesture into one transaction.
-        callback(null);
-        pendingMoves.current.set(String(item.id), item);
-        if (flushTimer.current) return;
-        flushTimer.current = setTimeout(() => {
-          flushTimer.current = undefined;
-          const p = latest.current,
-            cid = p.compositionId;
-          const captured = gesture.current ?? {
-            revision: p.revision,
-            project: p.project,
-            selection: [],
-          };
-          const moves = [...pendingMoves.current.values()];
-          pendingMoves.current.clear();
-          gesture.current = null;
-          const commands: Command[] = [];
-          try {
-            const keyMove = moves.find((i) => String(i.id).startsWith("key:"));
-            if (keyMove) {
-              const id = String(keyMove.id),
-                ref = parseKey(id);
-              const refs = [
-                ...new Set([
-                  ...captured.selection.filter((i) => i.startsWith("key:")),
-                  id,
-                ]),
-              ].map(parseKey);
-              const e = captured.project.compositions[cid].elements.find(
-                (e) => e.id === ref.elementId,
-              )!;
-              const range = elementRange(captured.project, cid, e);
-              const k = e.tracks[ref.property]!.find(
-                (k) => k.id === ref.keyframeId,
-              )!;
-              commands.push(
-                ...moveKeys(
-                  captured.project,
-                  cid,
-                  refs,
-                  +new Date(keyMove.start) / extent -
-                    (range.start + k.at * (range.end - range.start)),
-                ),
-              );
-            } else
-              for (const item of moves) {
-                const e = captured.project.compositions[cid].elements.find(
-                  (e) => e.id === String(item.id).split(":")[1],
-                );
-                if (!e) continue;
-                const parent = parentRange(captured.project, cid, e),
-                  old = clipRange(captured.project, cid, e);
-                const start = +new Date(item.start) / extent,
-                  end = +new Date(item.end) / extent;
-                const duration = parent.end - parent.start;
-                if (Math.abs(end - start - (old.end - old.start)) < 0.00002)
-                  commands.push({
-                    type: "element.move",
-                    compositionId: cid,
-                    elementId: e.id,
-                    delta: (start - old.start) / duration,
-                  });
-                else
-                  commands.push({
-                    type: "element.trim",
-                    compositionId: cid,
-                    elementId: e.id,
-                    start: clamp((start - parent.start) / duration),
-                    end: clamp((end - parent.start) / duration),
-                  });
-              }
-            if (commands.length)
-              void p.onCommit(
-                commands,
-                keyMove ? "移动关键帧" : "移动或裁剪素材",
-                captured.revision,
-              );
-          } catch (e) {
-            p.onError((e as Error).message);
-          }
-        }, 0);
-      },
-    };
-    const view = new VisTimeline(
-      host.current!,
-      items.current,
-      groups.current,
-      options,
-    );
-    const resumeClicks = () => {
-      ignoreClickUntil.current = 0;
-    };
-    const container = host.current!;
-    container.addEventListener("pointerdown", resumeClicks, true);
-    timeline.current = view;
-    view.addCustomTime(props.progress * extent, "playhead");
-    view.setCustomTimeTitle("拖动播放头 · 连续滚动进度", "playhead");
-    view.on("timechange", (e) =>
-      latest.current.onSeek(clamp(+e.time / extent)),
-    );
-    view.on("select", (e) => {
-      if (syncing.current || performance.now() < ignoreClickUntil.current)
-        return;
-      const ids = (e.items as (string | number)[]).map(String);
-      const keys = ids.filter((i) => i.startsWith("key:")).map(parseKey);
-      if (ids.length)
-        latest.current.onSelect([
-          ...new Set(
-            keys.length
-              ? keys.map((k) => k.elementId)
-              : ids.map((i) => i.split(":")[1]),
-          ),
-        ]);
-      latest.current.onKey(keys);
-    });
-    view.on("click", (e) => {
-      if (performance.now() < ignoreClickUntil.current) return;
-      if (!e.item && e.time && e.what !== "group-label") {
-        latest.current.onSeek(clamp(+e.time / extent));
-        latest.current.onKey([]);
-      }
-    });
-    const updateWindow = () => {
-      const range = view.getWindow();
-      if (host.current) {
-        host.current.dataset.windowStart = String(+range.start);
-        host.current.dataset.windowEnd = String(+range.end);
-      }
-    };
-    view.on("rangechanged", updateWindow);
-    updateWindow();
-    return () => {
-      container.removeEventListener("pointerdown", resumeClicks, true);
-      if (flushTimer.current) clearTimeout(flushTimer.current);
-      flushTimer.current = undefined;
-      pendingMoves.current.clear();
-      gesture.current = null;
-      view.destroy();
-      timeline.current = null;
-    };
-  }, [props.compositionId]);
-  useEffect(() => {
-    const comp = props.project.compositions[props.compositionId];
-    const nextGroups: any[] = [],
-      nextItems: any[] = [];
-    const isAncestorOfSelection = (e: Element): boolean =>
-      props.selected.some((id) => {
-        let node = comp.elements.find((n) => n.id === id);
-        while (node?.parentId) {
-          if (node.parentId === e.id) return true;
-          node = comp.elements.find((n) => n.id === node!.parentId);
-        }
-        return false;
-      });
-    const isOpen = (e: Element) =>
-      !props.compact ||
-      (expanded[e.id] ??
-        (props.selected.includes(e.id) || isAncestorOfSelection(e)));
-    const isStatic = (e: Element) =>
-      !e.parentId &&
-      !["group", "composition"].includes(e.type) &&
-      !Object.values(e.tracks).some((keys) => keys?.length) &&
-      clipRange(props.project, comp.id, e).start <= 0 &&
-      clipRange(props.project, comp.id, e).end >= 1;
-    const persistent = comp.elements.filter(isStatic);
-    if (props.compact && persistent.length) {
-      const label = document.createElement("button");
-      label.className = "track-toggle";
-      label.textContent = `${staticExpanded ? "▾" : "▸"} 全程静态图层 · ${persistent.length}`;
-      label.title = "水印、背景等全程素材集中收起；点击展开";
-      label.onclick = (event) => {
+function KeyDiamond({
+  p,
+  e,
+  property,
+  k,
+  scale,
+}: {
+  p: Props;
+  e: Element;
+  property: AnimProperty;
+  k: Keyframe;
+  scale: number;
+}) {
+  const at = globalTime(p.project, p.cid, e, k.at),
+    [delta, setDelta] = useState(0),
+    drag = useRef<{ x: number; delta: number; revision: number } | null>(null),
+    moved = useRef(false);
+  return (
+    <button
+      title={property + " · " + at.toFixed(2) + "s"}
+      className="key-diamond"
+      style={{ left: (at + delta) * scale, touchAction: "none" }}
+      onPointerDown={(event) => {
         event.stopPropagation();
-        setStaticExpanded((v) => !v);
-      };
-      nextGroups.push({
-        id: "static-header",
-        content: label,
-        order: -1,
-        className: "static-track-header",
-      });
-    }
-    let order = 0;
-    const append = (e: Element, depth = 0) => {
-      if (
-        props.compact &&
-        isStatic(e) &&
-        !staticExpanded &&
-        !props.selected.includes(e.id)
-      )
-        return;
-      const range = clipRange(props.project, comp.id, e),
-        animation = elementRange(props.project, comp.id, e);
-      const groupId = `range:${e.id}`;
-      const hasDetails =
-        Object.values(e.tracks).some((k) => k?.length) ||
-        comp.elements.some((n) => n.parentId === e.id);
-      const open = isOpen(e);
-      const label = document.createElement("button");
-      label.className = "track-toggle";
-      label.style.paddingLeft = `${depth * 12}px`;
-      label.textContent = `${hasDetails ? (open ? "▾" : "▸") : "·"} ${e.name}`;
-      label.title = hasDetails ? "点击展开 / 收起关键帧和子图层" : e.name;
-      label.onclick = (event) => {
-        event.stopPropagation();
-        latest.current.onSelect([e.id]);
-        latest.current.onKey([]);
-        if (hasDetails) setExpanded((v) => ({ ...v, [e.id]: !open }));
-      };
-      nextGroups.push({ id: groupId, content: label, order: order++ });
-      if (range.end > range.start)
-        nextItems.push({
-          id: groupId,
-          group: groupId,
-          content: e.type === "composition" ? "◇ 子合成" : e.name,
-          start: range.start * extent,
-          end: range.end * extent,
-          type: "range",
-          title: `${e.name} · ${(range.start * 100).toFixed(1)}–${(range.end * 100).toFixed(1)}%\n拖动移动素材；边缘裁剪，不改变动画速度`,
-          editable: {
-            updateTime: !e.locked,
-            updateGroup: false,
-            remove: false,
-          },
-          className: `${e.type === "composition" ? "composition-clip" : "element-clip"} ${props.selected.includes(e.id) ? "selected-clip" : ""} ${e.hidden ? "muted-clip" : ""}`,
-        });
-      if (open)
-        properties.forEach((property) => {
-          const keys = e.tracks[property];
-          if (!keys?.length) return;
-          const row = `${e.id}:${property}`;
-          nextGroups.push({
-            id: row,
-            content: `↳ ${propertyNames[property]}`,
-            order: order++,
-            className: "property-row",
-          });
-          keys.forEach((key) => {
-            const at =
-              animation.start + key.at * (animation.end - animation.start);
-            nextItems.push({
-              id: keyId({ elementId: e.id, property, keyframeId: key.id }),
-              group: row,
-              content: "◆",
-              start: at * extent,
-              type: "point",
-              editable: {
-                updateTime: !e.locked,
-                updateGroup: false,
-                remove: false,
+        drag.current = { x: event.clientX, delta: 0, revision: p.revision };
+        moved.current = false;
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={(event) => {
+        if (drag.current) {
+          const value = Math.max(
+            -at,
+            Math.round(((event.clientX - drag.current.x) / scale) * 30) / 30,
+          );
+          drag.current.delta = value;
+          setDelta(value);
+        }
+      }}
+      onPointerUp={(event) => {
+        const data = drag.current;
+        drag.current = null;
+        setDelta(0);
+        event.currentTarget.releasePointerCapture(event.pointerId);
+        if (data && Math.abs(data.delta) > 0.001) {
+          moved.current = true;
+          const source = sourceTime(
+            e,
+            parentTime(p.project, p.cid, e, at + data.delta),
+          );
+          void p.onCommit(
+            [
+              {
+                type: "keyframe.set",
+                compositionId: p.cid,
+                elementId: e.id,
+                property,
+                keyframe: { ...k, at: source },
               },
-              title: `${propertyNames[property]}: ${key.value} · 合成 ${(at * 100).toFixed(1)}%\nShift / Ctrl 多选 · Delete 删除关键帧`,
-              className: `keyframe-point ${at < range.start || at > range.end ? "trimmed-key" : ""}`,
-            });
-          });
-        });
-      if (open)
-        comp.elements
-          .filter((child) => child.parentId === e.id)
-          .forEach((child) => append(child, depth + 1));
+            ],
+            "移动关键帧",
+            data.revision,
+          );
+        }
+      }}
+      onPointerCancel={() => {
+        drag.current = null;
+        setDelta(0);
+      }}
+      onClick={() => {
+        if (moved.current) return;
+        p.onSeek(
+          Math.max(0, Math.min(p.project.compositions[p.cid].duration, at)),
+          true,
+        );
+        p.onKey(e, property, k);
+      }}
+    >
+      ◆
+    </button>
+  );
+}
+export function Timeline(p: Props) {
+  const c = p.project.compositions[p.cid],
+    tracks = [...c.tracks].reverse(),
+    [scale, setScale] = useState(72),
+    [gesture, setGesture] = useState<Gesture | null>(null),
+    scroll = useRef<HTMLDivElement>(null),
+    gestureRef = useRef<Gesture | null>(null);
+  const [viewport, setViewport] = useState({ left: 0, width: 1400 });
+  useEffect(() => {
+    const node = scroll.current!;
+    const update = () =>
+      setViewport({ left: node.scrollLeft, width: node.clientWidth });
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    node.addEventListener("scroll", update);
+    update();
+    return () => {
+      observer.disconnect();
+      node.removeEventListener("scroll", update);
     };
-    comp.elements.filter((e) => !e.parentId).forEach((e) => append(e));
-    syncing.current = true;
-    items.current.clear();
-    groups.current.clear();
-    groups.current.add(nextGroups);
-    items.current.add(nextItems);
-    const ids = props.keys.length
-      ? props.keys.map(keyId)
-      : props.selected.map((id) => `range:${id}`);
-    timeline.current?.setSelection(
-      ids.filter((id) => nextItems.some((i) => i.id === id)),
+  }, []);
+  useEffect(() => {
+    const node = scroll.current;
+    if (!node || gestureRef.current) return;
+    const pixel = p.time * scale;
+    if (
+      pixel < node.scrollLeft ||
+      pixel > node.scrollLeft + node.clientWidth - 160
+    )
+      node.scrollLeft = Math.max(0, pixel - node.clientWidth / 2);
+  }, [p.time, scale]);
+  const roots = c.elements.filter((e) => !e.parentId),
+    width = Math.max(800, (c.duration + 3) * scale),
+    selectedElement =
+      p.selected.length === 1
+        ? c.elements.find((e) => e.id === p.selected[0])
+        : undefined;
+  const step = scale >= 90 ? 0.5 : scale >= 45 ? 1 : scale >= 20 ? 2 : 5;
+  const firstTick = Math.max(0, Math.floor(viewport.left / scale / step) - 1),
+    lastTick = Math.min(
+      Math.ceil((c.duration + 3) / step),
+      Math.ceil((viewport.left + viewport.width) / scale / step) + 1,
     );
-    syncing.current = false;
-  }, [
-    props.project,
-    props.compositionId,
-    props.selected.join("|"),
-    props.keys.map(keyId).join("|"),
-    props.compact,
-    expanded,
-    staticExpanded,
-  ]);
-  useEffect(() => {
-    timeline.current?.setCustomTime(props.progress * extent, "playhead");
-  }, [props.progress]);
-  useEffect(() => {
-    const view = timeline.current;
-    if (!view) return;
-    if (props.view.action === "fit")
-      view.setWindow(0, extent, { animation: false });
-    else {
-      const range = view.getWindow(),
-        factor = props.view.action === "in" ? 0.7 : 1 / 0.7;
-      const center = props.progress * extent;
-      view.setWindow(
-        center + (+range.start - center) * factor,
-        center + (+range.end - center) * factor,
-        { animation: false },
-      );
+  const snap = (value: number, exclude: string[] = []) => {
+    const rounded = Math.round(value * 30) / 30;
+    if (!p.snap) return rounded;
+    const positions = [
+      0,
+      p.time,
+      ...roots
+        .filter((e) => !exclude.includes(e.id))
+        .flatMap((e) => [e.start, e.end]),
+    ];
+    const nearest = positions.sort(
+      (a, b) => Math.abs(a - value) - Math.abs(b - value),
+    )[0];
+    return Math.abs(nearest - value) * scale < 9 ? nearest : rounded;
+  };
+  const timeAt = (event: { clientX: number }, rect: DOMRect) =>
+    Math.max(0, (event.clientX - rect.left) / scale);
+  const start = (
+    event: React.PointerEvent,
+    e: Element,
+    kind: Gesture["kind"],
+  ) => {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    if (e.locked || c.tracks.find((t) => t.id === e.trackId)?.locked) return;
+    const ids = event.shiftKey
+      ? p.selected.includes(e.id)
+        ? p.selected.filter((id) => id !== e.id)
+        : [...p.selected, e.id]
+      : p.selected.includes(e.id)
+        ? p.selected
+        : [e.id];
+    p.onSelect(ids);
+    if (!ids.includes(e.id) || event.shiftKey) return;
+    if (kind !== "move" && ids.length !== 1) {
+      p.onError("裁边需要只选中一个片段；多选可整体移动、删除和创建复合片段");
+      return;
     }
-  }, [props.view]);
-  return <div className="timeline-view" ref={host} data-testid="timeline" />;
+    const g: Gesture = {
+      kind,
+      id: e.id,
+      ids,
+      x: event.clientX,
+      y: event.clientY,
+      scroll: scroll.current!.scrollLeft,
+      revision: p.revision,
+      delta: 0,
+      offset: 0,
+    };
+    gestureRef.current = g;
+    setGesture(g);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const move = (event: React.PointerEvent) => {
+    const g = gestureRef.current;
+    if (!g) return;
+    const e = roots.find((e) => e.id === g.id)!;
+    const bounds = scroll.current!.getBoundingClientRect();
+    if (event.clientX > bounds.right - 35) scroll.current!.scrollLeft += 10;
+    if (event.clientX < bounds.left + 150) scroll.current!.scrollLeft -= 10;
+    const raw =
+      (event.clientX - g.x + scroll.current!.scrollLeft - g.scroll) / scale;
+    const edge = g.kind === "right" ? e.end : e.start;
+    let delta = snap(edge + raw, g.ids) - edge;
+    if (g.kind === "move") {
+      const endDelta = snap(e.end + raw, g.ids) - e.end;
+      if (Math.abs(endDelta - raw) < Math.abs(delta - raw)) delta = endDelta;
+      delta = Math.max(
+        -Math.min(
+          ...roots.filter((e) => g.ids.includes(e.id)).map((e) => e.start),
+        ),
+        delta,
+      );
+    } else if (g.kind === "left")
+      delta = Math.min(e.end - e.start - 0.04, Math.max(-e.start, delta));
+    else delta = Math.max(e.start - e.end + 0.04, delta);
+    const offset =
+      g.kind === "move" ? -Math.round((event.clientY - g.y) / 64) : 0;
+    const next = { ...g, delta, offset };
+    gestureRef.current = next;
+    setGesture(next);
+  };
+  const finish = async (event: React.PointerEvent) => {
+    const g = gestureRef.current;
+    gestureRef.current = null;
+    setGesture(null);
+    if (!g) return;
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    if (Math.abs(g.delta) < 0.0001 && !g.offset) return;
+    const e = roots.find((e) => e.id === g.id)!;
+    await p.onCommit(
+      g.kind === "move"
+        ? [
+            {
+              type: "clips.move",
+              compositionId: p.cid,
+              elementIds: g.ids,
+              delta: g.delta,
+              trackOffset: g.offset,
+            },
+          ]
+        : [
+            {
+              type: "element.trim",
+              compositionId: p.cid,
+              elementId: e.id,
+              start: e.start + (g.kind === "left" ? g.delta : 0),
+              end: e.end + (g.kind === "right" ? g.delta : 0),
+            },
+          ],
+      g.kind === "move" ? "移动片段" : "裁剪片段",
+      g.revision,
+    );
+  };
+  const channels = selectedElement
+    ? Object.entries(selectedElement.tracks).filter(([, keys]) => keys.length)
+    : [];
+  return (
+    <section className="timeline-panel" aria-label="多轨时间线">
+      <div className="timeline-toolbar">
+        <strong>时间线</strong>
+        <button title="添加轨道" onClick={p.onAddTrack}>
+          <Plus size={15} />
+          轨道
+        </button>
+        <span className="divider" />
+        <button
+          title="分割 Ctrl+B"
+          disabled={!p.selected.length}
+          onClick={p.onSplit}
+        >
+          <Scissors size={16} />
+        </button>
+        <button
+          title="复制 Ctrl+C"
+          disabled={!p.selected.length}
+          onClick={p.onCopy}
+        >
+          <Copy size={16} />
+        </button>
+        <button
+          title="普通删除 · 保留空隙 Delete"
+          disabled={!p.selected.length}
+          onClick={() => p.onDelete(false)}
+        >
+          <Trash2 size={16} />
+        </button>
+        <button disabled={!p.selected.length} onClick={() => p.onDelete(true)}>
+          波纹删除
+        </button>
+        <button
+          title="创建复合片段 Alt+G"
+          disabled={!p.selected.length}
+          onClick={p.onCompound}
+        >
+          <Layers size={16} />
+        </button>
+        <span className="spacer" />
+        <button
+          className={p.snap ? "active" : ""}
+          onClick={p.onSnap}
+          title="吸附只对齐边界，不移动其他片段"
+        >
+          <Magnet size={15} />
+          吸附
+        </button>
+        <button
+          className={p.linked ? "active" : ""}
+          onClick={p.onLinked}
+          title="仅波纹删除时联动其他轨道"
+        >
+          跨轨联动
+        </button>
+        <select
+          aria-label="放入方式"
+          value={p.mode}
+          onChange={(e) => p.onMode(e.target.value as Props["mode"])}
+        >
+          <option value="place">放入空位</option>
+          <option value="insert">插入并后移</option>
+          <option value="overwrite">覆盖片段</option>
+        </select>
+        <button
+          title="缩小时间线"
+          onClick={() => setScale((s) => Math.max(12, s / 1.3))}
+        >
+          <Minus size={14} />
+        </button>
+        <input
+          aria-label="时间线缩放"
+          className="timeline-zoom"
+          type="range"
+          min="12"
+          max="240"
+          value={scale}
+          onChange={(e) => setScale(Number(e.target.value))}
+        />
+        <button
+          title="放大时间线"
+          onClick={() => setScale((s) => Math.min(240, s * 1.3))}
+        >
+          <Plus size={14} />
+        </button>
+      </div>
+      <div
+        className="timeline-scroll"
+        ref={scroll}
+        onWheel={(e) => {
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            setScale((s) =>
+              Math.max(12, Math.min(240, s * (e.deltaY > 0 ? 0.9 : 1.1))),
+            );
+          }
+        }}
+      >
+        <div className="timeline-grid" style={{ width: width + 128 }}>
+          <div className="time-ruler">
+            <div className="track-label">
+              <span>秒 · 30 fps</span>
+            </div>
+            <div
+              className="ruler-scale"
+              style={{ width }}
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                p.onSeek(
+                  Math.min(
+                    c.duration,
+                    timeAt(e, e.currentTarget.getBoundingClientRect()),
+                  ),
+                );
+              }}
+              onPointerMove={(e) => {
+                if (e.currentTarget.hasPointerCapture(e.pointerId))
+                  p.onSeek(
+                    Math.min(
+                      c.duration,
+                      timeAt(e, e.currentTarget.getBoundingClientRect()),
+                    ),
+                  );
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+                p.onSeek(
+                  Math.min(
+                    c.duration,
+                    timeAt(e, e.currentTarget.getBoundingClientRect()),
+                  ),
+                  true,
+                );
+              }}
+            >
+              {Array.from(
+                { length: Math.max(0, lastTick - firstTick + 1) },
+                (_, i) => (
+                  <span
+                    key={i + firstTick}
+                    className="tick"
+                    style={{ left: (i + firstTick) * step * scale }}
+                  >
+                    {((i + firstTick) * step).toFixed(step < 1 ? 1 : 0)}s
+                  </span>
+                ),
+              )}
+            </div>
+          </div>
+          {tracks.map((track) => (
+            <div
+              key={track.id}
+              className={"track-row " + (track.locked ? "locked" : "")}
+              data-testid={"track-" + track.id}
+            >
+              <div className="track-label">
+                <span title={track.name}>{track.name}</span>
+                <div>
+                  <button
+                    title={track.locked ? "解锁轨道" : "锁定轨道"}
+                    className={track.locked ? "active" : ""}
+                    onClick={() =>
+                      void p.onCommit(
+                        [
+                          {
+                            type: "track.update",
+                            compositionId: p.cid,
+                            trackId: track.id,
+                            patch: { locked: !track.locked },
+                          },
+                        ],
+                        "轨道锁定",
+                      )
+                    }
+                  >
+                    <LockKeyhole size={12} />
+                  </button>
+                  <button
+                    title={track.hidden ? "显示轨道" : "隐藏轨道"}
+                    className={track.hidden ? "active" : ""}
+                    onClick={() =>
+                      void p.onCommit(
+                        [
+                          {
+                            type: "track.update",
+                            compositionId: p.cid,
+                            trackId: track.id,
+                            patch: { hidden: !track.hidden },
+                          },
+                        ],
+                        "轨道显示",
+                      )
+                    }
+                  >
+                    <Eye size={12} />
+                  </button>
+                  <button
+                    title="删除空轨道"
+                    onClick={() =>
+                      void p.onCommit(
+                        [
+                          {
+                            type: "track.delete",
+                            compositionId: p.cid,
+                            trackId: track.id,
+                          },
+                        ],
+                        "删除轨道",
+                      )
+                    }
+                  >
+                    <Minus size={12} />
+                  </button>
+                </div>
+              </div>
+              <div
+                className="track-content"
+                style={{ width, backgroundSize: step * scale + "px 100%" }}
+                onPointerDown={(e) => {
+                  if (e.target === e.currentTarget) {
+                    p.onSelect([]);
+                    p.onSeek(
+                      Math.min(
+                        c.duration,
+                        timeAt(e, e.currentTarget.getBoundingClientRect()),
+                      ),
+                      true,
+                    );
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "copy";
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const at = snap(
+                    timeAt(e, e.currentTarget.getBoundingClientRect()),
+                  );
+                  const id = e.dataTransfer.getData(
+                    "application/x-scrollweave-asset",
+                  );
+                  if (id) p.onInsert(id, track.id, at);
+                  else if (e.dataTransfer.files.length)
+                    p.onFiles(Array.from(e.dataTransfer.files), track.id, at);
+                }}
+              >
+                {roots
+                  .filter((e) => e.trackId === track.id)
+                  .map((e) => {
+                    const asset = e.assetId
+                        ? p.project.assets[e.assetId]
+                        : undefined,
+                      active = gesture?.ids.includes(e.id),
+                      delta = active ? gesture!.delta : 0,
+                      left =
+                        e.start +
+                        (active && gesture!.kind !== "right" ? delta : 0),
+                      end =
+                        e.end +
+                        (active && gesture!.kind !== "left" ? delta : 0);
+                    return (
+                      <div
+                        key={e.id}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={"片段 " + e.name}
+                        data-testid={"clip-" + e.id}
+                        className={
+                          "timeline-clip " +
+                          e.type +
+                          (p.selected.includes(e.id) ? " selected" : "") +
+                          (active ? " dragging" : "")
+                        }
+                        style={{
+                          left: left * scale,
+                          width: Math.max(3, (end - left) * scale),
+                          transform:
+                            active && gesture!.kind === "move"
+                              ? "translateY(" + -gesture!.offset * 64 + "px)"
+                              : undefined,
+                        }}
+                        onPointerDown={(event) => start(event, e, "move")}
+                        onPointerMove={move}
+                        onPointerUp={finish}
+                        onPointerCancel={() => {
+                          gestureRef.current = null;
+                          setGesture(null);
+                        }}
+                        onDoubleClick={() => {
+                          if (e.type === "composition")
+                            p.onEnter(e.compositionId!);
+                          else p.onSeek(e.start, true);
+                        }}
+                      >
+                        {asset &&
+                          asset.kind !== "composition" &&
+                          thumbnailURL(asset) && (
+                            <img src={thumbnailURL(asset)} draggable={false} />
+                          )}
+                        <span className="clip-title">
+                          {e.type === "composition" ? "◈ " : ""}
+                          {e.name}
+                        </span>
+                        <small>
+                          {(end - left).toFixed(2)}s
+                          {asset?.status !== "ready" && asset
+                            ? " · " + asset.status
+                            : ""}
+                        </small>
+                        <div
+                          className="clip-handle left"
+                          aria-label="裁剪左边界"
+                          onPointerDown={(event) => start(event, e, "left")}
+                        />
+                        <div
+                          className="clip-handle right"
+                          aria-label="裁剪右边界"
+                          onPointerDown={(event) => start(event, e, "right")}
+                        />
+                      </div>
+                    );
+                  })}
+                {!roots.length && track.id === c.tracks[0].id && (
+                  <span className="drop-hint">
+                    将素材拖到这里 · 文件可直接拖入并创建片段
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+          {channels.map(([property, keys]) => (
+            <div className="key-row" key={property}>
+              <div className="track-label">{property}</div>
+              <div className="key-content" style={{ width }}>
+                {keys.map((k) => {
+                  return (
+                    <KeyDiamond
+                      key={k.id}
+                      p={p}
+                      e={selectedElement!}
+                      property={property as AnimProperty}
+                      k={k}
+                      scale={scale}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          <div className="playhead" style={{ left: 128 + p.time * scale }}>
+            <i />
+            <span />
+          </div>
+        </div>
+      </div>
+      <div className="timeline-status">
+        <span>
+          {gesture
+            ? (gesture.kind === "move" ? "移动" : "裁边") +
+              " " +
+              gesture.delta.toFixed(2) +
+              "s"
+            : "拖动移动 · 拖边裁剪 · Shift 多选 · Ctrl+B 分割 · Delete 留空 · Shift+Delete 波纹"}
+        </span>
+        <span>
+          {p.selected.length
+            ? p.selected.length + " 个片段已选中"
+            : "未选择片段"}{" "}
+          · {c.duration.toFixed(2)}s
+        </span>
+      </div>
+    </section>
+  );
 }

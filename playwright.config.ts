@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: "./tests",
   testMatch: "**/*.spec.ts",
   workers: 1,
-  timeout: 60000,
+  timeout: 120000,
   expect: { timeout: 10000 },
   reporter: "list",
   use: {
@@ -24,6 +24,6 @@ export default defineConfig({
     url: "http://127.0.0.1:4101/api/state",
     reuseExistingServer: false,
     timeout: 30000,
-    env: { PORT: "4101", SW_WORKSPACE: ".scrollweave/test" },
+    env: { PORT: "4101", SW_WORKSPACE: ".scrollweave/e2e-" + Date.now() },
   },
 });

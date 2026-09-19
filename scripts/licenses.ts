@@ -11,6 +11,10 @@ const allowed = new Set([
   "BSD-3-Clause",
   "0BSD",
   "MPL-2.0",
+  "MIT-0",
+  "BlueOak-1.0.0",
+  "CC0-1.0",
+  "(MPL-2.0 OR Apache-2.0)",
 ]);
 type Entry = {
   name: string;
@@ -49,6 +53,7 @@ for (const [directory, value] of Object.entries<any>(lock.packages)) {
     )
     .join("\n\n");
   const upstreamFallbacks: Record<string, string> = {
+    saxes: "docs/licenses/saxes-ISC.txt",
     "@cfcs/core": "docs/licenses/cfcs-MIT.txt",
     "css-styled": "docs/licenses/css-styled-MIT.txt",
     keycon: "docs/licenses/keycon-MIT.txt",

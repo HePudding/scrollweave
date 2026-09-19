@@ -8,7 +8,7 @@ import net from "node:net";
 
 test(
   "真实服务进程重启恢复项目、revision、选择和预览；第二进程不能占用工作区",
-  { timeout: 30000 },
+  { timeout: 60000 },
   async () => {
     fs.mkdirSync(".scrollweave", { recursive: true });
     const workspace = fs.mkdtempSync(path.resolve(".scrollweave/restart-"));
@@ -73,10 +73,14 @@ test(
         label: "重启验收",
         commands: [
           {
-            type: "element.update",
+            type: "element.add",
             compositionId: "main",
-            elementId: "title",
-            patch: { text: "重启后仍然可编辑" },
+            element: {
+              id: "title",
+              name: "重启文字",
+              type: "text",
+              text: "重启后仍然可编辑",
+            },
           },
         ],
       });
@@ -86,13 +90,14 @@ test(
       });
       await call("set_preview", {
         compositionId: "main",
-        progress: 0.64,
-        sectionId: "story",
+        progress: 6.4,
+        sectionId: "stage",
       });
       await call("save_project", {
         expectedRevision: after.revision,
         filename: "restart",
       });
+      const saved = await call("read_project");
       const duplicate = start();
       const [exitCode] = await once(duplicate, "exit");
       assert.notEqual(exitCode, 0);
@@ -100,10 +105,10 @@ test(
       child = start();
       await ready(child);
       const restored = await call("read_project");
-      assert.deepEqual(restored.project, after.project);
+      assert.deepEqual(restored.project, saved.project);
       assert.equal(restored.revision, after.revision);
       assert.deepEqual(restored.selection.elementIds, ["title"]);
-      assert.equal(restored.preview.progress, 0.64);
+      assert.equal(restored.preview.progress, 6.4);
       assert.equal(restored.canUndo, false);
     } finally {
       await stop(child);

@@ -38,7 +38,7 @@ export async function exportHTML(input: Project) {
   const notices = fs.existsSync("THIRD_PARTY_RUNTIME.txt")
     ? fs.readFileSync("THIRD_PARTY_RUNTIME.txt", "utf8")
     : "ScrollWeave MIT. Motion / motion-dom / motion-utils MIT. See project THIRD_PARTY_NOTICES.md.";
-  return `<!doctype html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="ScrollWeave 0.1.0"><title>${title}</title><style>${runtimeCSS}</style></head><body><main id="sw-root" aria-label="${title}"></main><script id="sw-project" type="application/json">${data}</script><script>${js.replace(/<\/script/gi, "<\\/script")}</script><!--\n${notices.replace(/-->/g, "-- >")}\n--></body></html>`;
+  return `<!doctype html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="ScrollWeave 0.2.0"><title>${title}</title><style>${runtimeCSS}</style></head><body><main id="sw-root" aria-label="${title}"></main><script id="sw-project" type="application/json">${data}</script><script>${js.replace(/<\/script/gi, "<\\/script")}</script><!--\n${notices.replace(/-->/g, "-- >")}\n--></body></html>`;
 }
 registerExporter({
   id: "html",
