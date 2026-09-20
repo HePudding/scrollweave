@@ -61,7 +61,7 @@ test("用户从空作品导入，源预览独立；拖入、重复、移动、�
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
+  await page.goto("/editor");
   await page
     .getByTestId("media-import")
     .setInputFiles([
@@ -221,7 +221,7 @@ test("真实 MCP 连接、自动发现 SVG、外部更新、错误恢复、缺�
   page,
   request,
 }) => {
-  await page.goto("/");
+  await page.goto("/editor");
   const client = new Client({ name: "scrollweave-acceptance", version: "2" });
   const json = (r: any) => {
     expect(r.isError, JSON.stringify(r.content)).not.toBe(true);
@@ -444,7 +444,7 @@ test("真实视频普通播放含音频，分割后续播；滚动正向、反�
       newId: "tail",
     },
   ]);
-  await page.goto("/");
+  await page.goto("/editor");
   await seek(page, 4);
   const media = page.locator('.canvas-host [data-element-id="tail"] video');
   await expect
@@ -637,7 +637,7 @@ test("复合片段内部编辑与返回，关键帧画布联动；图片 SVG 单
       }),
     },
   ]);
-  await page.goto("/");
+  await page.goto("/editor");
   await page.getByTestId("clip-text").click();
   await seek(page, 0);
   await page.getByTitle("添加关键帧 位置 X").click();
@@ -812,7 +812,7 @@ test("嵌套视频与横向动画共用秒制求值，滚动区间距离与平�
       },
     },
   ]);
-  await page.goto("/");
+  await page.goto("/editor");
   await seek(page, 5);
   const clip = page.locator(
       '.canvas-host [data-element-id="' + wrapper.id + '"]',

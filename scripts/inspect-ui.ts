@@ -25,7 +25,7 @@ const action = async (name: string, args: unknown = {}) => {
   return result;
 };
 try {
-  await page.goto(origin);
+  await page.goto(origin + "/editor");
   await page.waitForSelector(".canvas-host .sw-design");
   await page.getByLabel("播放头秒数").fill("2");
   await page.getByLabel("播放头秒数").press("Enter");

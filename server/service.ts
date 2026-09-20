@@ -267,6 +267,37 @@ export class EditorService {
       throw error;
     }
   }
+  static renameClosedProject(
+    directory: string,
+    name: string,
+    expectedRevision: number,
+  ) {
+    const workspace = fs.realpathSync.native(path.resolve(directory));
+    const release = acquire(workspace);
+    try {
+      const { store } = readWorkspace(workspace);
+      store.commit(
+        [{ type: "project.update", patch: { name } }],
+        expectedRevision,
+        "重命名作品",
+      );
+      atomic(
+        path.join(workspace, "project.scrollweave.json"),
+        JSON.stringify(
+          {
+            project: store.project,
+            revision: store.revision,
+            selection: store.selection,
+            preview: store.preview,
+          },
+          null,
+          2,
+        ),
+      );
+    } finally {
+      release();
+    }
+  }
   info() {
     return {
       directory: this.workspace,
@@ -375,8 +406,15 @@ export class EditorService {
     this.release();
   }
   async switchWorkspace(directory: string, name?: string) {
-    const next = path.resolve(directory);
-    if (next === this.workspace) return this.info();
+    if (this.switching) throw Error("正在切换作品目录，请稍候");
+    const absolute = path.resolve(directory);
+    const next = fs.existsSync(absolute)
+      ? fs.realpathSync.native(absolute)
+      : absolute;
+    if (next === this.workspace) {
+      if (name) throw Error("该目录已有作品，请使用打开");
+      return this.info();
+    }
     if (
       next === process.cwd() ||
       (path.relative(process.cwd(), next).split(path.sep)[0] !== ".." &&

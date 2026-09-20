@@ -1,22 +1,37 @@
 import express from "express";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
+import { z } from "zod";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { ConflictError } from "../src/core/commands";
 import { EditorService, type ToolName } from "./service";
 import { createMcpServer } from "./mcp";
 import { exportHTML } from "./export";
+import { ProjectLibrary, canonicalDirectory } from "./library";
 const port = Number(process.env.PORT ?? 4100);
+const projectsDirectory = path.resolve(
+  process.env.SW_PROJECTS_DIR ??
+    path.join(path.dirname(process.cwd()), "ScrollWeaveProjects"),
+);
+const library = new ProjectLibrary(
+  process.env.SW_LIBRARY_PATH ??
+    path.join(os.homedir(), ".scrollweave", "projects.json"),
+  projectsDirectory,
+);
 const workspace = path.resolve(
   process.env.SW_WORKSPACE ??
-    path.join(
-      path.dirname(process.cwd()),
-      "ScrollWeaveProjects",
-      "My-first-work",
-    ),
+    library.startupDirectory() ??
+    path.join(projectsDirectory, "My-first-work"),
 );
 const service = await EditorService.open(workspace, port),
   app = express();
+fs.mkdirSync(projectsDirectory, { recursive: true });
+library.remember(service.workspace, service.store.project.name, false);
+service.listeners.add((type) => {
+  if (type === "workspace")
+    library.remember(service.workspace, service.store.project.name);
+});
 app.disable("x-powered-by");
 app.use((req, res, next) => {
   const host = (req.headers.host ?? "").split(":")[0];
@@ -41,6 +56,7 @@ app.post(
   express.raw({ type: "application/octet-stream", limit: "512mb" }),
   async (req, res, next) => {
     try {
+      if (service.switching) throw Error("正在切换作品目录，请稍候");
       if (!Buffer.isBuffer(req.body)) throw Error("需要二进制文件");
       const name = decodeURIComponent(String(req.headers["x-file-name"] ?? ""));
       const asset = await service.assets.importBuffer(
@@ -61,6 +77,7 @@ app.post(
   express.raw({ type: "application/octet-stream", limit: "512mb" }),
   async (req, res, next) => {
     try {
+      if (service.switching) throw Error("正在切换作品目录，请稍候");
       if (!Buffer.isBuffer(req.body)) throw Error("需要项目文件");
       res.json(
         await service.importProject(req.body, req.query.asCompound === "true"),
@@ -73,6 +90,118 @@ app.post(
 app.use(express.json({ limit: "60mb" }));
 app.get("/api/state", (_req, res) => res.json(service.store.snapshot()));
 app.get("/api/workspace", (_req, res) => res.json(service.info()));
+const listProjects = () => ({
+  projects: library.list(service.workspace),
+  defaultDirectory: library.defaultDirectory,
+  activeDirectory: service.workspace,
+});
+app.get("/api/projects", (_req, res, next) => {
+  try {
+    res.json(listProjects());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/directories", async (req, res, next) => {
+  try {
+    res.json(
+      await library.browse(z.string().min(1).optional().parse(req.query.path)),
+    );
+  } catch (error) {
+    next(error);
+  }
+});
+app.post("/api/projects", async (req, res, next) => {
+  try {
+    const data = z
+      .object({
+        name: z.string().trim().min(1).max(200),
+        parentDirectory: z.string().min(1).optional(),
+      })
+      .strict()
+      .parse(req.body);
+    const directory = library.newDirectory(data.name, data.parentDirectory);
+    await service.run("new_project", { directory, name: data.name });
+    res.json({ ...listProjects(), workspace: service.info() });
+  } catch (error) {
+    next(error);
+  }
+});
+app.post("/api/projects/open", async (req, res, next) => {
+  try {
+    const data = z
+      .object({ directory: z.string().min(1) })
+      .strict()
+      .parse(req.body);
+    await service.run("open_project", data);
+    library.remember(service.workspace, service.store.project.name);
+    res.json({ ...listProjects(), workspace: service.info() });
+  } catch (error) {
+    next(error);
+  }
+});
+app.patch("/api/projects/:id", async (req, res, next) => {
+  try {
+    const data = z
+      .object({
+        name: z.string().trim().min(1).max(200).optional(),
+        favorite: z.boolean().optional(),
+        expectedRevision: z.number().int().min(0).optional(),
+      })
+      .strict()
+      .parse(req.body);
+    const record = library.get(String(req.params.id));
+    if (data.name) {
+      if (data.expectedRevision === undefined)
+        throw Error("重命名前请刷新项目版本");
+      if (
+        canonicalDirectory(record.directory) ===
+        canonicalDirectory(service.workspace)
+      ) {
+        await service.run("edit_project", {
+          expectedRevision: data.expectedRevision,
+          label: "重命名作品",
+          commands: [{ type: "project.update", patch: { name: data.name } }],
+        });
+      } else
+        EditorService.renameClosedProject(
+          record.directory,
+          data.name,
+          data.expectedRevision,
+        );
+    }
+    library.patch(record.id, {
+      ...(data.name ? { name: data.name } : {}),
+      ...(data.favorite !== undefined ? { favorite: data.favorite } : {}),
+    });
+    res.json(listProjects());
+  } catch (error) {
+    next(error);
+  }
+});
+app.delete("/api/projects/:id", (req, res, next) => {
+  try {
+    library.patch(String(req.params.id), { hidden: true });
+    res.json(listProjects());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/projects/:id/thumbnail", (req, res, next) => {
+  try {
+    const thumbnail = library.thumbnail(String(req.params.id));
+    if (!thumbnail) return void res.sendStatus(404);
+    // Also restrict SVG cache previews even when a folder was prepared outside the editor.
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+    );
+    res.setHeader("Cache-Control", "private, max-age=60");
+    res.sendFile(thumbnail, { dotfiles: "allow" });
+  } catch (error) {
+    next(error);
+  }
+});
 app.get("/api/events", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");

@@ -5,6 +5,7 @@ import { once } from "node:events";
 import fs from "node:fs";
 import path from "node:path";
 import net from "node:net";
+import os from "node:os";
 
 test(
   "真实服务进程重启恢复项目、revision、选择和预览；第二进程不能占用工作区",
@@ -21,7 +22,17 @@ test(
     const start = () =>
       spawn(process.execPath, ["--import", "tsx", "server/index.ts"], {
         cwd: process.cwd(),
-        env: { ...process.env, PORT: String(port), SW_WORKSPACE: workspace },
+        env: {
+          ...process.env,
+          PORT: String(port),
+          SW_WORKSPACE: workspace,
+          SW_LIBRARY_PATH: path.join(
+            workspace,
+            ".scrollweave",
+            "library-test.json",
+          ),
+          SW_PROJECTS_DIR: path.join(workspace, "projects"),
+        },
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
       });
@@ -98,6 +109,15 @@ test(
         filename: "restart",
       });
       const saved = await call("read_project");
+      const library = await (await fetch(`${origin}/api/projects`)).json();
+      const projectId = library.projects[0].id;
+      assert.equal(library.projects[0].directory, workspace);
+      const favorite = await fetch(`${origin}/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ favorite: true }),
+      });
+      assert.equal(favorite.status, 200);
       const duplicate = start();
       const [exitCode] = await once(duplicate, "exit");
       assert.notEqual(exitCode, 0);
@@ -110,6 +130,98 @@ test(
       assert.deepEqual(restored.selection.elementIds, ["title"]);
       assert.equal(restored.preview.progress, 6.4);
       assert.equal(restored.canUndo, false);
+      const reopenedLibrary = await (
+        await fetch(`${origin}/api/projects`)
+      ).json();
+      assert.equal(
+        reopenedLibrary.projects.find((p: { id: string }) => p.id === projectId)
+          .favorite,
+        true,
+      );
+
+      // Real HTTP project creation/opening uses the same service and preserves the previous work.
+      const parentDirectory = fs.mkdtempSync(
+        path.join(os.tmpdir(), "scrollweave-home-http-"),
+      );
+      const createdResponse = await fetch(`${origin}/api/projects`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "Homepage acceptance", parentDirectory }),
+      });
+      assert.equal(createdResponse.status, 200);
+      const created = await createdResponse.json();
+      const createdEntry = created.projects.find(
+        (p: { active: boolean }) => p.active,
+      );
+      assert.equal(createdEntry.name, "Homepage acceptance");
+      assert.equal(
+        (await call("read_project")).project.compositions.main.elements.length,
+        0,
+      );
+      const importResponse = await fetch(`${origin}/api/import`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "X-File-Name": "test-image.png",
+        },
+        body: fs.readFileSync("tests/fixtures/test-image.png"),
+      });
+      assert.equal(importResponse.status, 200);
+      const withCover = await (await fetch(`${origin}/api/projects`)).json();
+      const cover = withCover.projects.find(
+        (p: { id: string }) => p.id === createdEntry.id,
+      ).thumbnail;
+      const coverResponse = await fetch(origin + cover);
+      assert.equal(coverResponse.status, 200);
+      assert.match(coverResponse.headers.get("content-type")!, /image/);
+      const conflict = await fetch(
+        `${origin}/api/projects/${createdEntry.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: "Conflict", expectedRevision: 999 }),
+        },
+      );
+      assert.equal(conflict.status, 409);
+      const restoreResponse = await fetch(`${origin}/api/projects/open`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ directory: workspace }),
+      });
+      // Source-tree workspaces are fixture-only; the normal open API intentionally refuses them.
+      assert.equal(restoreResponse.status, 400);
+      await call("new_project", {
+        directory: path.join(parentDirectory, "another"),
+        name: "Another",
+      });
+      const opened = await fetch(`${origin}/api/projects/open`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ directory: createdEntry.directory }),
+      });
+      assert.equal(opened.status, 200);
+      assert.equal(
+        (await call("read_project")).project.name,
+        "Homepage acceptance",
+      );
+      const removed = await fetch(`${origin}/api/projects/${createdEntry.id}`, {
+        method: "DELETE",
+      });
+      assert.equal(removed.status, 200);
+      assert.ok(
+        fs.existsSync(
+          path.join(createdEntry.directory, "assets", "test-image.png"),
+        ),
+      );
+      assert.deepEqual(
+        JSON.parse(
+          fs.readFileSync(
+            path.join(workspace, "project.scrollweave.json"),
+            "utf8",
+          ),
+        ).project,
+        saved.project,
+      );
     } finally {
       await stop(child);
     }

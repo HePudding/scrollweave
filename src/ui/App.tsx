@@ -34,6 +34,7 @@ import { Canvas, propertyCommands } from "./Canvas";
 import { Timeline } from "./Timeline";
 import { SourceComposition } from "./SourceComposition";
 import { TextField } from "./TextField";
+import { ProjectHome } from "./ProjectHome";
 import {
   assetURL,
   thumbnailURL,
@@ -166,6 +167,24 @@ function NumberField({
   );
 }
 export function App() {
+  const [route, setRoute] = useState(location.pathname);
+  useEffect(() => {
+    const changed = () => setRoute(location.pathname);
+    window.addEventListener("popstate", changed);
+    return () => window.removeEventListener("popstate", changed);
+  }, []);
+  const navigate = (path: string) => {
+    history.pushState(null, "", path);
+    setRoute(path);
+  };
+  return route === "/editor" ? (
+    <Editor onHome={() => navigate("/")} />
+  ) : (
+    <ProjectHome onEnter={() => navigate("/editor")} />
+  );
+}
+
+function Editor({ onHome }: { onHome: () => void }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null),
     state = useRef<Snapshot | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null),
@@ -264,6 +283,9 @@ export function App() {
     setWorkspace(w);
     setDirectory(w.directory);
   };
+  useEffect(() => {
+    if (snapshot) document.title = snapshot.project.name + " · ScrollWeave";
+  }, [snapshot?.project.name]);
   useEffect(() => {
     let alive = true;
     void fetch("/api/state")
@@ -938,6 +960,9 @@ export function App() {
   return (
     <div className="editor-shell">
       <header className="app-header">
+        <button aria-label="返回项目主页" title="返回项目主页" onClick={onHome}>
+          <ArrowLeft size={18} />
+        </button>
         <div className="brand">
           <span className="brand-mark">S</span>ScrollWeave
           <span className="version">02</span>

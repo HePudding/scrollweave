@@ -1,5 +1,10 @@
 import { defineConfig } from "@playwright/test";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+const testDirectory = fs.mkdtempSync(
+  path.join(os.tmpdir(), "scrollweave-browser-"),
+);
 const executablePath =
   process.env.SW_BROWSER_PATH ||
   [
@@ -24,6 +29,11 @@ export default defineConfig({
     url: "http://127.0.0.1:4101/api/state",
     reuseExistingServer: false,
     timeout: 30000,
-    env: { PORT: "4101", SW_WORKSPACE: ".scrollweave/e2e-" + Date.now() },
+    env: {
+      PORT: "4101",
+      SW_WORKSPACE: path.join(testDirectory, "initial"),
+      SW_PROJECTS_DIR: path.join(testDirectory, "projects"),
+      SW_LIBRARY_PATH: path.join(testDirectory, "library.json"),
+    },
   },
 });
