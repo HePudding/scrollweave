@@ -13,7 +13,7 @@
     "build": "tsx scripts/build.ts",
     "start": "node dist/server.mjs",
     "mcp": "tsx server/stdio.ts",
-    "test": "tsx --test tests/core.test.ts tests/persistence.test.ts tests/workspace.test.ts tests/library.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/persistence.test.ts tests/workspace.test.ts tests/library.test.ts tests/directory-picker.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "licenses": "tsx scripts/licenses.ts",

@@ -9,6 +9,8 @@ import { EditorService, type ToolName } from "./service";
 import { createMcpServer } from "./mcp";
 import { exportHTML } from "./export";
 import { ProjectLibrary, canonicalDirectory } from "./library";
+import { DirectoryPicker } from "./directory-picker";
+const directoryPicker = new DirectoryPicker();
 const port = Number(process.env.PORT ?? 4100);
 const projectsDirectory = path.resolve(
   process.env.SW_PROJECTS_DIR ??
@@ -102,13 +104,28 @@ app.get("/api/projects", (_req, res, next) => {
     next(error);
   }
 });
-app.get("/api/directories", async (req, res, next) => {
+app.post("/api/directories/pick", async (req, res, next) => {
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  res.on("close", abort);
   try {
-    res.json(
-      await library.browse(z.string().min(1).optional().parse(req.query.path)),
-    );
+    const options = z
+      .object({
+        mode: z.enum(["open", "parent"]),
+        initialDirectory: z
+          .string()
+          .min(1)
+          .max(32768)
+          .default(library.defaultDirectory),
+      })
+      .strict()
+      .parse(req.body);
+    const directory = await directoryPicker.pick(options, controller.signal);
+    res.json({ directory });
   } catch (error) {
-    next(error);
+    if (!controller.signal.aborted) next(error);
+  } finally {
+    res.off("close", abort);
   }
 });
 app.post("/api/projects", async (req, res, next) => {
@@ -316,6 +333,7 @@ let closing = false;
 const close = async () => {
   if (closing) return;
   closing = true;
+  directoryPicker.close();
   server.close();
   await service.close();
   process.exit();

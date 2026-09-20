@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import os from "node:os";
 import { z } from "zod";
 import { uid } from "../src/core/model";
 import { migrateProject } from "../src/core/migrate";
-import type { DirectoryListing, ProjectEntry } from "../src/core/library";
+import type { ProjectEntry } from "../src/core/library";
 
 const recordSchema = z.object({
   id: z.string().regex(/^project_[a-zA-Z0-9_]+$/),
@@ -26,7 +25,6 @@ export const projectFile = (directory: string) => {
     ? current
     : path.join(directory, "workspace.json");
 };
-const hasProject = (directory: string) => fs.existsSync(projectFile(directory));
 export function canonicalDirectory(directory: string) {
   const absolute = path.resolve(directory);
   return fs.existsSync(absolute) ? fs.realpathSync.native(absolute) : absolute;
@@ -229,46 +227,9 @@ export class ProjectLibrary {
     }
     return null;
   }
-  async browse(directory?: string): Promise<DirectoryListing> {
-    const target = canonicalDirectory(directory || this.defaultDirectory);
-    const entries = await fs.promises.readdir(target, { withFileTypes: true });
-    const folders = entries
-      .filter(
-        (e) =>
-          e.isDirectory() &&
-          !e.name.startsWith(".") &&
-          e.name !== "$RECYCLE.BIN" &&
-          e.name !== "System Volume Information",
-      )
-      .sort((a, b) => a.name.localeCompare(b.name, "zh-CN", { numeric: true }));
-    const ancestors = [];
-    let current = target;
-    for (;;) {
-      ancestors.unshift({
-        name: path.basename(current) || current,
-        directory: current,
-      });
-      const parent = path.dirname(current);
-      if (parent === current) break;
-      current = parent;
-    }
-    return {
-      directory: target,
-      parent: path.dirname(target) === target ? null : path.dirname(target),
-      isProject: hasProject(target),
-      breadcrumbs: ancestors,
-      shortcuts: [
-        { name: "作品目录", directory: this.defaultDirectory },
-        { name: "个人文件夹", directory: os.homedir() },
-      ],
-      folders: folders.slice(0, 500).map((e) => {
-        const directory = path.join(target, e.name);
-        return { name: e.name, directory, isProject: hasProject(directory) };
-      }),
-      truncated: folders.length > 500,
-    };
-  }
   newDirectory(name: string, parent = this.defaultDirectory) {
+    if (!path.isAbsolute(parent) || !fs.statSync(parent).isDirectory())
+      throw Error("请选择有效的保存文件夹。");
     const segment = name
       .trim()
       .replace(/[<>:"/\\|?*\x00-\x1f]/g, "-")

@@ -78,6 +78,21 @@ test(
     let child = start();
     try {
       await ready(child);
+      const blockedPicker = await fetch(`${origin}/api/directories/pick`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://example.com",
+        },
+        body: JSON.stringify({ mode: "open" }),
+      });
+      assert.equal(blockedPicker.status, 403);
+      const invalidPicker = await fetch(`${origin}/api/directories/pick`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "unknown" }),
+      });
+      assert.equal(invalidPicker.status, 400);
       const before = await call("read_project");
       const after = await call("edit_project", {
         expectedRevision: before.revision,

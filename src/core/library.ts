@@ -25,13 +25,3 @@ export type ProjectLibraryState = {
   defaultDirectory: string;
   activeDirectory: string;
 };
-
-export type DirectoryListing = {
-  directory: string;
-  parent: string | null;
-  isProject: boolean;
-  breadcrumbs: { name: string; directory: string }[];
-  shortcuts: { name: string; directory: string }[];
-  folders: { name: string; directory: string; isProject: boolean }[];
-  truncated: boolean;
-};

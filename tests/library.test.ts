@@ -81,18 +81,11 @@ test("missing and malformed projects remain visible; a damaged registry is never
   );
 });
 
-test("directory browser lists one level only; new project folders reject collisions and unsafe names", async () => {
+test("new project folders require an existing parent and reject collisions and unsafe names", () => {
   const { library, create } = setup();
   const first = create("visible");
   fs.mkdirSync(path.join(first, "nested"));
   fs.mkdirSync(path.join(library.defaultDirectory, ".hidden"));
-  const listing = await library.browse();
-  assert.deepEqual(
-    listing.folders.map((f) => f.name),
-    ["visible"],
-  );
-  assert.equal(listing.folders[0].isProject, true);
-  assert.equal(library.list(first).length, 0); // Browsing doesn't register folders.
   assert.throws(() => library.newDirectory("visible"), /已存在/);
   assert.throws(() => library.newDirectory("CON"), /有效/);
   assert.throws(() => library.newDirectory(".."), /有效/);
@@ -100,7 +93,9 @@ test("directory browser lists one level only; new project folders reject collisi
     path.dirname(library.newDirectory("safe/name")),
     library.defaultDirectory,
   );
-  await assert.rejects(library.browse(path.join(first, "missing")));
+  assert.throws(() => library.newDirectory("new", path.join(first, "missing")));
+  assert.throws(() => library.newDirectory("new", "relative-parent"));
+  assert.equal(library.list(first).length, 0);
 });
 
 test("closed project rename changes the actual file with revision checks and honors the process lock", async () => {

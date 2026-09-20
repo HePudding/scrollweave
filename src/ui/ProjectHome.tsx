@@ -8,8 +8,6 @@ import {
 } from "react";
 import {
   ArrowRight,
-  ArrowUp,
-  Check,
   ChevronRight,
   CircleHelp,
   Clock3,
@@ -32,16 +30,18 @@ import {
   Clapperboard,
   Sparkles,
 } from "lucide-react";
-import type {
-  DirectoryListing,
-  ProjectEntry,
-  ProjectLibraryState,
-} from "../core/library";
+import type { ProjectEntry, ProjectLibraryState } from "../core/library";
 import "./projects.css";
 
-async function api<T>(url: string, method = "GET", body?: unknown): Promise<T> {
+async function api<T>(
+  url: string,
+  method = "GET",
+  body?: unknown,
+  signal?: AbortSignal,
+): Promise<T> {
   const response = await fetch(url, {
     method,
+    signal,
     ...(body === undefined
       ? {}
       : {
@@ -76,13 +76,11 @@ function Modal({
   title,
   children,
   onClose,
-  wide = false,
   busy = false,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
-  wide?: boolean;
   busy?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -98,7 +96,7 @@ function Modal({
   return (
     <dialog
       ref={ref}
-      className={`home-dialog ${wide ? "wide-dialog" : ""}`}
+      className="home-dialog"
       aria-label={title}
       onCancel={(e) => {
         e.preventDefault();
@@ -113,225 +111,6 @@ function Modal({
       </div>
       {children}
     </dialog>
-  );
-}
-
-function DirectoryPicker({
-  initial,
-  mode,
-  onPick,
-  onClose,
-}: {
-  initial: string;
-  mode: "open" | "parent";
-  onPick: (directory: string) => Promise<void> | void;
-  onClose: () => void;
-}) {
-  const [listing, setListing] = useState<DirectoryListing | null>(null);
-  const [draft, setDraft] = useState(initial),
-    [filter, setFilter] = useState("");
-  const [error, setError] = useState(""),
-    [loading, setLoading] = useState(false),
-    [busy, setBusy] = useState(false);
-  const requestId = useRef(0);
-  const browse = useCallback(async (directory: string) => {
-    const id = ++requestId.current;
-    setLoading(true);
-    setError("");
-    try {
-      const next = await api<DirectoryListing>(
-        "/api/directories?path=" + encodeURIComponent(directory),
-      );
-      if (id === requestId.current) {
-        setListing(next);
-        setDraft(next.directory);
-        setFilter("");
-      }
-    } catch (e) {
-      if (id === requestId.current) setError((e as Error).message);
-    } finally {
-      if (id === requestId.current) setLoading(false);
-    }
-  }, []);
-  useEffect(() => {
-    void browse(initial);
-    return () => {
-      requestId.current++;
-    };
-  }, [browse, initial]);
-  const choose = async () => {
-    if (!listing) return;
-    setBusy(true);
-    setError("");
-    try {
-      await onPick(listing.directory);
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  return (
-    <Modal
-      title={mode === "open" ? "打开项目文件夹" : "选择保存位置"}
-      onClose={onClose}
-      wide
-      busy={busy}
-    >
-      <p className="dialog-description">
-        {mode === "open"
-          ? "选择包含 ScrollWeave 项目文件的文件夹。"
-          : "选择父文件夹，新项目会在其中创建独立目录。"}
-      </p>
-      <form
-        className="directory-address"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void browse(draft);
-        }}
-      >
-        <button
-          type="button"
-          title="上一级"
-          aria-label="上一级"
-          disabled={!listing?.parent || loading || busy}
-          onClick={() => void browse(listing!.parent!)}
-        >
-          <ArrowUp size={17} />
-        </button>
-        <input
-          aria-label="文件夹路径"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          disabled={busy}
-        />
-        <button
-          type="submit"
-          aria-label="前往文件夹"
-          disabled={loading || busy || !draft.trim()}
-        >
-          <ArrowRight size={17} />
-        </button>
-      </form>
-      {error && (
-        <div role="alert" className="home-inline-error">
-          {error}
-        </div>
-      )}
-      <div className="directory-browser">
-        <nav aria-label="常用位置">
-          {(
-            listing?.shortcuts ?? [{ name: "作品目录", directory: initial }]
-          ).map((shortcut) => (
-            <button
-              key={shortcut.directory}
-              disabled={busy}
-              onClick={() => void browse(shortcut.directory)}
-            >
-              <Folder size={16} />
-              {shortcut.name}
-            </button>
-          ))}
-        </nav>
-        <div className="directory-main">
-          <div className="directory-breadcrumbs">
-            {listing?.breadcrumbs.map((part, i) => (
-              <span key={part.directory}>
-                {i > 0 && <ChevronRight size={12} />}
-                <button
-                  disabled={busy}
-                  onClick={() => void browse(part.directory)}
-                >
-                  {part.name}
-                </button>
-              </span>
-            ))}
-          </div>
-          <label className="directory-filter">
-            <Search size={15} />
-            <input
-              aria-label="筛选文件夹"
-              placeholder="筛选当前目录"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-          </label>
-          <div className="directory-folders" aria-busy={loading}>
-            {loading ? (
-              <div className="directory-empty">
-                <LoaderCircle className="home-spinner" size={22} />
-                正在读取文件夹
-              </div>
-            ) : (
-              listing?.folders
-                .filter((f) =>
-                  f.name.toLowerCase().includes(filter.toLowerCase()),
-                )
-                .map((folder) => (
-                  <button
-                    className="directory-folder"
-                    key={folder.directory}
-                    disabled={busy}
-                    onClick={() => void browse(folder.directory)}
-                  >
-                    {folder.isProject ? (
-                      <Clapperboard size={20} />
-                    ) : (
-                      <Folder size={20} />
-                    )}
-                    <span>{folder.name}</span>
-                    {folder.isProject && <small>ScrollWeave 项目</small>}
-                    <ChevronRight size={15} />
-                  </button>
-                ))
-            )}
-            {!loading &&
-              listing &&
-              !listing.folders.some((f) =>
-                f.name.toLowerCase().includes(filter.toLowerCase()),
-              ) && (
-                <div className="directory-empty">
-                  {filter ? "没有匹配的文件夹" : "这里没有子文件夹"}
-                </div>
-              )}
-            {listing?.truncated && (
-              <p>仅显示前 500 个文件夹，可输入完整路径前往目标目录。</p>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="directory-selection">
-        <FolderOpen size={17} />
-        <span title={listing?.directory}>
-          {listing?.directory || "请选择文件夹"}
-        </span>
-        {listing?.isProject && <Check size={16} />}
-      </div>
-      <div className="home-dialog-actions">
-        <small>
-          {mode === "open" && listing && !listing.isProject
-            ? "此目录中尚无项目，请进入项目文件夹。"
-            : "只浏览当前层级的文件夹"}
-        </small>
-        <button disabled={busy} onClick={onClose}>
-          取消
-        </button>
-        <button
-          className="primary"
-          disabled={
-            loading ||
-            busy ||
-            !listing ||
-            draft !== listing.directory ||
-            (mode === "open" && !listing.isProject)
-          }
-          onClick={() => void choose()}
-        >
-          {busy && <LoaderCircle size={16} className="home-spinner" />}
-          {mode === "open" ? "打开这个项目" : "使用此位置"}
-        </button>
-      </div>
-    </Modal>
   );
 }
 
@@ -525,6 +304,11 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
     [notice, setNotice] = useState("");
   const [dialog, setDialog] = useState<"new" | "help" | null>(null),
     [picker, setPicker] = useState<"open" | "parent" | null>(null);
+  const [pickerBusy, setPickerBusy] = useState(false),
+    [pickerApplying, setPickerApplying] = useState(false),
+    [pickerError, setPickerError] = useState(""),
+    [directoryDraft, setDirectoryDraft] = useState("");
+  const pickerRequest = useRef<AbortController | null>(null);
   const [name, setName] = useState(""),
     [parentDirectory, setParentDirectory] = useState("");
   const [renaming, setRenaming] = useState<ProjectEntry | null>(null),
@@ -572,6 +356,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
     window.addEventListener("keydown", key);
     return () => {
       mounted.current = false;
+      pickerRequest.current?.abort();
       events.close();
       clearTimeout(timer);
       window.removeEventListener("focus", focus);
@@ -608,6 +393,49 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
     setParentDirectory(library?.defaultDirectory ?? "");
     setError("");
     setDialog("new");
+  };
+  const useDirectory = async (mode: "open" | "parent", directory: string) => {
+    setPickerApplying(true);
+    try {
+      if (mode === "parent") setParentDirectory(directory);
+      else await open(directory);
+      setPicker(null);
+    } finally {
+      if (mounted.current) setPickerApplying(false);
+    }
+  };
+  const closePicker = () => {
+    pickerRequest.current?.abort();
+    setPicker(null);
+  };
+  const pickDirectory = async (mode: "open" | "parent") => {
+    if (pickerRequest.current) return;
+    const controller = new AbortController();
+    pickerRequest.current = controller;
+    const initialDirectory =
+      mode === "parent" ? parentDirectory : (library?.defaultDirectory ?? "");
+    setPicker(mode);
+    setDirectoryDraft(initialDirectory);
+    setPickerError("");
+    setPickerBusy(true);
+    try {
+      const { directory } = await api<{ directory: string | null }>(
+        "/api/directories/pick",
+        "POST",
+        { mode, initialDirectory },
+        controller.signal,
+      );
+      if (directory === null) setPicker(null);
+      else {
+        setDirectoryDraft(directory);
+        await useDirectory(mode, directory);
+      }
+    } catch (e) {
+      if (!controller.signal.aborted) setPickerError((e as Error).message);
+    } finally {
+      pickerRequest.current = null;
+      if (mounted.current) setPickerBusy(false);
+    }
   };
   const all = library?.projects ?? [];
   const projects = all
@@ -668,7 +496,10 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
             <Star size={18} />
             我的收藏<span>{all.filter((p) => p.favorite).length}</span>
           </button>
-          <button disabled={!library || busy} onClick={() => setPicker("open")}>
+          <button
+            disabled={!library || busy}
+            onClick={() => void pickDirectory("open")}
+          >
             <FolderOpen size={18} />
             打开文件夹
           </button>
@@ -758,7 +589,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
             </button>
             <button
               disabled={!library || busy}
-              onClick={() => setPicker("open")}
+              onClick={() => void pickDirectory("open")}
             >
               <span className="home-action-icon">
                 <FolderOpen size={23} />
@@ -1006,7 +837,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                   type="button"
                   aria-label="更改保存位置"
                   disabled={busy}
-                  onClick={() => setPicker("parent")}
+                  onClick={() => void pickDirectory("parent")}
                 >
                   更改
                 </button>
@@ -1049,21 +880,64 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
         </Modal>
       )}
       {picker && (
-        <DirectoryPicker
-          initial={
-            picker === "parent"
-              ? parentDirectory
-              : (library?.defaultDirectory ?? "")
-          }
-          mode={picker}
-          onClose={() => setPicker(null)}
-          onPick={async (directory) => {
-            if (picker === "parent") {
-              setParentDirectory(directory);
-              setPicker(null);
-            } else await open(directory);
-          }}
-        />
+        <Modal
+          title={picker === "open" ? "打开项目文件夹" : "选择保存位置"}
+          onClose={closePicker}
+          busy={pickerApplying}
+        >
+          {pickerBusy ? (
+            <p className="native-picker-status" role="status">
+              <LoaderCircle size={20} className="home-spinner" />
+              {pickerApplying ? "正在打开项目…" : "请在系统窗口中选择文件夹。"}
+            </p>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setPickerBusy(true);
+                setPickerError("");
+                void useDirectory(picker, directoryDraft.trim())
+                  .catch((e) => setPickerError((e as Error).message))
+                  .finally(() => setPickerBusy(false));
+              }}
+            >
+              {pickerError && (
+                <div className="home-inline-error" role="alert">
+                  {pickerError}
+                </div>
+              )}
+              <label className="home-field">
+                文件夹的完整路径
+                <input
+                  aria-label="文件夹路径"
+                  value={directoryDraft}
+                  onChange={(e) => setDirectoryDraft(e.target.value)}
+                  required
+                />
+              </label>
+              <div className="home-dialog-actions">
+                <button
+                  type="button"
+                  onClick={() => void pickDirectory(picker)}
+                >
+                  重试系统选择器
+                </button>
+                <button
+                  type="submit"
+                  className="primary"
+                  disabled={!directoryDraft.trim()}
+                >
+                  {picker === "open" ? "打开项目" : "使用此位置"}
+                </button>
+              </div>
+            </form>
+          )}
+          <div className="home-dialog-actions">
+            <button disabled={pickerApplying} onClick={closePicker}>
+              取消
+            </button>
+          </div>
+        </Modal>
       )}
       {renaming && (
         <Modal title="重命名项目" onClose={() => setRenaming(null)} busy={busy}>
