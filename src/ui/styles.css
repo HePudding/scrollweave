@@ -957,7 +957,7 @@ hr {
   display: flex;
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 10;
   background: #1c211b;
   border-bottom: 1px solid #343d2e;
 }
@@ -1474,14 +1474,64 @@ hr {
   z-index: 7;
   pointer-events: none;
 }
-.playhead > i {
+.ruler-playhead {
   position: absolute;
-  left: -4px;
+  top: 0;
+  width: 14px;
+  min-width: 0;
+  height: 30px;
+  transform: translateX(-50%);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: ew-resize;
+  z-index: 3;
+  touch-action: none;
+}
+.ruler-playhead:hover {
+  background: transparent;
+}
+.ruler-playhead::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #d6efb1;
+}
+.ruler-playhead > i {
+  position: absolute;
+  left: 2.5px;
   top: 0;
   width: 9px;
   height: 13px;
   background: var(--lime);
   clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
+}
+.ruler-playhead.outside-left,
+.ruler-playhead.outside-right {
+  cursor: pointer;
+}
+.ruler-playhead.outside-left::after,
+.ruler-playhead.outside-right::after {
+  display: none;
+}
+.ruler-playhead > span {
+  position: absolute;
+  top: 13px;
+  left: 5px;
+  padding: 2px 4px;
+  color: #d9efbd;
+  background: #26351e;
+  border-radius: 3px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.ruler-playhead.outside-right > span {
+  left: auto;
+  right: 5px;
 }
 .timeline-status {
   height: 25px;

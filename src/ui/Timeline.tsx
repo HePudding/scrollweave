@@ -280,8 +280,15 @@ export function Timeline(p: Props) {
   const [viewport, setViewport] = useState({ left: 0, width: 1400 });
   useEffect(() => {
     const node = scroll.current!;
-    const update = () =>
-      setViewport({ left: node.scrollLeft, width: node.clientWidth });
+    const update = () => {
+      const left = node.scrollLeft,
+        width = node.clientWidth;
+      setViewport((previous) =>
+        previous.left === left && previous.width === width
+          ? previous
+          : { left, width },
+      );
+    };
     const observer = new ResizeObserver(update);
     observer.observe(node);
     node.addEventListener("scroll", update);
@@ -325,6 +332,29 @@ export function Timeline(p: Props) {
       Math.ceil((c.duration + 3) / step),
       Math.ceil((viewport.left + viewport.width) / scale / step) + 1,
     );
+  const playheadPixel = p.time * scale;
+  const visibleLeft = viewport.left;
+  const visibleRight = Math.max(
+    visibleLeft,
+    viewport.left + viewport.width - TRACK_GUTTER - 1,
+  );
+  const headOutside =
+    playheadPixel < visibleLeft
+      ? "left"
+      : playheadPixel > visibleRight
+        ? "right"
+        : null;
+  const headPixel = headOutside
+    ? Math.max(visibleLeft + 7, Math.min(visibleRight - 7, playheadPixel))
+    : playheadPixel;
+  const revealPlayhead = () => {
+    const node = scroll.current;
+    if (node)
+      node.scrollLeft = Math.max(
+        0,
+        playheadPixel - (node.clientWidth - TRACK_GUTTER) / 2,
+      );
+  };
   const snap = (value: number, exclude: string[] = []) => {
     const rounded = Math.round(value * 30) / 30;
     if (!p.snap) return rounded;
@@ -623,6 +653,7 @@ export function Timeline(p: Props) {
                   );
               }}
               onPointerUp={(e) => {
+                if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
                 e.currentTarget.releasePointerCapture(e.pointerId);
                 p.onSeek(
                   Math.min(
@@ -645,6 +676,39 @@ export function Timeline(p: Props) {
                   </span>
                 ),
               )}
+              <button
+                className={
+                  "ruler-playhead" +
+                  (headOutside ? ` outside-${headOutside}` : "")
+                }
+                aria-label={
+                  headOutside
+                    ? `回到播放头 ${p.time.toFixed(2)} 秒`
+                    : `播放头 ${p.time.toFixed(2)} 秒`
+                }
+                title={
+                  headOutside ? "播放头在可见范围外，点击定位" : "拖动播放头"
+                }
+                style={{ left: headPixel }}
+                onPointerDown={(event) => {
+                  if (headOutside) event.stopPropagation();
+                }}
+                onPointerUp={(event) => {
+                  if (headOutside) event.stopPropagation();
+                }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (headOutside) revealPlayhead();
+                }}
+              >
+                <i />
+                {headOutside && (
+                  <span>
+                    {headOutside === "left" ? "‹ " : ""}
+                    {p.time.toFixed(2)}s{headOutside === "right" ? " ›" : ""}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
           {tracks.map((track, index) => (
@@ -858,10 +922,7 @@ export function Timeline(p: Props) {
           <div
             className="playhead"
             style={{ left: TRACK_GUTTER + p.time * scale }}
-          >
-            <i />
-            <span />
-          </div>
+          />
         </div>
       </div>
       <div className="timeline-status">
