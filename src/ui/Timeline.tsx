@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   LockKeyhole,
   Eye,
+  EyeOff,
   Plus,
   Magnet,
   Scissors,
@@ -19,6 +20,18 @@ import {
   type Keyframe,
 } from "../core/model";
 import type { Command } from "../core/commands";
+import { easingPoints } from "../core/easing";
+import { pairedKeys } from "../core/animation-edit";
+import { properties } from "../core/model";
+const TRACK_GUTTER = 48;
+const channelLabels: Record<AnimProperty, string> = {
+  x: "X",
+  y: "Y",
+  scaleX: "缩放X",
+  scaleY: "缩放Y",
+  rotation: "旋转",
+  opacity: "透明度",
+};
 type Props = {
   project: Project;
   cid: string;
@@ -46,6 +59,8 @@ type Props = {
   onCompound: () => void;
   onEnter: (id: string) => void;
   onAddTrack: () => void;
+  activeProperty: AnimProperty;
+  selectedKeyId?: string;
   onKey: (e: Element, property: AnimProperty, key: Keyframe) => void;
   onError: (message: string) => void;
 };
@@ -79,11 +94,29 @@ function KeyDiamond({
     moved = useRef(false);
   return (
     <button
-      title={property + " · " + at.toFixed(2) + "s"}
-      className="key-diamond"
-      style={{ left: (at + delta) * scale, touchAction: "none" }}
+      title={
+        channelLabels[property] +
+        " 关键帧 · " +
+        at.toFixed(2) +
+        "s · 拖动调整时间"
+      }
+      aria-label={channelLabels[property] + " 关键帧 " + at.toFixed(2) + "秒"}
+      className={
+        "key-diamond" +
+        (p.selectedKeyId === k.id && p.activeProperty === property
+          ? " active"
+          : "")
+      }
+      style={{ left: (at + delta - e.start) * scale, touchAction: "none" }}
       onPointerDown={(event) => {
         event.stopPropagation();
+        if (
+          event.button !== 0 ||
+          e.locked ||
+          p.project.compositions[p.cid].tracks.find((t) => t.id === e.trackId)
+            ?.locked
+        )
+          return;
         drag.current = { x: event.clientX, delta: 0, revision: p.revision };
         moved.current = false;
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -91,14 +124,18 @@ function KeyDiamond({
       onPointerMove={(event) => {
         if (drag.current) {
           const value = Math.max(
-            -at,
-            Math.round(((event.clientX - drag.current.x) / scale) * 30) / 30,
+            e.start - at,
+            Math.min(
+              e.end - at,
+              Math.round(((event.clientX - drag.current.x) / scale) * 30) / 30,
+            ),
           );
           drag.current.delta = value;
           setDelta(value);
         }
       }}
       onPointerUp={(event) => {
+        event.stopPropagation();
         const data = drag.current;
         drag.current = null;
         setDelta(0);
@@ -110,15 +147,13 @@ function KeyDiamond({
             parentTime(p.project, p.cid, e, at + data.delta),
           );
           void p.onCommit(
-            [
-              {
-                type: "keyframe.set",
-                compositionId: p.cid,
-                elementId: e.id,
-                property,
-                keyframe: { ...k, at: source },
-              },
-            ],
+            pairedKeys(e, property, k).map(({ property: channel, key }) => ({
+              type: "keyframe.set",
+              compositionId: p.cid,
+              elementId: e.id,
+              property: channel,
+              keyframe: { ...key, at: source },
+            })),
             "移动关键帧",
             data.revision,
           );
@@ -128,7 +163,9 @@ function KeyDiamond({
         drag.current = null;
         setDelta(0);
       }}
-      onClick={() => {
+      onDoubleClick={(event) => event.stopPropagation()}
+      onClick={(event) => {
+        event.stopPropagation();
         if (moved.current) return;
         p.onSeek(
           Math.max(0, Math.min(p.project.compositions[p.cid].duration, at)),
@@ -141,13 +178,105 @@ function KeyDiamond({
     </button>
   );
 }
+function ClipKeys({ p, e, scale }: { p: Props; e: Element; scale: number }) {
+  const selected = p.selected.includes(e.id),
+    keys = e.tracks[p.activeProperty] ?? [];
+  const clock = (k: Keyframe) =>
+    (globalTime(p.project, p.cid, e, k.at) - e.start) * scale;
+  const width = (e.end - e.start) * scale;
+  const markers = new Map<number, { property: AnimProperty; key: Keyframe }>();
+  for (const property of [
+    ...properties.filter((prop) => prop !== p.activeProperty),
+    p.activeProperty,
+  ])
+    for (const key of e.tracks[property] ?? []) {
+      const x = clock(key);
+      if (x >= -0.01 && x <= width + 0.01)
+        markers.set(Math.round(key.at * 100000), { property, key });
+    }
+  if (!markers.size) return null;
+  return (
+    <div
+      className="clip-key-overlay"
+      aria-label={selected ? "素材条关键帧" : undefined}
+    >
+      {selected &&
+        keys.slice(0, -1).map((key, i) => {
+          const left = clock(key),
+            right = clock(keys[i + 1]);
+          if (right < 0 || left > width || right - left < 5) return null;
+          const points = easingPoints(key.easing, 24),
+            low = Math.min(0, ...points.map((p) => p[1])),
+            high = Math.max(1, ...points.map((p) => p[1]));
+          const path = points
+            .map(
+              ([x, y], i) =>
+                `${i ? "L" : "M"}${x * 100},${19 - ((y - low) / (high - low)) * 16}`,
+            )
+            .join(" ");
+          return (
+            <button
+              key={key.id}
+              className="clip-curve"
+              style={{ left, width: right - left }}
+              aria-label={`编辑 ${channelLabels[p.activeProperty]} 曲线 ${(left / scale + e.start).toFixed(2)} 至 ${(right / scale + e.start).toFixed(2)} 秒`}
+              onPointerDown={(event) => event.stopPropagation()}
+              onDoubleClick={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                p.onKey(e, p.activeProperty, key);
+              }}
+            >
+              <svg
+                viewBox="0 0 100 22"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path d={path} />
+              </svg>
+            </button>
+          );
+        })}
+      {selected ? (
+        [...markers.values()].map(({ property, key }) => (
+          <KeyDiamond
+            key={`${property}-${key.id}`}
+            p={p}
+            e={e}
+            property={property}
+            k={key}
+            scale={scale}
+          />
+        ))
+      ) : (
+        <svg
+          className="clip-key-summary"
+          width={width}
+          height="14"
+          aria-hidden="true"
+        >
+          <path
+            d={[...markers.values()]
+              .map(({ key }) => {
+                const x = clock(key);
+                return `M${x},2 l4,4 -4,4 -4,-4 Z`;
+              })
+              .join(" ")}
+          />
+        </svg>
+      )}
+    </div>
+  );
+}
 export function Timeline(p: Props) {
   const c = p.project.compositions[p.cid],
     tracks = [...c.tracks].reverse(),
+    [height, setHeight] = useState(360),
     [scale, setScale] = useState(72),
     [gesture, setGesture] = useState<Gesture | null>(null),
     scroll = useRef<HTMLDivElement>(null),
     gestureRef = useRef<Gesture | null>(null);
+  const resize = useRef<{ y: number; height: number } | null>(null);
   const [viewport, setViewport] = useState({ left: 0, width: 1400 });
   useEffect(() => {
     const node = scroll.current!;
@@ -168,16 +297,28 @@ export function Timeline(p: Props) {
     const pixel = p.time * scale;
     if (
       pixel < node.scrollLeft ||
-      pixel > node.scrollLeft + node.clientWidth - 160
+      pixel > node.scrollLeft + node.clientWidth - TRACK_GUTTER - 32
     )
       node.scrollLeft = Math.max(0, pixel - node.clientWidth / 2);
   }, [p.time, scale]);
+  useEffect(() => {
+    const node = scroll.current;
+    if (!node || gestureRef.current || p.selected.length !== 1) return;
+    const clip = node.querySelector<HTMLElement>(
+      `[data-testid="clip-${p.selected[0]}"]`,
+    );
+    const row = clip?.closest<HTMLElement>(".track-row");
+    if (!row) return;
+    if (row.offsetTop < node.scrollTop + 31)
+      node.scrollTop = row.offsetTop - 31;
+    else if (
+      row.offsetTop + row.offsetHeight >
+      node.scrollTop + node.clientHeight
+    )
+      node.scrollTop = row.offsetTop + row.offsetHeight - node.clientHeight;
+  }, [p.selected.join("|"), p.cid, height]);
   const roots = c.elements.filter((e) => !e.parentId),
-    width = Math.max(800, (c.duration + 3) * scale),
-    selectedElement =
-      p.selected.length === 1
-        ? c.elements.find((e) => e.id === p.selected[0])
-        : undefined;
+    width = Math.max(800, (c.duration + 3) * scale);
   const step = scale >= 90 ? 0.5 : scale >= 45 ? 1 : scale >= 20 ? 2 : 5;
   const firstTick = Math.max(0, Math.floor(viewport.left / scale / step) - 1),
     lastTick = Math.min(
@@ -243,7 +384,8 @@ export function Timeline(p: Props) {
     const e = roots.find((e) => e.id === g.id)!;
     const bounds = scroll.current!.getBoundingClientRect();
     if (event.clientX > bounds.right - 35) scroll.current!.scrollLeft += 10;
-    if (event.clientX < bounds.left + 150) scroll.current!.scrollLeft -= 10;
+    if (event.clientX < bounds.left + TRACK_GUTTER + 22)
+      scroll.current!.scrollLeft -= 10;
     const raw =
       (event.clientX - g.x + scroll.current!.scrollLeft - g.scroll) / scale;
     const edge = g.kind === "right" ? e.end : e.start;
@@ -299,11 +441,64 @@ export function Timeline(p: Props) {
       g.revision,
     );
   };
-  const channels = selectedElement
-    ? Object.entries(selectedElement.tracks).filter(([, keys]) => keys.length)
-    : [];
   return (
-    <section className="timeline-panel" aria-label="多轨时间线">
+    <section
+      className="timeline-panel"
+      aria-label="多轨时间线"
+      style={{ "--track-gutter": `${TRACK_GUTTER}px`, height } as CSSProperties}
+    >
+      <div
+        className="timeline-resize"
+        role="separator"
+        aria-label="调整时间线高度"
+        aria-orientation="horizontal"
+        aria-valuenow={height}
+        aria-valuemin={230}
+        aria-valuemax={Math.round(window.innerHeight * 0.7)}
+        aria-valuetext={`${height} 像素`}
+        tabIndex={0}
+        title="上下拖动调整时间线高度"
+        onPointerDown={(event) => {
+          resize.current = { y: event.clientY, height };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          if (resize.current)
+            setHeight(
+              Math.max(
+                230,
+                Math.min(
+                  window.innerHeight * 0.7,
+                  resize.current.height + resize.current.y - event.clientY,
+                ),
+              ),
+            );
+        }}
+        onPointerUp={(event) => {
+          resize.current = null;
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        }}
+        onPointerCancel={() => {
+          resize.current = null;
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            event.preventDefault();
+            event.stopPropagation();
+            setHeight((value) =>
+              Math.max(
+                230,
+                Math.min(
+                  window.innerHeight * 0.7,
+                  value + (event.key === "ArrowUp" ? 40 : -40),
+                ),
+              ),
+            );
+          }
+        }}
+      >
+        <span />
+      </div>
       <div className="timeline-toolbar">
         <strong>时间线</strong>
         <button title="添加轨道" onClick={p.onAddTrack}>
@@ -401,10 +596,10 @@ export function Timeline(p: Props) {
           }
         }}
       >
-        <div className="timeline-grid" style={{ width: width + 128 }}>
+        <div className="timeline-grid" style={{ width: width + TRACK_GUTTER }}>
           <div className="time-ruler">
-            <div className="track-label">
-              <span>秒 · 30 fps</span>
+            <div className="track-label" title="时间刻度：秒 · 30 fps">
+              <span>秒</span>
             </div>
             <div
               className="ruler-scale"
@@ -452,15 +647,33 @@ export function Timeline(p: Props) {
               )}
             </div>
           </div>
-          {tracks.map((track) => (
+          {tracks.map((track, index) => (
             <div
               key={track.id}
-              className={"track-row " + (track.locked ? "locked" : "")}
+              className={
+                "track-row " +
+                (track.locked ? "locked " : "") +
+                (track.hidden ? "hidden-track" : "")
+              }
               data-testid={"track-" + track.id}
             >
-              <div className="track-label">
-                <span title={track.name}>{track.name}</span>
-                <div>
+              <div
+                className="track-label track-controls"
+                aria-label={`轨道 ${tracks.length - index}`}
+              >
+                <span
+                  className="track-index"
+                  title={`轨道 ${tracks.length - index} · 可连续放入多个素材`}
+                >
+                  {track.locked ? (
+                    <LockKeyhole size={13} />
+                  ) : track.hidden ? (
+                    <EyeOff size={13} />
+                  ) : (
+                    tracks.length - index
+                  )}
+                </span>
+                <div className="track-actions">
                   <button
                     title={track.locked ? "解锁轨道" : "锁定轨道"}
                     className={track.locked ? "active" : ""}
@@ -501,6 +714,10 @@ export function Timeline(p: Props) {
                   </button>
                   <button
                     title="删除空轨道"
+                    disabled={
+                      c.tracks.length === 1 ||
+                      c.elements.some((e) => e.trackId === track.id)
+                    }
                     onClick={() =>
                       void p.onCommit(
                         [
@@ -575,6 +792,9 @@ export function Timeline(p: Props) {
                           "timeline-clip " +
                           e.type +
                           (p.selected.includes(e.id) ? " selected" : "") +
+                          (Object.values(e.tracks).some((keys) => keys.length)
+                            ? " animated"
+                            : "") +
                           (active ? " dragging" : "")
                         }
                         style={{
@@ -613,6 +833,7 @@ export function Timeline(p: Props) {
                             ? " · " + asset.status
                             : ""}
                         </small>
+                        {!active && <ClipKeys p={p} e={e} scale={scale} />}
                         <div
                           className="clip-handle left"
                           aria-label="裁剪左边界"
@@ -634,26 +855,10 @@ export function Timeline(p: Props) {
               </div>
             </div>
           ))}
-          {channels.map(([property, keys]) => (
-            <div className="key-row" key={property}>
-              <div className="track-label">{property}</div>
-              <div className="key-content" style={{ width }}>
-                {keys.map((k) => {
-                  return (
-                    <KeyDiamond
-                      key={k.id}
-                      p={p}
-                      e={selectedElement!}
-                      property={property as AnimProperty}
-                      k={k}
-                      scale={scale}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-          <div className="playhead" style={{ left: 128 + p.time * scale }}>
+          <div
+            className="playhead"
+            style={{ left: TRACK_GUTTER + p.time * scale }}
+          >
             <i />
             <span />
           </div>
@@ -666,7 +871,7 @@ export function Timeline(p: Props) {
               " " +
               gesture.delta.toFixed(2) +
               "s"
-            : "拖动移动 · 拖边裁剪 · Shift 多选 · Ctrl+B 分割 · Delete 留空 · Shift+Delete 波纹"}
+            : "K 添加位置关键帧 · [ / ] 前后帧 · 拖动菱形调整时间 · Ctrl+B 分割"}
         </span>
         <span>
           {p.selected.length

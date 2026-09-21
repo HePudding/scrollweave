@@ -440,6 +440,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -512,6 +531,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -584,6 +622,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -656,6 +713,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -728,6 +804,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }
@@ -800,6 +895,25 @@
                                 "items": false,
                                 "minItems": 4,
                                 "maxItems": 4
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "const": "expression"
+                                  },
+                                  "formula": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 256
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "formula"
+                                ],
+                                "additionalProperties": false
                               }
                             ]
                           }

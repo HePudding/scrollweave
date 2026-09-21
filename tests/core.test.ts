@@ -25,12 +25,191 @@ import { sampleComposition as legacySample } from "../src/core/legacy-evaluate";
 import { validateProject as validateLegacy } from "../src/core/legacy-model";
 import { migrateProject } from "../src/core/migrate";
 import { clipWindow } from "../src/core/timing";
+import { findAvailableTrack } from "../src/core/placement";
 import { readKeys, moveKeys, pasteKeys } from "../src/core/keyframes";
+import {
+  addPropertyKeys,
+  propertyCommands,
+  pairedKeys,
+} from "../src/core/animation-edit";
+import { compileExpression, expressionError } from "../src/core/expression";
+import { sampleTrack } from "../src/core/evaluate";
 import { sanitizeSVG } from "../server/assets";
 import { exportHTML } from "../server/export";
 import "../src/extensions/builtins";
 const approximate = (a: number, b: number) =>
   assert.ok(Math.abs(a - b) < 1e-5, `${a} != ${b}`);
+test("添加位置关键帧后，移动播放头并拖动画布同时记录 XY；撤销恢复整次操作", () => {
+  const p = blankProject();
+  const e = createElement({
+    id: "moving",
+    type: "shape",
+    x: 40,
+    y: 70,
+    start: 1,
+    end: 5,
+    sourceIn: 2,
+    speed: 2,
+  });
+  p.compositions.main.elements.push(e);
+  const store = new ProjectStore(p);
+  store.commit(addPropertyKeys(p, "main", e, 1, ["x", "y"]), 0);
+  const first = store.project.compositions.main.elements[0];
+  store.commit(
+    propertyCommands(
+      store.project,
+      "main",
+      first,
+      3,
+      { x: 340, y: 170 },
+      false,
+    ),
+    1,
+  );
+  const moved = store.project.compositions.main.elements[0];
+  assert.deepEqual(
+    moved.tracks.x?.map((k) => [k.at, k.value]),
+    [
+      [2, 40],
+      [6, 340],
+    ],
+  );
+  assert.deepEqual(
+    moved.tracks.y?.map((k) => [k.at, k.value]),
+    [
+      [2, 70],
+      [6, 170],
+    ],
+  );
+  approximate(sampleElement(moved, 2).x, 190);
+  assert.equal(pairedKeys(moved, "x", moved.tracks.x![1]).length, 2);
+  store.commit(
+    propertyCommands(store.project, "main", moved, 3, { x: 360 }, false),
+    2,
+  );
+  assert.equal(store.project.compositions.main.elements[0].tracks.x!.length, 2);
+  store.undo(3);
+  store.undo(4);
+  assert.equal(store.project.compositions.main.elements[0].tracks.x!.length, 1);
+  assert.equal(store.project.compositions.main.elements[0].tracks.y!.length, 1);
+});
+test("自动记录第一次发生在中途时保留起始姿态；普通静态编辑不生成关键帧", () => {
+  const p = blankProject(),
+    e = createElement({ type: "shape", start: 1, end: 5, x: 80, y: 90 });
+  p.compositions.main.elements.push(e);
+  const animated = applyCommands(
+    p,
+    propertyCommands(p, "main", e, 3, { x: 180, y: 290 }, true),
+  ).compositions.main.elements[0];
+  approximate(sampleElement(animated, 1).x, 80);
+  approximate(sampleElement(animated, 3).y, 290);
+  assert.equal(animated.tracks.x!.length, 2);
+  const staticEdit = applyCommands(
+    p,
+    propertyCommands(p, "main", e, 3, { x: 180 }, false),
+  ).compositions.main.elements[0];
+  assert.equal(staticEdit.x, 180);
+  assert.equal(staticEdit.tracks.x, undefined);
+});
+test("数学缓动表达式、端点、优先级和无效输入有一致的有限求值", () => {
+  approximate(compileExpression("t*t*(3-2*t)")(0.25), 0.15625);
+  approximate(compileExpression("1-(1-t)^3")(0.5), 0.875);
+  approximate(compileExpression("-t^2+2*t")(0.25), 0.4375);
+  approximate(compileExpression("t^(2^2)")(0.5), 0.0625);
+  approximate(compileExpression("t+0.15*sin(2*pi*t)")(0.25), 0.4);
+  for (const formula of [
+    "",
+    "window.alert(1)",
+    "constructor(t)",
+    "t;1",
+    "1/(t-0.5)",
+    "sqrt(-t)",
+    "t+1",
+    "sin(t)",
+    "t(t)",
+    "pow(t)",
+    "(".repeat(40) + "t" + ")".repeat(40),
+  ])
+    assert.ok(expressionError(formula), formula);
+  const singular = compileExpression("t+0/abs(t-0.3333333)");
+  assert.equal(singular(0.3333333), 0.3333333); // Runtime guard for singularities between validation samples.
+});
+test("公式曲线经过项目保存后仍在同一个采样器中插值，并拒绝无效公式", () => {
+  const p = blankProject(),
+    e = createElement({
+      type: "shape",
+      start: 0,
+      end: 4,
+      tracks: {
+        x: [
+          {
+            id: "a",
+            at: 0,
+            value: 20,
+            easing: { type: "expression", formula: "t*t" },
+          },
+          { id: "b", at: 4, value: 100, easing: "linear" },
+        ],
+      },
+    });
+  p.compositions.main.elements.push(e);
+  const roundtrip = validateProject(JSON.parse(JSON.stringify(p)));
+  const keys = roundtrip.compositions.main.elements[0].tracks.x!;
+  approximate(sampleTrack(keys, 2, 0), 40);
+  approximate(sampleTrack(keys, 0, 0), 20);
+  approximate(sampleTrack(keys, 4, 0), 100);
+  assert.throws(() =>
+    applyCommands(p, [
+      {
+        type: "keyframe.set",
+        compositionId: "main",
+        elementId: e.id,
+        property: "x",
+        keyframe: {
+          ...keys[0],
+          easing: { type: "expression", formula: "t+1" },
+        },
+      },
+    ]),
+  );
+});
+test("连续素材、文字和粘贴可复用同一轨道，避开重叠、锁定和隐藏轨道", () => {
+  const c = blankProject().compositions.main;
+  c.elements.push(createElement({ type: "shape", start: 0, end: 5 }));
+  assert.equal(
+    findAvailableTrack(c, [{ start: 5, end: 10 }])?.id,
+    "track_main",
+  );
+  assert.equal(findAvailableTrack(c, [{ start: 4, end: 9 }]), undefined);
+  // A pasted selection can span gaps; only its actual intervals occupy space.
+  c.elements.push(createElement({ type: "text", start: 8, end: 9 }));
+  assert.equal(
+    findAvailableTrack(c, [
+      { start: 5, end: 8 },
+      { start: 9, end: 12 },
+    ])?.id,
+    "track_main",
+  );
+  assert.equal(
+    findAvailableTrack(c, [
+      { start: 5, end: 7 },
+      { start: 8, end: 12 },
+    ]),
+    undefined,
+  );
+  c.tracks.push({ id: "second", name: "轨道 2", locked: false, hidden: false });
+  assert.equal(
+    findAvailableTrack(c, [{ start: 12, end: 15 }], "second")?.id,
+    "second",
+  );
+  c.tracks[1].locked = true;
+  assert.equal(
+    findAvailableTrack(c, [{ start: 12, end: 15 }], "second")?.id,
+    "track_main",
+  );
+  c.tracks[0].hidden = true;
+  assert.equal(findAvailableTrack(c, [{ start: 12, end: 15 }]), undefined);
+});
 function populated() {
   const p = blankProject();
   p.compositions.main.elements.push(

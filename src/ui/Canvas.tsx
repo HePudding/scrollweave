@@ -2,13 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Moveable from "react-moveable";
 import { mountStage } from "../runtime/render";
 import { sampleElement } from "../core/evaluate";
-import {
-  properties,
-  uid,
-  type Project,
-  type Element,
-  type AnimProperty,
-} from "../core/model";
+import { type Project, type Element } from "../core/model";
+import { propertyCommands } from "../core/animation-edit";
+export { propertyCommands } from "../core/animation-edit";
 import type { Command } from "../core/commands";
 
 export function parentProgress(
@@ -23,55 +19,6 @@ export function parentProgress(
   )!;
   return sampleElement(parent, parentProgress(project, cid, parent, progress))
     .progress;
-}
-export function propertyCommands(
-  project: Project,
-  compositionId: string,
-  element: Element,
-  progress: number,
-  values: Partial<Element>,
-  autoKey: boolean,
-): Command[] {
-  const patch: Partial<Element> = {};
-  const commands: Command[] = [];
-  const at =
-    Math.round(
-      sampleElement(
-        element,
-        parentProgress(project, compositionId, element, progress),
-      ).progress * 100000,
-    ) / 100000;
-  for (const [name, value] of Object.entries(values)) {
-    const prop = name as AnimProperty;
-    if (
-      properties.includes(prop) &&
-      (autoKey || element.tracks[prop]?.length)
-    ) {
-      const existing = element.tracks[prop]?.find(
-        (k) => Math.abs(k.at - at) < 0.00001,
-      );
-      commands.push({
-        type: "keyframe.set",
-        compositionId,
-        elementId: element.id,
-        property: prop,
-        keyframe: {
-          id: existing?.id ?? uid("key"),
-          at: existing?.at ?? at,
-          value: Number(value),
-          easing: existing?.easing ?? "easeInOut",
-        },
-      });
-    } else (patch as any)[name] = value;
-  }
-  if (Object.keys(patch).length)
-    commands.push({
-      type: "element.update",
-      compositionId,
-      elementId: element.id,
-      patch,
-    });
-  return commands;
 }
 type Props = {
   project: Project;

@@ -889,11 +889,30 @@ hr {
 .timeline-panel {
   height: 285px;
   min-height: 230px;
-  max-height: 40vh;
+  max-height: 70vh;
   border-top: 1px solid #394232;
   display: flex;
   flex-direction: column;
   background: #171b17;
+}
+.timeline-resize {
+  height: 7px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  cursor: ns-resize;
+  touch-action: none;
+  background: #21281d;
+}
+.timeline-resize > span {
+  width: 38px;
+  height: 2px;
+  border-radius: 2px;
+  background: #58684b;
+}
+.timeline-resize:hover > span,
+.timeline-resize:focus-visible > span {
+  background: var(--lime);
 }
 .timeline-toolbar {
   height: 43px;
@@ -943,16 +962,17 @@ hr {
   border-bottom: 1px solid #343d2e;
 }
 .track-label {
-  width: 128px;
-  min-width: 128px;
+  width: var(--track-gutter);
+  min-width: var(--track-gutter);
   position: sticky;
   left: 0;
   z-index: 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
-  padding: 8px 12px;
+  padding: 3px;
   background: #1e241c;
   border-right: 1px solid #343e2e;
   color: #a7b49b;
@@ -971,8 +991,42 @@ hr {
   gap: 3px;
 }
 .track-label button {
-  padding: 2px;
+  padding: 3px 10px;
   color: #75876a;
+}
+.track-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 10px;
+  color: #738167;
+  font-variant-numeric: tabular-nums;
+}
+.track-label > .track-actions {
+  position: absolute;
+  inset: 3px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.track-controls:hover .track-actions,
+.track-controls:focus-within .track-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+.track-controls:hover .track-index,
+.track-controls:focus-within .track-index {
+  opacity: 0;
+}
+.track-actions button:focus-visible {
+  outline: 1px solid var(--lime);
+}
+.track-row.hidden-track .timeline-clip {
+  opacity: 0.4;
 }
 .ruler-scale {
   position: relative;
@@ -1101,6 +1155,308 @@ hr {
 .timeline-clip.selected .clip-handle {
   background: #c4f36b55;
 }
+.timeline-clip.animated {
+  align-content: start;
+}
+.timeline-clip.animated > small {
+  position: absolute;
+  right: 10px;
+  top: 1px;
+  margin: 0;
+  font-size: 8px;
+}
+.timeline-clip.animated .clip-title {
+  max-width: calc(100% - 40px);
+  font-size: 9px;
+}
+.timeline-clip.selected {
+  overflow: visible;
+}
+.clip-key-overlay {
+  position: absolute;
+  top: 15px;
+  left: -1px;
+  right: -1px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 5;
+}
+.timeline-clip.selected .clip-key-overlay {
+  left: -2px;
+  right: -2px;
+}
+.key-diamond {
+  position: absolute;
+  top: -2px;
+  width: 16px;
+  height: 16px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f1f3e8;
+  font-size: 13px;
+  line-height: 16px;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  text-shadow:
+    -1px 0 #1e3024,
+    0 1px #1e3024,
+    1px 0 #1e3024,
+    0 -1px #1e3024;
+  cursor: ew-resize;
+}
+.key-diamond:hover,
+.key-diamond.active {
+  color: #5be2d2;
+  background: transparent;
+}
+.key-diamond:focus-visible {
+  outline: 1px solid #5be2d2;
+}
+.clip-key-summary {
+  position: absolute;
+  top: -2px;
+  overflow: visible;
+  fill: #dce5d0;
+  stroke: #273c31;
+  stroke-width: 1;
+  opacity: 0.65;
+}
+.clip-curve {
+  position: absolute;
+  top: 5px;
+  height: 23px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  pointer-events: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+.clip-curve svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.clip-curve path {
+  fill: none;
+  stroke: #c4f36b;
+  stroke-width: 1.3px;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.65;
+}
+.clip-curve:hover {
+  background: #c4f36b16;
+}
+.animation-panel {
+  padding-top: 10px;
+}
+.animation-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.animation-actions button {
+  padding: 6px 5px;
+}
+.animation-actions .add-position-key {
+  flex: 1;
+  justify-content: center;
+  background: #3b492e;
+  color: #ddf3bd;
+  font-size: 10px;
+}
+.animation-actions kbd {
+  margin-left: auto;
+  color: #aabe93;
+  background: #222c1b;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font: inherit;
+}
+.animation-channel {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.animation-channel select {
+  max-width: 160px;
+}
+.key-details h4 {
+  gap: 7px;
+}
+.key-details > summary {
+  cursor: pointer;
+  font-size: 11px;
+  padding: 12px 0 3px;
+  color: #b9caa8;
+}
+.key-details > summary span {
+  float: right;
+  color: #849677;
+  font-size: 10px;
+}
+.animation-panel > .hint {
+  background: transparent;
+  padding: 0;
+  line-height: 1.6;
+  font-size: 10px;
+  color: #8ea17d;
+}
+.key-details h4 > span {
+  margin-left: auto;
+  font-size: 9px;
+  color: #94a386;
+  font-weight: 400;
+}
+.key-details h4 > button {
+  margin-left: 0;
+}
+.curve-heading {
+  margin-top: 15px !important;
+}
+.easing-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.easing-presets button {
+  flex-direction: column;
+  gap: 2px;
+  font-size: 9px;
+  padding: 5px 2px;
+  background: #222b1d;
+  border: 1px solid #35422c;
+}
+.easing-presets button.active {
+  border-color: #a8cc76;
+  color: #d5efb6;
+}
+.easing-presets svg {
+  width: 30px;
+  height: 22px;
+}
+.easing-presets path {
+  stroke: #acc788;
+  stroke-width: 1.5;
+  fill: none;
+}
+.curve-mode {
+  display: flex;
+  gap: 4px;
+  margin: 10px 0 6px;
+}
+.curve-mode button {
+  flex: 1;
+  font-size: 10px;
+  justify-content: center;
+  padding: 5px;
+}
+.curve-mode button.active {
+  background: #35432a;
+  color: #d9edbd;
+}
+.curve-graph {
+  width: 100%;
+  display: block;
+  background: #171e13;
+  border: 1px solid #36422c;
+  border-radius: 5px;
+  touch-action: none;
+  user-select: none;
+}
+.curve-grid {
+  stroke: #35412b;
+  stroke-width: 0.5;
+}
+.curve-diagonal {
+  stroke: #536449;
+  stroke-dasharray: 3 4;
+  stroke-width: 0.6;
+}
+.curve-line {
+  fill: none;
+  stroke: #c4f36b;
+  stroke-width: 2;
+}
+.curve-progress {
+  stroke: #c4f36b66;
+  stroke-width: 1;
+}
+.curve-dot {
+  fill: #ecffd4;
+  stroke: #171e13;
+  stroke-width: 1.5;
+}
+.curve-handle-line {
+  stroke: #56cfc3;
+  stroke-width: 1;
+}
+.curve-handle {
+  fill: #142b27;
+  stroke: #56ded0;
+  stroke-width: 2;
+  cursor: grab;
+}
+.curve-handle:active {
+  cursor: grabbing;
+}
+.curve-handle:focus {
+  outline: none;
+  fill: #56ded0;
+}
+.curve-graph text {
+  fill: #91a083;
+  font-size: 9px;
+}
+.curve-readout {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #a4b595;
+  margin: 6px 0;
+  font-variant-numeric: tabular-nums;
+}
+.bezier-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.bezier-fields input {
+  width: 100%;
+  padding: 5px 3px;
+  font-size: 10px;
+}
+.expression-editor input {
+  width: 100%;
+  font:
+    11px ui-monospace,
+    monospace;
+  margin-top: 5px;
+}
+.expression-editor > button {
+  width: 100%;
+  justify-content: center;
+  background: #3b492e;
+}
+.formula-error {
+  font-size: 10px;
+  color: #f4b2a6;
+  line-height: 1.5;
+}
+.connection-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #453825;
+  color: #efd9aa;
+  padding: 6px 14px;
+  font-size: 11px;
+}
 .drop-hint {
   position: absolute;
   top: 24px;
@@ -1137,48 +1493,6 @@ hr {
   padding: 0 15px;
   font-size: 9px;
   color: #78866e;
-}
-.key-row {
-  display: flex;
-  height: 29px;
-  border-bottom: 1px solid #2b3425;
-}
-.key-row .track-label {
-  font-size: 10px;
-}
-.key-content {
-  position: relative;
-}
-.key-diamond {
-  position: absolute;
-  top: 1px;
-  transform: translateX(-50%);
-  color: var(--lime);
-  padding: 4px 6px;
-  font-size: 12px;
-}
-.key-editor {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 48px;
-  padding: 8px 16px;
-  background: #293321;
-  border-top: 1px solid #465936;
-  font-size: 10px;
-}
-.key-editor input {
-  width: 70px;
-}
-.key-editor > b {
-  color: var(--lime);
-  margin-right: 12px;
-}
-.key-editor > span {
-  color: #9eac92;
-}
-.key-editor > button:last-child {
-  margin-left: auto;
 }
 .modal-backdrop {
   position: fixed;

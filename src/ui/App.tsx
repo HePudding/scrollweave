@@ -29,7 +29,8 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { BezierCurveEditor, type ValueType } from "react-bezier-curve-editor";
+import { AnimationPanel, propertyNames, type KeyEdit } from "./AnimationPanel";
+import { addPropertyKeys, pairedKeys } from "../core/animation-edit";
 import { Canvas, propertyCommands } from "./Canvas";
 import { Timeline } from "./Timeline";
 import { SourceComposition } from "./SourceComposition";
@@ -56,41 +57,8 @@ import {
   globalTime,
 } from "../core/evaluate";
 import type { Command, Snapshot } from "../core/commands";
-const source = uid("ui");
-function CurveEditor({
-  value,
-  onCommit,
-}: {
-  value: [number, number, number, number];
-  onCommit: (v: [number, number, number, number]) => void;
-}) {
-  const [draft, setDraft] = useState(value),
-    current = useRef(value),
-    dirty = useRef(false);
-  useEffect(() => {
-    setDraft(value);
-    current.current = value;
-  }, [value.join(",")]);
-  const finish = () => {
-    if (dirty.current) {
-      dirty.current = false;
-      onCommit(current.current);
-    }
-  };
-  return (
-    <div onPointerUp={finish} onKeyUp={finish} onBlur={finish}>
-      <BezierCurveEditor
-        size={86}
-        value={draft as ValueType}
-        onChange={(v) => {
-          current.current = v as [number, number, number, number];
-          dirty.current = true;
-          setDraft(current.current);
-        }}
-      />
-    </div>
-  );
-}
+import { findAvailableTrack } from "../core/placement";
+const connectionMessage = "本地服务连接中断，正在重新连接。恢复后可继续编辑。";
 const names: Record<string, string> = {
   image: "图片",
   svg: "SVG",
@@ -100,14 +68,6 @@ const names: Record<string, string> = {
   text: "文字",
   group: "分组",
   custom: "扩展",
-};
-const propertyNames: Record<AnimProperty, string> = {
-  x: "位置 X",
-  y: "位置 Y",
-  scaleX: "水平缩放",
-  scaleY: "垂直缩放",
-  rotation: "旋转",
-  opacity: "透明度",
 };
 type Workspace = {
   directory: string;
@@ -119,7 +79,6 @@ type Workspace = {
   pendingImports: number;
   revision: number;
 };
-type KeyEdit = { elementId: string; property: AnimProperty; keyId: string };
 function NumberField({
   label,
   value,
@@ -135,33 +94,39 @@ function NumberField({
   step?: number;
   disabled?: boolean;
 }) {
-  const [draft, setDraft] = useState(String(Math.round(value * 10000) / 10000)),
-    focused = useRef(false),
+  // Playback values render directly. Only a focused input keeps a local draft;
+  // copying every animation frame into state creates a passive update cascade.
+  const [draft, setDraft] = useState<string | null>(null),
+    initial = useRef(""),
     captured = useRef(revision);
-  useEffect(() => {
-    if (!focused.current) setDraft(String(Math.round(value * 10000) / 10000));
-  }, [value]);
+  const formatted = String(Math.round(value * 10000) / 10000);
   return (
     <input
       aria-label={label}
       type="number"
       step={step}
       disabled={disabled}
-      value={draft}
-      onFocus={() => {
-        focused.current = true;
+      value={draft ?? formatted}
+      onFocus={(event) => {
+        initial.current = event.currentTarget.value;
+        setDraft(event.currentTarget.value);
         captured.current = revision;
       }}
       onChange={(e) => setDraft(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") e.currentTarget.blur();
       }}
-      onBlur={() => {
-        focused.current = false;
-        const number = Number(draft);
-        if (draft !== "" && Number.isFinite(number) && number !== value)
+      onBlur={(event) => {
+        const text = event.currentTarget.value,
+          number = Number(text);
+        setDraft(null);
+        if (
+          text !== initial.current &&
+          text !== "" &&
+          Number.isFinite(number) &&
+          number !== value
+        )
           onCommit(number, captured.current);
-        else setDraft(String(value));
       }}
     />
   );
@@ -185,6 +150,7 @@ export function App() {
 }
 
 function Editor({ onHome }: { onHome: () => void }) {
+  const [source] = useState(() => uid("ui"));
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null),
     state = useRef<Snapshot | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null),
@@ -207,6 +173,7 @@ function Editor({ onHome }: { onHome: () => void }) {
       "place",
     ),
     [previewMode, setPreviewMode] = useState<"edit" | "scroll">("edit");
+  const [activeProperty, setActiveProperty] = useState<AnimProperty>("x");
   const [keyEdit, setKeyEdit] = useState<KeyEdit | null>(null),
     [navigation, setNavigation] = useState<string[]>([]),
     [dialog, setDialog] = useState<"workspace" | "help" | null>(null),
@@ -233,9 +200,29 @@ function Editor({ onHome }: { onHome: () => void }) {
     setTime(t);
   };
   const report = (message: string) => {
-    setError(message);
+    setError(
+      /failed to fetch|networkerror|load failed/i.test(message)
+        ? connectionMessage
+        : message,
+    );
     setNotice("");
   };
+  async function readJSON(path: string, init?: RequestInit) {
+    let response: Response;
+    try {
+      response = await fetch(path, init);
+    } catch {
+      setConnected(false);
+      setPlaying(false);
+      throw Error(connectionMessage);
+    }
+    const result = await response.json();
+    if (!response.ok) {
+      if (response.status === 409) accept(await readJSON("/api/state"));
+      throw Error(result.error ?? "操作失败，请重试");
+    }
+    return result;
+  }
   const accept = (next: Snapshot, initial = false) => {
     if (
       state.current &&
@@ -257,18 +244,11 @@ function Editor({ onHome }: { onHome: () => void }) {
     name: string,
     args: Record<string, unknown> = {},
   ): Promise<any> {
-    const response = await fetch("/api/action", {
+    return readJSON("/api/action", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, args }),
     });
-    const result = await response.json();
-    if (!response.ok) {
-      if (response.status === 409)
-        accept(await (await fetch("/api/state")).json());
-      throw Error(result.error ?? "操作失败");
-    }
-    return result;
   }
   async function action(name: string, args: Record<string, unknown> = {}) {
     try {
@@ -279,25 +259,46 @@ function Editor({ onHome }: { onHome: () => void }) {
     }
   }
   const refreshWorkspace = async () => {
-    const w = await (await fetch("/api/workspace")).json();
-    setWorkspace(w);
-    setDirectory(w.directory);
+    try {
+      const w = await readJSON("/api/workspace");
+      setWorkspace(w);
+      setDirectory(w.directory);
+    } catch (error) {
+      report((error as Error).message);
+    }
+  };
+  const reconnect = async () => {
+    try {
+      const s = await readJSON("/api/state");
+      accept(s, !state.current);
+      await refreshWorkspace();
+      setError((previous) => (previous === connectionMessage ? "" : previous));
+    } catch (error) {
+      report((error as Error).message);
+    }
   };
   useEffect(() => {
     if (snapshot) document.title = snapshot.project.name + " · ScrollWeave";
   }, [snapshot?.project.name]);
   useEffect(() => {
     let alive = true;
-    void fetch("/api/state")
-      .then((r) => r.json())
+    void readJSON("/api/state")
       .then((s) => {
         if (alive) accept(s, true);
       })
       .catch((e) => report(e.message));
     void refreshWorkspace();
     const events = new EventSource("/api/events");
-    events.onopen = () => setConnected(true);
-    events.onerror = () => setConnected(false);
+    events.onopen = () => {
+      if (alive) {
+        setConnected(true);
+        void reconnect();
+      }
+    };
+    events.onerror = () => {
+      setConnected(false);
+      setPlaying(false);
+    };
     events.addEventListener("state", (event) => {
       const s = JSON.parse(event.data);
       accept(s);
@@ -384,7 +385,13 @@ function Editor({ onHome }: { onHome: () => void }) {
       label,
       expectedRevision: revision,
     });
-    if (result) accept(await (await fetch("/api/state")).json());
+    if (result) {
+      try {
+        accept(await readJSON("/api/state"));
+      } catch (error) {
+        report((error as Error).message);
+      }
+    }
   };
   const select = (ids: string[]) => {
     const s = state.current!;
@@ -395,6 +402,13 @@ function Editor({ onHome }: { onHome: () => void }) {
     state.current = { ...s, selection };
     setSnapshot(state.current);
     setKeyEdit(null);
+    const element = s.project.compositions[
+      s.selection.compositionId
+    ].elements.find((e) => e.id === ids[0]);
+    if (element && !element.tracks[activeProperty]?.length)
+      setActiveProperty(
+        properties.find((property) => element.tracks[property]?.length) ?? "x",
+      );
     void action("set_selection", { ...selection, source });
   };
   const seek = (at: number, final = false) => {
@@ -469,16 +483,10 @@ function Editor({ onHome }: { onHome: () => void }) {
           ? s.project.compositions[asset.compositionId!].duration
           : 5;
     if (!trackId) {
-      const available = c.tracks.find(
-        (t) =>
-          !t.locked &&
-          !c.elements.some(
-            (e) =>
-              !e.parentId &&
-              e.trackId === t.id &&
-              e.start < at + duration &&
-              e.end > at,
-          ),
+      const available = findAvailableTrack(
+        c,
+        [{ start: at, end: at + duration }],
+        c.elements.find((e) => s.selection.elementIds.includes(e.id))?.trackId,
       );
       if (available) trackId = available.id;
       else {
@@ -553,15 +561,25 @@ function Editor({ onHome }: { onHome: () => void }) {
     const s = state.current!,
       cid = s.selection.compositionId,
       c = s.project.compositions[cid],
-      trackId = uid("track"),
+      at = timeRef.current,
+      available = findAvailableTrack(
+        c,
+        [{ start: at, end: at + 5 }],
+        c.elements.find((e) => s.selection.elementIds.includes(e.id))?.trackId,
+      ),
+      trackId = available?.id ?? uid("track"),
       id = uid("clip");
     void commit(
       [
-        {
-          type: "track.add",
-          compositionId: cid,
-          track: { id: trackId, name: type === "text" ? "文字" : "图形" },
-        },
+        ...(!available
+          ? [
+              {
+                type: "track.add",
+                compositionId: cid,
+                track: { id: trackId, name: "轨道 " + (c.tracks.length + 1) },
+              } as Command,
+            ]
+          : []),
         {
           type: "element.add",
           compositionId: cid,
@@ -607,21 +625,42 @@ function Editor({ onHome }: { onHome: () => void }) {
     setNotice(
       "已复制 " +
         s.selection.elementIds.length +
-        " 个片段；Ctrl+V 在播放头粘贴到新轨道",
+        " 个片段；Ctrl+V 在播放头粘贴，优先使用已有轨道",
     );
   };
   const paste = async () => {
     if (!clipboard.length) return;
     const s = state.current!,
       cid = s.selection.compositionId,
-      id = uid("track");
+      c = s.project.compositions[cid],
+      roots = clipboard.filter(
+        (e) => !clipboard.some((x) => x.id === e.parentId),
+      ),
+      first = Math.min(...roots.map((e) => e.start)),
+      available =
+        new Set(clipboard.map((e) => e.trackId)).size === 1
+          ? findAvailableTrack(
+              c,
+              roots.map((e) => ({
+                start: e.start + timeRef.current - first,
+                end: e.end + timeRef.current - first,
+              })),
+              c.elements.find((e) => s.selection.elementIds.includes(e.id))
+                ?.trackId,
+            )
+          : undefined,
+      id = available?.id ?? uid("track");
     await commit(
       [
-        {
-          type: "track.add",
-          compositionId: cid,
-          track: { id, name: "粘贴轨道" },
-        },
+        ...(!available
+          ? [
+              {
+                type: "track.add",
+                compositionId: cid,
+                track: { id, name: "轨道 " + (c.tracks.length + 1) },
+              } as Command,
+            ]
+          : []),
         {
           type: "clips.paste",
           compositionId: cid,
@@ -704,17 +743,99 @@ function Editor({ onHome }: { onHome: () => void }) {
       setPosition(0);
     setPlaying((p) => !p);
   };
+  function addKeys(
+    channels: AnimProperty[],
+    focus: AnimProperty = channels[0],
+  ) {
+    const s = state.current;
+    if (!s || s.selection.elementIds.length !== 1) return;
+    const cid = s.selection.compositionId,
+      c = s.project.compositions[cid];
+    const element = c.elements.find((e) => e.id === s.selection.elementIds[0]);
+    if (
+      !element ||
+      element.locked ||
+      c.tracks.find((t) => t.id === element.trackId)?.locked
+    )
+      return;
+    const at = sourceTime(
+      element,
+      parentTime(s.project, cid, element, timeRef.current),
+    );
+    if (
+      at < element.sourceIn - 1e-5 ||
+      at >
+        element.sourceIn + (element.end - element.start) * element.speed + 1e-5
+    ) {
+      report("请先把播放头移到所选素材的时间范围内");
+      return;
+    }
+    const commands = addPropertyKeys(
+      s.project,
+      cid,
+      element,
+      timeRef.current,
+      channels,
+    );
+    const command = commands.find(
+      (c) => c.type === "keyframe.set" && c.property === focus,
+    );
+    setActiveProperty(focus);
+    void commit(commands, "添加关键帧", s.revision).then(() => {
+      if (command?.type === "keyframe.set")
+        setKeyEdit({
+          elementId: element.id,
+          property: focus,
+          keyId: command.keyframe.id,
+        });
+    });
+  }
+  function navigateKey(direction: -1 | 1) {
+    const s = state.current;
+    if (!s || s.selection.elementIds.length !== 1) return;
+    const cid = s.selection.compositionId,
+      element = s.project.compositions[cid].elements.find(
+        (e) => e.id === s.selection.elementIds[0],
+      );
+    if (!element) return;
+    const keys = (element.tracks[activeProperty] ?? []).map((key) => ({
+      key,
+      time: globalTime(s.project, cid, element, key.at),
+    }));
+    const candidate =
+      direction === 1
+        ? keys.find((k) => k.time > timeRef.current + 1e-5)
+        : keys.filter((k) => k.time < timeRef.current - 1e-5).at(-1);
+    if (candidate) {
+      seek(candidate.time, true);
+      setKeyEdit({
+        elementId: element.id,
+        property: activeProperty,
+        keyId: candidate.key.id,
+      });
+    }
+  }
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (
         (event.target as HTMLElement)?.closest(
-          "input,textarea,select,[contenteditable=true]",
+          "input,textarea,select,[contenteditable=true],[role=slider],[role=separator]",
         ) ||
         dialog ||
         assetId
       )
         return;
+      if (!state.current) return;
       const mod = event.ctrlKey || event.metaKey;
+      if (!mod && !event.altKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        if (event.shiftKey) setAutoKey((v) => !v);
+        else if (!event.repeat) addKeys(["x", "y"]);
+      }
+      if (!mod && !event.altKey && (event.key === "[" || event.key === "]")) {
+        event.preventDefault();
+        navigateKey(event.key === "[" ? -1 : 1);
+      }
       if (event.code === "Space") {
         event.preventDefault();
         togglePlay();
@@ -756,18 +877,25 @@ function Editor({ onHome }: { onHome: () => void }) {
         event.preventDefault();
         if (keyEdit) {
           const s = state.current!;
-          void commit(
-            [
-              {
-                type: "keyframe.delete",
-                compositionId: s.selection.compositionId,
-                elementId: keyEdit.elementId,
-                property: keyEdit.property,
-                keyframeId: keyEdit.keyId,
-              },
-            ],
-            "删除关键帧",
+          const element = s.project.compositions[
+            s.selection.compositionId
+          ].elements.find((e) => e.id === keyEdit.elementId);
+          const frame = element?.tracks[keyEdit.property]?.find(
+            (k) => k.id === keyEdit.keyId,
           );
+          if (element && frame)
+            void commit(
+              pairedKeys(element, keyEdit.property, frame).map(
+                ({ property, key }) => ({
+                  type: "keyframe.delete",
+                  compositionId: s.selection.compositionId,
+                  elementId: element.id,
+                  property,
+                  keyframeId: key.id,
+                }),
+              ),
+              "删除关键帧",
+            );
           setKeyEdit(null);
         } else remove(event.shiftKey);
       }
@@ -871,15 +999,6 @@ function Editor({ onHome }: { onHome: () => void }) {
   }
   const value = e ? sampleElement(e, parentTime(project, cid, e, time)) : null,
     asset = assetId ? project.assets[assetId] : undefined;
-  const keyElement = keyEdit
-      ? c.elements.find((e) => e.id === keyEdit.elementId)
-      : undefined,
-    key =
-      keyElement && keyEdit
-        ? keyElement.tracks[keyEdit.property]?.find(
-            (k) => k.id === keyEdit.keyId,
-          )
-        : undefined;
   const assets = Object.values(project.assets).filter(
     (a) =>
       !a.archived &&
@@ -894,44 +1013,11 @@ function Editor({ onHome }: { onHome: () => void }) {
       rev,
     );
   };
-  const addKey = (property: AnimProperty) => {
-    if (!e || !value) return;
-    const at = sourceTime(e, parentTime(project, cid, e, time)),
-      existing = e.tracks[property]?.find((k) => Math.abs(k.at - at) < 1e-5),
-      k = {
-        id: existing?.id ?? uid("key"),
-        at,
-        value: value[property],
-        easing: existing?.easing ?? ("easeInOut" as const),
-      };
-    void commit(
-      [
-        {
-          type: "keyframe.set",
-          compositionId: cid,
-          elementId: e.id,
-          property,
-          keyframe: k,
-        },
-      ],
-      "设置关键帧",
-    ).then(() => setKeyEdit({ elementId: e.id, property, keyId: k.id }));
-  };
-  const updateKey = (patch: Partial<Keyframe>) => {
-    if (key && keyEdit)
-      void commit(
-        [
-          {
-            type: "keyframe.set",
-            compositionId: cid,
-            elementId: keyEdit.elementId,
-            property: keyEdit.property,
-            keyframe: { ...key, ...patch },
-          },
-        ],
-        "编辑关键帧",
-      );
-  };
+  const addKey = (property: AnimProperty) =>
+    addKeys(
+      property === "x" || property === "y" ? ["x", "y"] : [property],
+      property,
+    );
   const save = async (name: "save_project" | "export_html") => {
     setBusy(true);
     const result = await action(name, {
@@ -1023,6 +1109,12 @@ function Editor({ onHome }: { onHome: () => void }) {
           <CircleHelp size={18} />
         </button>
       </header>
+      {!connected && (
+        <div className="connection-banner" role="status">
+          本地服务连接中断，正在自动重连
+          <button onClick={() => void reconnect()}>重新连接</button>
+        </div>
+      )}
       {(error || notice) && (
         <div
           className={"message " + (error ? "error" : "success")}
@@ -1617,7 +1709,7 @@ function Editor({ onHome }: { onHome: () => void }) {
             <span className="spacer" />
             {e && <span className="type-tag">{names[e.type]}</span>}
           </div>
-          <div className="inspector-body">
+          <div className="inspector-body" key={e?.id ?? "overview"}>
             {e && value ? (
               <>
                 <TextField
@@ -1627,6 +1719,90 @@ function Editor({ onHome }: { onHome: () => void }) {
                   revision={revision}
                   onCommit={(name, r) => update({ name }, r)}
                 />
+                <AnimationPanel
+                  project={project}
+                  cid={cid}
+                  element={e}
+                  time={time}
+                  revision={revision}
+                  autoKey={autoKey}
+                  onAutoKey={() => setAutoKey((v) => !v)}
+                  activeProperty={activeProperty}
+                  onProperty={setActiveProperty}
+                  keyEdit={keyEdit}
+                  onKey={setKeyEdit}
+                  onAddPosition={() => addKeys(["x", "y"])}
+                  onNavigate={navigateKey}
+                  onSeek={seek}
+                  onCommit={commit}
+                />
+                {e.type === "text" && (
+                  <div className="property-section">
+                    <h4>文字</h4>
+                    <TextField
+                      label="文字内容"
+                      multiline
+                      value={e.text}
+                      revision={revision}
+                      onCommit={(text, r) => update({ text }, r)}
+                    />
+                    <label>
+                      字号
+                      <NumberField
+                        label="字号"
+                        value={e.fontSize}
+                        revision={revision}
+                        onCommit={(fontSize, r) => update({ fontSize }, r)}
+                      />
+                    </label>
+                    <label>
+                      文字颜色
+                      <input
+                        type="color"
+                        aria-label="文字颜色"
+                        value={e.color}
+                        onChange={(event) =>
+                          update({ color: event.target.value })
+                        }
+                      />
+                    </label>
+                    <label>
+                      点击链接
+                      <TextField
+                        label="点击链接"
+                        value={e.href}
+                        revision={revision}
+                        onCommit={(href, r) => update({ href }, r)}
+                        placeholder="https://…"
+                      />
+                    </label>
+                  </div>
+                )}
+                {e.type === "shape" && (
+                  <div className="property-section">
+                    <h4>形状</h4>
+                    <label>
+                      填充
+                      <input
+                        type="color"
+                        aria-label="形状填充"
+                        value={e.fill}
+                        onChange={(event) =>
+                          update({ fill: event.target.value })
+                        }
+                      />
+                    </label>
+                    <label>
+                      圆角
+                      <NumberField
+                        label="圆角"
+                        value={e.radius}
+                        revision={revision}
+                        onCommit={(radius, r) => update({ radius }, r)}
+                      />
+                    </label>
+                  </div>
+                )}
                 <div className="property-section">
                   <h4>
                     剪辑范围 <span>秒</span>
@@ -1730,9 +1906,9 @@ function Editor({ onHome }: { onHome: () => void }) {
                         )
                       }
                     >
-                      {c.tracks.map((t) => (
+                      {c.tracks.map((t, index) => (
                         <option value={t.id} key={t.id}>
-                          {t.name}
+                          轨道 {index + 1}
                         </option>
                       ))}
                     </select>
@@ -1827,73 +2003,6 @@ function Editor({ onHome }: { onHome: () => void }) {
                     </label>
                   </div>
                 </div>
-                {e.type === "text" && (
-                  <div className="property-section">
-                    <h4>文字</h4>
-                    <TextField
-                      label="文字内容"
-                      multiline
-                      value={e.text}
-                      revision={revision}
-                      onCommit={(text, r) => update({ text }, r)}
-                    />
-                    <label>
-                      字号
-                      <NumberField
-                        label="字号"
-                        value={e.fontSize}
-                        revision={revision}
-                        onCommit={(fontSize, r) => update({ fontSize }, r)}
-                      />
-                    </label>
-                    <label>
-                      文字颜色
-                      <input
-                        type="color"
-                        aria-label="文字颜色"
-                        value={e.color}
-                        onChange={(event) =>
-                          update({ color: event.target.value })
-                        }
-                      />
-                    </label>
-                    <label>
-                      点击链接
-                      <TextField
-                        label="点击链接"
-                        value={e.href}
-                        revision={revision}
-                        onCommit={(href, r) => update({ href }, r)}
-                        placeholder="https://…"
-                      />
-                    </label>
-                  </div>
-                )}
-                {e.type === "shape" && (
-                  <div className="property-section">
-                    <h4>形状</h4>
-                    <label>
-                      填充
-                      <input
-                        type="color"
-                        aria-label="形状填充"
-                        value={e.fill}
-                        onChange={(event) =>
-                          update({ fill: event.target.value })
-                        }
-                      />
-                    </label>
-                    <label>
-                      圆角
-                      <NumberField
-                        label="圆角"
-                        value={e.radius}
-                        revision={revision}
-                        onCommit={(radius, r) => update({ radius }, r)}
-                      />
-                    </label>
-                  </div>
-                )}
                 {["image", "svg", "video"].includes(e.type) && (
                   <div className="property-section">
                     <h4>
@@ -2126,75 +2235,6 @@ function Editor({ onHome }: { onHome: () => void }) {
           </div>
         </aside>
       </div>
-      {key && keyEdit && keyElement && (
-        <div className="key-editor">
-          <b>◆ {propertyNames[keyEdit.property]}</b>
-          <span>源时钟</span>
-          <NumberField
-            label="关键帧源时间"
-            value={key.at}
-            revision={revision}
-            onCommit={(at) => updateKey({ at })}
-          />
-          <span>s</span>
-          <span>值</span>
-          <NumberField
-            label="关键帧值"
-            value={key.value}
-            revision={revision}
-            onCommit={(value) => updateKey({ value })}
-          />
-          <select
-            aria-label="关键帧缓动"
-            value={Array.isArray(key.easing) ? "custom" : key.easing}
-            onChange={(event) =>
-              updateKey({
-                easing:
-                  event.target.value === "custom"
-                    ? [0.25, 0.1, 0.25, 1]
-                    : (event.target.value as Keyframe["easing"]),
-              })
-            }
-          >
-            <option value="linear">线性</option>
-            <option value="easeIn">缓入</option>
-            <option value="easeOut">缓出</option>
-            <option value="easeInOut">缓入缓出</option>
-            <option value="custom">自定义曲线</option>
-          </select>
-          {Array.isArray(key.easing) && (
-            <CurveEditor
-              value={key.easing}
-              onCommit={(easing) => updateKey({ easing })}
-            />
-          )}
-          <span>
-            作品 {globalTime(project, cid, keyElement, key.at).toFixed(2)}s
-          </span>
-          <button
-            onClick={() => {
-              void commit(
-                [
-                  {
-                    type: "keyframe.delete",
-                    compositionId: cid,
-                    elementId: keyEdit.elementId,
-                    property: keyEdit.property,
-                    keyframeId: key.id,
-                  },
-                ],
-                "删除关键帧",
-              );
-              setKeyEdit(null);
-            }}
-          >
-            删除
-          </button>
-          <button aria-label="关闭关键帧编辑" onClick={() => setKeyEdit(null)}>
-            <X size={15} />
-          </button>
-        </div>
-      )}
       <Timeline
         project={project}
         cid={cid}
@@ -2218,9 +2258,13 @@ function Editor({ onHome }: { onHome: () => void }) {
         onCompound={compound}
         onEnter={(id) => void enter(id)}
         onAddTrack={() => void addTrack()}
-        onKey={(e, property, k) =>
-          setKeyEdit({ elementId: e.id, property, keyId: k.id })
-        }
+        activeProperty={activeProperty}
+        selectedKeyId={keyEdit?.keyId}
+        onKey={(e, property, k) => {
+          if (!selected.includes(e.id)) select([e.id]);
+          setActiveProperty(property);
+          setKeyEdit({ elementId: e.id, property, keyId: k.id });
+        }}
         onError={report}
       />
       <input
@@ -2519,9 +2563,10 @@ function Editor({ onHome }: { onHome: () => void }) {
                 </p>
                 <hr />
                 <p>
-                  Space 播放 / 暂停 · Ctrl+B 分割 · Ctrl+C/V 复制粘贴 · Shift
-                  多选 · Ctrl+A 全选 · Delete 留空 · Shift+Delete 波纹删除 ·
-                  Alt+G 复合片段 · Ctrl+Z / Ctrl+Shift+Z 撤销重做。
+                  K 添加位置关键帧 · Shift+K 自动记录 · [ / ] 前后关键帧 · Space
+                  播放 / 暂停 · Ctrl+B 分割 · Ctrl+C/V 复制粘贴 · Shift 多选 ·
+                  Ctrl+A 全选 · Delete 留空 · Shift+Delete 波纹删除 · Alt+G
+                  复合片段 · Ctrl+Z / Ctrl+Shift+Z 撤销重做。
                 </p>
               </>
             )}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { customElements } from "../extensions/registry";
 import { properties } from "./constants";
+import { expressionError } from "./expression";
 export { properties } from "./constants";
 export type AnimProperty = (typeof properties)[number];
 export const MAX_TIME = 86400;
@@ -30,6 +31,19 @@ export const easingSchema = z.union([
     z.number().min(0).max(1),
     z.number().min(-3).max(3),
   ]),
+  z
+    .object({
+      type: z.literal("expression"),
+      formula: z
+        .string()
+        .min(1)
+        .max(256)
+        .superRefine((value, ctx) => {
+          const message = expressionError(value);
+          if (message) ctx.addIssue({ code: "custom", message });
+        }),
+    })
+    .strict(),
 ]);
 export const keyframeSchema = z
   .object({

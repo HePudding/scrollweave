@@ -1,4 +1,5 @@
-import { interpolate, cubicBezier, easeIn, easeOut, easeInOut } from "motion";
+import { interpolate } from "motion";
+import { easingFunction } from "./easing";
 import type { Element, Keyframe, Project } from "./model";
 import { properties } from "./constants";
 export const clamp = (n: number, min = 0, max = 1) =>
@@ -50,18 +51,11 @@ export function sampleTrack(
   if (exact) return exact.value;
   let sample = samplers.get(keys);
   if (!sample) {
-    const easing = { easeIn, easeOut, easeInOut, linear: (p: number) => p };
     sample = interpolate(
       keys.map((k) => k.at),
       keys.map((k) => k.value),
       {
-        ease: keys
-          .slice(0, -1)
-          .map((k) =>
-            Array.isArray(k.easing)
-              ? cubicBezier(...k.easing)
-              : easing[k.easing],
-          ),
+        ease: keys.slice(0, -1).map((k) => easingFunction(k.easing)),
       },
     );
     samplers.set(keys, sample);

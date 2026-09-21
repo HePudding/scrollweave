@@ -6,6 +6,7 @@ import { zipSync, unzipSync, strToU8 } from "fflate";
 import { ProjectStore, commandSchema } from "../src/core/commands";
 import {
   idSchema,
+  easingSchema,
   seconds,
   validateProject,
   blankProject,
@@ -83,9 +84,7 @@ export const schemas = {
     property: z.enum(["x", "y", "scaleX", "scaleY", "rotation", "opacity"]),
     at: z.number().finite(),
     value: z.number().finite(),
-    easing: z
-      .enum(["linear", "easeIn", "easeOut", "easeInOut"])
-      .default("easeInOut"),
+    easing: easingSchema.default("easeInOut"),
   }),
   create_compound: z.object({
     ...expected,
