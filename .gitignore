@@ -13,3 +13,22 @@ tmp/
 .env.*
 !.env.example
 !.env.template
+
+# Local agent setup and installed helper skills
+/.agents/
+/AGENTS.md
+/.mcp.json
+/skills-lock.json
+
+# Internal planning, writing drafts, and history recovery (keep locally)
+/ScrollWeave-完整功能实现与UX设计.md
+/docs/SCROLLWEAVE-COMPETITION-2026.md
+/docs/GIT-HISTORY-RECOVERY.md
+/docs/history-recovery.json
+/docs/RESEARCH.md
+/docs/research-sources.json
+/docs/HANDOFF-*.md
+/docs/项目说明书-*
+/docs/ScrollWeave-项目介绍*
+/docs/~$*
+/output/
