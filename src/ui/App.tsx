@@ -36,6 +36,7 @@ import { Timeline } from "./Timeline";
 import { SourceComposition } from "./SourceComposition";
 import { TextField } from "./TextField";
 import { ProjectHome } from "./ProjectHome";
+import { AgentPanel } from "./AgentPanel";
 import {
   assetURL,
   thumbnailURL,
@@ -150,6 +151,7 @@ export function App() {
 }
 
 function Editor({ onHome }: { onHome: () => void }) {
+  const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
   const [source] = useState(() => uid("ui"));
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null),
     state = useRef<Snapshot | null>(null);
@@ -819,9 +821,10 @@ function Editor({ onHome }: { onHome: () => void }) {
     const key = (event: KeyboardEvent) => {
       if (
         (event.target as HTMLElement)?.closest(
-          "input,textarea,select,[contenteditable=true],[role=slider],[role=separator]",
+          "input,textarea,select,[contenteditable=true],[role=slider],[role=separator],.agent-dock,.agent-settings",
         ) ||
         dialog ||
+        agentSettingsOpen ||
         assetId
       )
         return;
@@ -1105,6 +1108,13 @@ function Editor({ onHome }: { onHome: () => void }) {
           <ArrowDownToLine size={16} />
           导出网页
         </button>
+        <button
+          title="设置 · 模型服务商"
+          aria-label="设置 · 模型服务商"
+          onClick={() => setAgentSettingsOpen(true)}
+        >
+          <Settings2 size={17} />
+        </button>
         <button title="Agent 接入与快捷键" onClick={() => setDialog("help")}>
           <CircleHelp size={18} />
         </button>
@@ -1137,6 +1147,13 @@ function Editor({ onHome }: { onHome: () => void }) {
           </button>
         </div>
       )}
+      <AgentPanel
+        projectId={project.id}
+        projectName={project.name}
+        workspace={workspace?.directory ?? ""}
+        settingsOpen={agentSettingsOpen}
+        onSettingsChange={setAgentSettingsOpen}
+      />
       <div className="workspace-grid">
         <aside className="library-panel">
           <div className="panel-tabs">

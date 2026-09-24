@@ -2,6 +2,17 @@
   "generatedFrom": "package-lock.json",
   "packages": [
     {
+      "name": "@anthropic-ai/sdk",
+      "version": "0.124.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "github:anthropics/anthropic-sdk-typescript",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@asamuzakjp/css-color",
       "version": "7.0.0",
       "license": "MIT",
@@ -19,6 +30,237 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/asamuzaK/domSelector.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/client-bedrock-runtime",
+      "version": "3.1127.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/core",
+      "version": "3.978.1",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-env",
+      "version": "3.972.72",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-http",
+      "version": "3.972.74",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "node_modules/@aws-sdk/core/LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-ini",
+      "version": "3.973.17",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-login",
+      "version": "3.972.79",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "node_modules/@aws-sdk/core/LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-node",
+      "version": "3.972.84",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-process",
+      "version": "3.972.72",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-sso",
+      "version": "3.973.16",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/token-providers",
+      "version": "3.1138.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/credential-provider-web-identity",
+      "version": "3.972.78",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/eventstream-handler-node",
+      "version": "3.972.35",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/middleware-eventstream",
+      "version": "3.972.30",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/middleware-websocket",
+      "version": "3.972.54",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/nested-clients",
+      "version": "3.997.46",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "node_modules/@aws-sdk/core/LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/signature-v4-multi-region",
+      "version": "3.996.47",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/token-providers",
+      "version": "3.1127.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/types",
+      "version": "3.974.6",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws-sdk/xml-builder",
+      "version": "3.972.41",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/aws/aws-sdk-js-v3.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@aws/lambda-invoke-store",
+      "version": "0.3.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/awslabs/aws-lambda-invoke-store.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@babel/runtime",
+      "version": "7.29.7",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/babel/babel.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -123,6 +365,83 @@
       ]
     },
     {
+      "name": "@earendil-works/chord",
+      "version": "0.87.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/earendil-works/pi.git",
+      "licenseFiles": [
+        "docs/licenses/pi-MIT.txt"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-agent-core",
+      "version": "0.87.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/earendil-works/pi.git",
+      "licenseFiles": [
+        "docs/licenses/pi-MIT.txt"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-ai",
+      "version": "0.87.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/earendil-works/pi.git",
+      "licenseFiles": [
+        "docs/licenses/pi-MIT.txt"
+      ]
+    },
+    {
+      "name": "agent-base",
+      "version": "9.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "http-proxy-agent",
+      "version": "9.1.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "https-proxy-agent",
+      "version": "9.1.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-telemetry",
+      "version": "0.87.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/earendil-works/pi.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
       "name": "@egjs/agent",
       "version": "2.4.4",
       "license": "MIT",
@@ -169,10 +488,241 @@
       ]
     },
     {
+      "name": "@electron-internal/extract-zip",
+      "version": "1.0.5",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/extract-zip",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "@electron/asar",
+      "version": "3.4.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/asar.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.21",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/minimatch.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/fuses",
+      "version": "1.8.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/fuses.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/get",
+      "version": "5.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/get",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "undici",
+      "version": "7.29.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/nodejs/undici.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/notarize",
+      "version": "2.5.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/notarize.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/osx-sign",
+      "version": "1.3.3",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/osx-sign.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "isbinaryfile",
+      "version": "4.0.10",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/gjtorikian/isBinaryFile",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "@electron/rebuild",
+      "version": "4.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/rebuild.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/universal",
+      "version": "2.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/universal.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "2.1.7",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.4.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/jprichardson/node-fs-extra.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "9.0.9",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/minimatch.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/windows-sign",
+      "version": "1.2.2",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/windows-sign.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.4.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/jprichardson/node-fs-extra.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@esbuild/aix-ppc64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/aix-ppc64/v/0.28.2",
       "licenseFiles": []
@@ -181,7 +731,7 @@
       "name": "@esbuild/android-arm",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/android-arm/v/0.28.2",
       "licenseFiles": []
@@ -190,7 +740,7 @@
       "name": "@esbuild/android-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/android-arm64/v/0.28.2",
       "licenseFiles": []
@@ -199,7 +749,7 @@
       "name": "@esbuild/android-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/android-x64/v/0.28.2",
       "licenseFiles": []
@@ -208,7 +758,7 @@
       "name": "@esbuild/darwin-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/darwin-arm64/v/0.28.2",
       "licenseFiles": []
@@ -217,7 +767,7 @@
       "name": "@esbuild/darwin-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/darwin-x64/v/0.28.2",
       "licenseFiles": []
@@ -226,7 +776,7 @@
       "name": "@esbuild/freebsd-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/freebsd-arm64/v/0.28.2",
       "licenseFiles": []
@@ -235,7 +785,7 @@
       "name": "@esbuild/freebsd-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/freebsd-x64/v/0.28.2",
       "licenseFiles": []
@@ -244,7 +794,7 @@
       "name": "@esbuild/linux-arm",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-arm/v/0.28.2",
       "licenseFiles": []
@@ -253,7 +803,7 @@
       "name": "@esbuild/linux-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-arm64/v/0.28.2",
       "licenseFiles": []
@@ -262,7 +812,7 @@
       "name": "@esbuild/linux-ia32",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-ia32/v/0.28.2",
       "licenseFiles": []
@@ -271,7 +821,7 @@
       "name": "@esbuild/linux-loong64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-loong64/v/0.28.2",
       "licenseFiles": []
@@ -280,7 +830,7 @@
       "name": "@esbuild/linux-mips64el",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-mips64el/v/0.28.2",
       "licenseFiles": []
@@ -289,7 +839,7 @@
       "name": "@esbuild/linux-ppc64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-ppc64/v/0.28.2",
       "licenseFiles": []
@@ -298,7 +848,7 @@
       "name": "@esbuild/linux-riscv64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-riscv64/v/0.28.2",
       "licenseFiles": []
@@ -307,7 +857,7 @@
       "name": "@esbuild/linux-s390x",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-s390x/v/0.28.2",
       "licenseFiles": []
@@ -316,7 +866,7 @@
       "name": "@esbuild/linux-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/linux-x64/v/0.28.2",
       "licenseFiles": []
@@ -325,7 +875,7 @@
       "name": "@esbuild/netbsd-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/netbsd-arm64/v/0.28.2",
       "licenseFiles": []
@@ -334,7 +884,7 @@
       "name": "@esbuild/netbsd-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/netbsd-x64/v/0.28.2",
       "licenseFiles": []
@@ -343,7 +893,7 @@
       "name": "@esbuild/openbsd-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/openbsd-arm64/v/0.28.2",
       "licenseFiles": []
@@ -352,7 +902,7 @@
       "name": "@esbuild/openbsd-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/openbsd-x64/v/0.28.2",
       "licenseFiles": []
@@ -361,7 +911,7 @@
       "name": "@esbuild/openharmony-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/openharmony-arm64/v/0.28.2",
       "licenseFiles": []
@@ -370,7 +920,7 @@
       "name": "@esbuild/sunos-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/sunos-x64/v/0.28.2",
       "licenseFiles": []
@@ -379,7 +929,7 @@
       "name": "@esbuild/win32-arm64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/win32-arm64/v/0.28.2",
       "licenseFiles": []
@@ -388,7 +938,7 @@
       "name": "@esbuild/win32-ia32",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": false,
       "source": "https://www.npmjs.com/package/@esbuild/win32-ia32/v/0.28.2",
       "licenseFiles": []
@@ -397,7 +947,7 @@
       "name": "@esbuild/win32-x64",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/evanw/esbuild.git",
       "licenseFiles": [
@@ -416,12 +966,67 @@
       ]
     },
     {
+      "name": "@google/genai",
+      "version": "2.21.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/googleapis/js-genai.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@hono/node-server",
       "version": "2.1.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/honojs/node-server.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@isaacs/fs-minipass",
+      "version": "4.0.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/npm/fs-minipass.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@malept/cross-spawn-promise",
+      "version": "2.0.0",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/malept/cross-spawn-promise",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@malept/flatpak-bundler",
+      "version": "0.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/malept/flatpak-bundler.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -438,6 +1043,17 @@
       ]
     },
     {
+      "name": "@noble/hashes",
+      "version": "2.4.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/paulmillr/noble-hashes.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@oxc-project/types",
       "version": "0.150.0",
       "license": "MIT",
@@ -446,6 +1062,50 @@
       "source": "git+https://github.com/oxc-project/oxc.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "@peculiar/asn1-schema",
+      "version": "2.9.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/asn1-schema",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@peculiar/json-schema",
+      "version": "1.1.12",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/PeculiarVentures/json-schema.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@peculiar/utils",
+      "version": "2.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/pvtsutils",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@peculiar/webcrypto",
+      "version": "1.7.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/webcrypto",
+      "licenseFiles": [
+        "LICENSE.md"
       ]
     },
     {
@@ -458,6 +1118,105 @@
       "licenseFiles": [
         "LICENSE",
         "NOTICE"
+      ]
+    },
+    {
+      "name": "@protobufjs/aspromise",
+      "version": "1.1.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/base64",
+      "version": "1.1.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/codegen",
+      "version": "2.0.5",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/eventemitter",
+      "version": "1.1.1",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/fetch",
+      "version": "1.1.1",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/float",
+      "version": "1.0.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/path",
+      "version": "1.1.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/pool",
+      "version": "1.1.0",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@protobufjs/utf8",
+      "version": "1.1.2",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/protobufjs/protobuf.js.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -642,6 +1401,105 @@
       ]
     },
     {
+      "name": "@sindresorhus/is",
+      "version": "4.6.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/is",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "@smithy/core",
+      "version": "3.35.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@smithy/credential-provider-imds",
+      "version": "4.5.2",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@smithy/fetch-http-handler",
+      "version": "5.8.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@smithy/node-http-handler",
+      "version": "4.12.1",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@smithy/signature-v4",
+      "version": "5.7.3",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@smithy/types",
+      "version": "4.19.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/smithy-lang/smithy-typescript.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@stablelib/base64",
+      "version": "1.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/StableLib/stablelib",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@szmarczak/http-timer",
+      "version": "4.0.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/szmarczak/http-timer.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@types/body-parser",
       "version": "1.19.6",
       "license": "MIT",
@@ -653,8 +1511,30 @@
       ]
     },
     {
+      "name": "@types/cacheable-request",
+      "version": "6.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@types/connect",
       "version": "3.4.38",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/debug",
+      "version": "4.1.13",
       "license": "MIT",
       "scope": "development",
       "installed": true,
@@ -677,6 +1557,28 @@
     {
       "name": "@types/express-serve-static-core",
       "version": "5.1.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/fs-extra",
+      "version": "9.0.13",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/http-cache-semantics",
+      "version": "4.2.0",
       "license": "MIT",
       "scope": "development",
       "installed": true,
@@ -719,10 +1621,32 @@
       ]
     },
     {
+      "name": "@types/keyv",
+      "version": "3.1.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/ms",
+      "version": "2.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "@types/node",
       "version": "22.20.3",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "licenseFiles": [
@@ -767,6 +1691,28 @@
       "version": "19.3.0",
       "license": "MIT",
       "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/responselike",
+      "version": "1.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/retry",
+      "version": "0.12.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "licenseFiles": [
@@ -1012,12 +1958,45 @@
       ]
     },
     {
+      "name": "@xmldom/xmldom",
+      "version": "0.8.15",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/xmldom/xmldom.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "abbrev",
+      "version": "4.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/abbrev-js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "accepts",
       "version": "2.0.0",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "jshttp/accepts",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "agent-base",
+      "version": "7.1.4",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1045,6 +2024,248 @@
       ]
     },
     {
+      "name": "ansi-regex",
+      "version": "5.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/ansi-regex",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "ansi-styles",
+      "version": "4.3.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/ansi-styles",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "app-builder-lib",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "node_modules/electron-builder/LICENSE"
+      ]
+    },
+    {
+      "name": "@electron/get",
+      "version": "3.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/get",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "8.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "semver",
+      "version": "6.3.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/npm/node-semver.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "ci-info",
+      "version": "4.3.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "github:watson/ci-info",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "env-paths",
+      "version": "2.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/env-paths",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "isexe",
+      "version": "3.1.5",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/isaacs/isexe",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "jsonfile",
+      "version": "4.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:jprichardson/node-jsonfile.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "semver",
+      "version": "7.7.4",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/node-semver.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "universalify",
+      "version": "0.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/RyanZim/universalify.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "which",
+      "version": "5.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/node-which.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "argparse",
+      "version": "2.0.1",
+      "license": "Python-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "nodeca/argparse",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "asn1js",
+      "version": "3.0.10",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/ASN1.js",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "async",
+      "version": "3.2.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/caolan/async.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "async-exit-hook",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/tapppi/async-exit-hook.git",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "asynckit",
+      "version": "0.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/alexindigo/asynckit.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "at-least-node",
+      "version": "1.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/RyanZim/at-least-node.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "aws4",
+      "version": "1.13.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "github:mhart/aws4",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "4.0.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "base64-js",
+      "version": "1.5.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/beatgammit/base64-js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "bidi-js",
       "version": "1.1.0",
       "license": "MIT",
@@ -1053,6 +2274,28 @@
       "source": "https://github.com/lojjic/bidi-js.git",
       "licenseFiles": [
         "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "bignumber.js",
+      "version": "9.3.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/MikeMcl/bignumber.js.git",
+      "licenseFiles": [
+        "LICENCE.md"
+      ]
+    },
+    {
+      "name": "bluebird",
+      "version": "3.7.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/petkaantonov/bluebird.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -1078,12 +2321,122 @@
       ]
     },
     {
+      "name": "boolean",
+      "version": "3.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/thenativeweb/boolean.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "bowser",
+      "version": "2.14.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/bowser-js/bowser.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "5.0.12",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "buffer-equal-constant-time",
+      "version": "1.0.1",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git@github.com:goinstant/buffer-equal-constant-time.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "buffer-from",
+      "version": "1.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "LinusU/buffer-from",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "builder-util",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "builder-util-runtime",
+      "version": "9.7.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "bytes",
       "version": "3.1.2",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "visionmedia/bytes.js",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "bytestreamjs",
+      "version": "2.0.1",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/PeculiarVentures/ByteStream.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "cacheable-lookup",
+      "version": "5.0.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/szmarczak/cacheable-lookup.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "cacheable-request",
+      "version": "7.0.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "lukechilds/cacheable-request",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1111,6 +2464,17 @@
       ]
     },
     {
+      "name": "chalk",
+      "version": "4.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/chalk",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "chokidar",
       "version": "5.0.0",
       "license": "MIT",
@@ -1122,12 +2486,131 @@
       ]
     },
     {
+      "name": "chownr",
+      "version": "3.0.0",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/chownr.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "chromium-pickle-js",
+      "version": "0.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/node-chromium-pickle-js.git",
+      "licenseFiles": []
+    },
+    {
+      "name": "ci-info",
+      "version": "4.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "github:watson/ci-info",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "classnames",
       "version": "2.5.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/JedWatson/classnames.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "cliui",
+      "version": "8.0.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "yargs/cliui",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "clone-response",
+      "version": "1.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/sindresorhus/clone-response.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "color-convert",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "Qix-/color-convert",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "color-name",
+      "version": "1.1.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:colorjs/color-name.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "combined-stream",
+      "version": "1.0.8",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/felixge/node-combined-stream.git",
+      "licenseFiles": [
+        "License"
+      ]
+    },
+    {
+      "name": "commander",
+      "version": "5.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/tj/commander.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "compare-version",
+      "version": "0.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "kevva/compare-version",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "concat-map",
+      "version": "0.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/substack/node-concat-map.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1177,6 +2660,17 @@
       ]
     },
     {
+      "name": "core-util-is",
+      "version": "1.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/core-util-is",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "cors",
       "version": "2.8.6",
       "license": "MIT",
@@ -1186,6 +2680,15 @@
       "licenseFiles": [
         "LICENSE"
       ]
+    },
+    {
+      "name": "cross-dirname",
+      "version": "0.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/JumpLink/cross-dirname.git",
+      "licenseFiles": []
     },
     {
       "name": "cross-spawn",
@@ -1243,6 +2746,17 @@
       ]
     },
     {
+      "name": "data-uri-to-buffer",
+      "version": "4.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/TooTallNate/node-data-uri-to-buffer.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
       "name": "data-urls",
       "version": "7.0.0",
       "license": "MIT",
@@ -1287,6 +2801,72 @@
       ]
     },
     {
+      "name": "decompress-response",
+      "version": "6.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/decompress-response",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "mimic-response",
+      "version": "3.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/mimic-response",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "defer-to-connect",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/szmarczak/defer-to-connect.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "define-data-property",
+      "version": "1.1.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/ljharb/define-data-property.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "define-properties",
+      "version": "1.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/ljharb/define-properties.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "delayed-stream",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/felixge/node-delayed-stream.git",
+      "licenseFiles": [
+        "License"
+      ]
+    },
+    {
       "name": "depd",
       "version": "2.0.0",
       "license": "MIT",
@@ -1309,6 +2889,83 @@
       ]
     },
     {
+      "name": "detect-node",
+      "version": "2.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/iliakan/detect-node",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "diff",
+      "version": "8.0.4",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/kpdecker/jsdiff.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "dir-compare",
+      "version": "4.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/gliviu/dir-compare",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.21",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/minimatch.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "dmg-builder",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "node_modules/electron-builder/LICENSE"
+      ]
+    },
+    {
       "name": "dompurify",
       "version": "3.4.15",
       "license": "(MPL-2.0 OR Apache-2.0)",
@@ -1321,12 +2978,56 @@
       ]
     },
     {
+      "name": "dotenv",
+      "version": "16.6.1",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/motdotla/dotenv.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "dotenv-expand",
+      "version": "11.0.7",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/motdotla/dotenv-expand",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "dunder-proto",
       "version": "1.0.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/es-shims/dunder-proto.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "duplexer2",
+      "version": "0.1.4",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "deoxxa/duplexer2",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "ecdsa-sig-formatter",
+      "version": "1.0.11",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+ssh://git@github.com/Brightspace/node-ecdsa-sig-formatter.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1343,12 +3044,155 @@
       ]
     },
     {
+      "name": "ejs",
+      "version": "3.1.10",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/mde/ejs.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "electron",
+      "version": "44.4.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/electron",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "electron-builder",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "electron-builder-squirrel-windows",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "electron-publish",
+      "version": "26.15.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron-userland/electron-builder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "electron-winstaller",
+      "version": "5.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/electron/windows-installer",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "7.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "jsonfile",
+      "version": "4.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:jprichardson/node-jsonfile.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "universalify",
+      "version": "0.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/RyanZim/universalify.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@types/node",
+      "version": "24.13.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "undici-types",
+      "version": "7.18.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/nodejs/undici.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "emoji-regex",
+      "version": "8.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/mathiasbynens/emoji-regex.git",
+      "licenseFiles": [
+        "LICENSE-MIT.txt"
+      ]
+    },
+    {
       "name": "encodeurl",
       "version": "2.0.0",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "pillarjs/encodeurl",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "end-of-stream",
+      "version": "1.4.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/mafintosh/end-of-stream.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1362,6 +3206,28 @@
       "source": "https://github.com/fb55/entities.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "env-paths",
+      "version": "3.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/env-paths",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "err-code",
+      "version": "2.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/IndigoUnited/js-err-code.git",
+      "licenseFiles": [
+        "README.md#license"
       ]
     },
     {
@@ -1398,14 +3264,47 @@
       ]
     },
     {
+      "name": "es-set-tostringtag",
+      "version": "2.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/es-shims/es-set-tostringtag.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "es6-error",
+      "version": "4.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/bjyoungblood/es6-error.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
       "name": "esbuild",
       "version": "0.28.2",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/evanw/esbuild.git",
       "licenseFiles": [
         "LICENSE.md"
+      ]
+    },
+    {
+      "name": "escalade",
+      "version": "3.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "lukeed/escalade",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -1417,6 +3316,17 @@
       "source": "component/escape-html",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "escape-string-regexp",
+      "version": "4.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/escape-string-regexp",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -1453,6 +3363,17 @@
       ]
     },
     {
+      "name": "exponential-backoff",
+      "version": "3.1.3",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/coveooss/exponential-backoff.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "express",
       "version": "5.2.1",
       "license": "MIT",
@@ -1475,12 +3396,34 @@
       ]
     },
     {
+      "name": "extend",
+      "version": "3.0.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/justmoon/node-extend.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "fast-deep-equal",
       "version": "3.1.3",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/epoberezkin/fast-deep-equal.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fast-sha256",
+      "version": "1.3.0",
+      "license": "Unlicense",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dchest/fast-sha256-js",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1508,6 +3451,17 @@
       ]
     },
     {
+      "name": "fetch-blob",
+      "version": "3.2.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/node-fetch/fetch-blob.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "fflate",
       "version": "0.8.3",
       "license": "MIT",
@@ -1519,12 +3473,100 @@
       ]
     },
     {
+      "name": "filelist",
+      "version": "1.0.6",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/mde/filelist.git",
+      "licenseFiles": [
+        "docs/licenses/filelist-Apache-2.0.txt"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "2.1.7",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "5.1.9",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/minimatch.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "finalhandler",
       "version": "2.1.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "pillarjs/finalhandler",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "form-data",
+      "version": "4.0.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/form-data/form-data.git",
+      "licenseFiles": [
+        "License"
+      ]
+    },
+    {
+      "name": "mime-db",
+      "version": "1.52.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "jshttp/mime-db",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "mime-types",
+      "version": "2.1.35",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "jshttp/mime-types",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "formdata-polyfill",
+      "version": "4.0.10",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://jimmywarting@github.com/jimmywarting/FormData.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1574,6 +3616,28 @@
       ]
     },
     {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs.realpath",
+      "version": "1.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/isaacs/fs.realpath.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "fsevents",
       "version": "2.3.3",
       "license": "MIT",
@@ -1594,6 +3658,28 @@
       ]
     },
     {
+      "name": "gaxios",
+      "version": "7.3.1",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/googleapis/google-cloud-node.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "gcp-metadata",
+      "version": "8.1.2",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/googleapis/google-cloud-node-core.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "gesto",
       "version": "1.19.4",
       "license": "MIT",
@@ -1602,6 +3688,17 @@
       "source": "git+https://github.com/daybrush/gesto.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "get-caller-file",
+      "version": "2.0.5",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/stefanpenner/get-caller-file.git",
+      "licenseFiles": [
+        "LICENSE.md"
       ]
     },
     {
@@ -1627,6 +3724,105 @@
       ]
     },
     {
+      "name": "get-stream",
+      "version": "5.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/get-stream",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "glob",
+      "version": "7.2.3",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/node-glob.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/balanced-match.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.21",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/brace-expansion.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/minimatch.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "global-agent",
+      "version": "3.0.0",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/gajus/global-agent",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "globalthis",
+      "version": "1.0.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/ljharb/System.global.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "google-auth-library",
+      "version": "10.9.1",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/googleapis/google-cloud-node.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "google-logging-utils",
+      "version": "1.1.3",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/googleapis/google-cloud-node-core.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "gopd",
       "version": "1.2.0",
       "license": "MIT",
@@ -1638,12 +3834,67 @@
       ]
     },
     {
+      "name": "got",
+      "version": "11.8.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/got",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "graceful-fs",
+      "version": "4.2.11",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/isaacs/node-graceful-fs",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "has-flag",
+      "version": "4.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/has-flag",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "has-property-descriptors",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/inspect-js/has-property-descriptors.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "has-symbols",
       "version": "1.1.0",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git://github.com/inspect-js/has-symbols.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "has-tostringtag",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/inspect-js/has-tostringtag.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1671,6 +3922,39 @@
       ]
     },
     {
+      "name": "hosted-git-info",
+      "version": "4.1.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/hosted-git-info.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "lru-cache",
+      "version": "6.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/node-lru-cache.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "yallist",
+      "version": "4.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/isaacs/yallist.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "html-encoding-sniffer",
       "version": "6.0.0",
       "license": "MIT",
@@ -1679,6 +3963,17 @@
       "source": "git+https://github.com/jsdom/html-encoding-sniffer.git",
       "licenseFiles": [
         "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "http-cache-semantics",
+      "version": "4.2.0",
+      "license": "BSD-2-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/kornelski/http-cache-semantics.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -1693,12 +3988,67 @@
       ]
     },
     {
+      "name": "http-proxy-agent",
+      "version": "7.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "http2-wrapper",
+      "version": "1.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/szmarczak/http2-wrapper.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "https-proxy-agent",
+      "version": "7.0.6",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "iconv-lite",
       "version": "0.7.3",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/pillarjs/iconv-lite.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "ignore",
+      "version": "7.0.8",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/kaelzhang/node-ignore.git",
+      "licenseFiles": [
+        "LICENSE-MIT"
+      ]
+    },
+    {
+      "name": "inflight",
+      "version": "1.0.6",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/npm/inflight.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1737,6 +4087,17 @@
       ]
     },
     {
+      "name": "is-fullwidth-code-point",
+      "version": "3.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/is-fullwidth-code-point",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "is-potential-custom-element-name",
       "version": "1.0.1",
       "license": "MIT",
@@ -1759,12 +4120,56 @@
       ]
     },
     {
+      "name": "isarray",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/juliangruber/isarray.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "isbinaryfile",
+      "version": "5.0.7",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/gjtorikian/isBinaryFile",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
       "name": "isexe",
       "version": "2.0.0",
       "license": "ISC",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/isaacs/isexe.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "jake",
+      "version": "10.9.4",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/jakejs/jake.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "jiti",
+      "version": "2.7.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "unjs/jiti",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -1781,6 +4186,17 @@
       ]
     },
     {
+      "name": "js-yaml",
+      "version": "4.3.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "nodeca/js-yaml",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "jsdom",
       "version": "30.1.0",
       "license": "MIT",
@@ -1789,6 +4205,39 @@
       "source": "git+https://github.com/jsdom/jsdom.git",
       "licenseFiles": [
         "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "json-bigint",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git@github.com:sidorares/json-bigint.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "json-buffer",
+      "version": "3.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/dominictarr/json-buffer.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "json-schema-to-ts",
+      "version": "3.1.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/ThomasAribart/json-schema-to-ts.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -1814,6 +4263,61 @@
       ]
     },
     {
+      "name": "json-stringify-safe",
+      "version": "5.0.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/json-stringify-safe",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "json5",
+      "version": "2.2.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/json5/json5.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:jprichardson/node-jsonfile.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "jwa",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/brianloveswords/node-jwa.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "jws",
+      "version": "4.0.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/brianloveswords/node-jws.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "keycode",
       "version": "2.2.1",
       "license": "MIT",
@@ -1834,6 +4338,26 @@
       "licenseFiles": [
         "docs/licenses/keycon-MIT.txt"
       ]
+    },
+    {
+      "name": "keyv",
+      "version": "4.5.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/jaredwray/keyv.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "lazy-val",
+      "version": "1.0.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "develar/lazy-val",
+      "licenseFiles": []
     },
     {
       "name": "lightningcss",
@@ -1948,6 +4472,39 @@
       ]
     },
     {
+      "name": "lodash",
+      "version": "4.18.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "lodash/lodash",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "long",
+      "version": "5.3.2",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/dcodeIO/long.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "lowercase-keys",
+      "version": "2.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/lowercase-keys",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "lru-cache",
       "version": "11.5.3",
       "license": "BlueOak-1.0.0",
@@ -1967,6 +4524,17 @@
       "source": "https://github.com/lucide-icons/lucide.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "matcher",
+      "version": "3.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/matcher",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -2014,6 +4582,17 @@
       ]
     },
     {
+      "name": "mime",
+      "version": "2.6.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/broofa/mime",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "mime-db",
       "version": "1.54.0",
       "license": "MIT",
@@ -2031,6 +4610,72 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "jshttp/mime-types",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "mimic-response",
+      "version": "1.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/mimic-response",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "minimatch",
+      "version": "10.2.6",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:isaacs/minimatch",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "minimist",
+      "version": "1.2.8",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/minimistjs/minimist.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "minipass",
+      "version": "7.1.3",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/isaacs/minipass",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "minizlib",
+      "version": "3.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/isaacs/minizlib.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "mkdirp",
+      "version": "0.5.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/substack/node-mkdirp.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2113,6 +4758,136 @@
       ]
     },
     {
+      "name": "node-abi",
+      "version": "4.35.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/electron/node-abi.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "node-api-version",
+      "version": "0.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/timfish/node-api-version",
+      "licenseFiles": []
+    },
+    {
+      "name": "node-domexception",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/jimmywarting/node-domexception.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "node-fetch",
+      "version": "3.3.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/node-fetch/node-fetch.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "node-gyp",
+      "version": "12.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/nodejs/node-gyp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "env-paths",
+      "version": "2.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/env-paths",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "isexe",
+      "version": "4.0.0",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/isaacs/isexe",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "undici",
+      "version": "6.28.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/nodejs/undici.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "which",
+      "version": "6.0.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/node-which.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "node-int64",
+      "version": "0.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/broofa/node-int64",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "nopt",
+      "version": "9.0.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/nopt.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "normalize-url",
+      "version": "6.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/normalize-url",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "object-assign",
       "version": "4.1.1",
       "license": "MIT",
@@ -2130,6 +4905,17 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "git://github.com/inspect-js/object-inspect.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "object-keys",
+      "version": "1.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/ljharb/object-keys.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2157,6 +4943,17 @@
       ]
     },
     {
+      "name": "openai",
+      "version": "6.40.0",
+      "license": "Apache-2.0",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "github:openai/openai-node",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "overlap-area",
       "version": "1.1.0",
       "license": "MIT",
@@ -2165,6 +4962,50 @@
       "source": "git+https://github.com/daybrush/overlap-area.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "p-cancelable",
+      "version": "2.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/p-cancelable",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "p-limit",
+      "version": "3.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/p-limit",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "p-retry",
+      "version": "4.6.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "sindresorhus/p-retry",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "retry",
+      "version": "0.13.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/tim-kos/node-retry.git",
+      "licenseFiles": [
+        "License"
       ]
     },
     {
@@ -2190,6 +5031,28 @@
       ]
     },
     {
+      "name": "partial-json",
+      "version": "0.1.7",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/promplate/partial-json-parser-js",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "path-is-absolute",
+      "version": "1.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/path-is-absolute",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "path-key",
       "version": "3.1.1",
       "license": "MIT",
@@ -2207,6 +5070,17 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/pillarjs/path-to-regexp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "pe-library",
+      "version": "0.4.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jet2jet/pe-library-js.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2245,6 +5119,28 @@
       ]
     },
     {
+      "name": "pkijs",
+      "version": "3.4.1",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/PKI.js",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "@noble/hashes",
+      "version": "1.8.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/paulmillr/noble-hashes.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "playwright",
       "version": "1.63.0",
       "license": "Apache-2.0",
@@ -2269,12 +5165,45 @@
       ]
     },
     {
+      "name": "plist",
+      "version": "3.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/TooTallNate/node-plist.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "postcss",
       "version": "8.5.28",
       "license": "MIT",
       "scope": "development",
       "installed": true,
       "source": "postcss/postcss",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "postject",
+      "version": "1.0.0-alpha.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:nodejs/postject.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "commander",
+      "version": "9.5.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/tj/commander.js.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2291,12 +5220,98 @@
       ]
     },
     {
+      "name": "proc-log",
+      "version": "6.1.0",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/proc-log.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "process-nextick-args",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/calvinmetcalf/process-nextick-args.git",
+      "licenseFiles": [
+        "license.md"
+      ]
+    },
+    {
+      "name": "progress",
+      "version": "2.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/visionmedia/node-progress",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "promise-retry",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/IndigoUnited/node-promise-retry.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "proper-lockfile",
+      "version": "4.1.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:moxystudio/node-proper-lockfile.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "protobufjs",
+      "version": "7.6.6",
+      "license": "BSD-3-Clause",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "protobufjs/protobuf.js",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "proxy-addr",
       "version": "2.0.8",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "jshttp/proxy-addr",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "proxy-agent-negotiate",
+      "version": "1.1.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/TooTallNate/proxy-agents.git",
+      "licenseFiles": []
+    },
+    {
+      "name": "pump",
+      "version": "3.0.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/mafintosh/pump.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2313,6 +5328,28 @@
       ]
     },
     {
+      "name": "pvtsutils",
+      "version": "1.3.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/PeculiarVentures/pvtsutils",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "pvutils",
+      "version": "1.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/pvutils",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "qs",
       "version": "6.16.0",
       "license": "BSD-3-Clause",
@@ -2321,6 +5358,17 @@
       "source": "https://github.com/ljharb/qs.git",
       "licenseFiles": [
         "LICENSE.md"
+      ]
+    },
+    {
+      "name": "quick-lru",
+      "version": "5.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/quick-lru",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -2412,12 +5460,45 @@
       ]
     },
     {
+      "name": "read-binary-file-arch",
+      "version": "1.0.6",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+ssh://git@github.com/samuelmaddock/read-binary-file-arch.git",
+      "licenseFiles": [
+        "README.md#license"
+      ]
+    },
+    {
+      "name": "readable-stream",
+      "version": "2.3.8",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/nodejs/readable-stream",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "readdirp",
       "version": "5.1.1",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/paulmillr/readdirp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "require-directory",
+      "version": "2.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/troygoode/node-require-directory.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2431,6 +5512,72 @@
       "source": "floatdrop/require-from-string",
       "licenseFiles": [
         "license"
+      ]
+    },
+    {
+      "name": "resedit",
+      "version": "1.7.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jet2jet/resedit-js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "resolve-alpn",
+      "version": "1.2.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/szmarczak/resolve-alpn.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "responselike",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/sindresorhus/responselike.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "retry",
+      "version": "0.12.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/tim-kos/node-retry.git",
+      "licenseFiles": [
+        "License"
+      ]
+    },
+    {
+      "name": "rimraf",
+      "version": "2.6.3",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/isaacs/rimraf.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "roarr",
+      "version": "2.15.4",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:gajus/roarr.git",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -2456,6 +5603,17 @@
       ]
     },
     {
+      "name": "safe-buffer",
+      "version": "5.1.2",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git://github.com/feross/safe-buffer.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "safer-buffer",
       "version": "2.1.2",
       "license": "MIT",
@@ -2464,6 +5622,28 @@
       "source": "git+https://github.com/ChALkeR/safer-buffer.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "sanitize-filename",
+      "version": "1.6.4",
+      "license": "WTFPL OR ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:parshap/node-sanitize-filename.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "sax",
+      "version": "1.6.1",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git+ssh://git@github.com/isaacs/sax-js.git",
+      "licenseFiles": [
+        "LICENSE.md"
       ]
     },
     {
@@ -2500,6 +5680,28 @@
       ]
     },
     {
+      "name": "semver",
+      "version": "7.8.5",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/npm/node-semver.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "semver-compare",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/substack/semver-compare.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "send",
       "version": "1.2.1",
       "license": "MIT",
@@ -2508,6 +5710,17 @@
       "source": "pillarjs/send",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "serialize-error",
+      "version": "7.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/serialize-error",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -2599,6 +5812,39 @@
       ]
     },
     {
+      "name": "signal-exit",
+      "version": "3.0.7",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/tapjs/signal-exit.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "simple-update-notifier",
+      "version": "2.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/alexbrazier/simple-update-notifier.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "source-map",
+      "version": "0.6.1",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "http://github.com/mozilla/source-map.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "source-map-js",
       "version": "1.2.1",
       "license": "BSD-3-Clause",
@@ -2610,12 +5856,164 @@
       ]
     },
     {
+      "name": "source-map-support",
+      "version": "0.5.21",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/evanw/node-source-map-support",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "sprintf-js",
+      "version": "1.1.3",
+      "license": "BSD-3-Clause",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/alexei/sprintf.js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "standardwebhooks",
+      "version": "1.1.1",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/standard-webhooks/standard-webhooks",
+      "licenseFiles": [
+        "docs/licenses/standardwebhooks-MIT.txt"
+      ]
+    },
+    {
+      "name": "stat-mode",
+      "version": "1.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/TooTallNate/stat-mode.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "statuses",
       "version": "2.0.2",
       "license": "MIT",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "jshttp/statuses",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "string_decoder",
+      "version": "1.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/nodejs/string_decoder.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "string-width",
+      "version": "4.2.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/string-width",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "strip-ansi",
+      "version": "6.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/strip-ansi",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "sumchecker",
+      "version": "3.0.1",
+      "license": "Apache-2.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/malept/sumchecker.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "supports-color",
+      "version": "7.2.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/supports-color",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
+      "name": "tar",
+      "version": "7.5.22",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/isaacs/node-tar.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "temp",
+      "version": "0.9.4",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/bruce/node-temp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "temp-file",
+      "version": "3.4.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "develar/temp-file",
+      "licenseFiles": []
+    },
+    {
+      "name": "tiny-async-pool",
+      "version": "1.3.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git@github.com:rxaviers/async-pool.git",
+      "licenseFiles": [
+        "LICENSE-MIT"
+      ]
+    },
+    {
+      "name": "semver",
+      "version": "5.7.2",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/npm/node-semver.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2654,6 +6052,26 @@
       ]
     },
     {
+      "name": "tmp",
+      "version": "0.2.7",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/raszi/node-tmp.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "tmp-promise",
+      "version": "3.0.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/benjamingr/tmp-promise.git",
+      "licenseFiles": []
+    },
+    {
       "name": "toidentifier",
       "version": "1.0.1",
       "license": "MIT",
@@ -2687,6 +6105,28 @@
       ]
     },
     {
+      "name": "truncate-utf8-bytes",
+      "version": "1.0.2",
+      "license": "WTFPL",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/parshap/truncate-utf8-bytes.git",
+      "licenseFiles": [
+        "docs/licenses/truncate-utf8-bytes-WTFPL.txt"
+      ]
+    },
+    {
+      "name": "ts-algebra",
+      "version": "2.0.0",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/ThomasAribart/ts-algebra.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "tslib",
       "version": "2.8.1",
       "license": "0BSD",
@@ -2709,6 +6149,17 @@
       ]
     },
     {
+      "name": "type-fest",
+      "version": "0.13.1",
+      "license": "(MIT OR CC0-1.0)",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/type-fest",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "type-is",
       "version": "2.1.0",
       "license": "MIT",
@@ -2728,6 +6179,17 @@
       "source": "jshttp/content-type",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "typebox",
+      "version": "1.3.27",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "https://github.com/sinclairzx81/typebox",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -2757,9 +6219,20 @@
       "name": "undici-types",
       "version": "6.21.0",
       "license": "MIT",
-      "scope": "development",
+      "scope": "runtime/editor/server",
       "installed": true,
       "source": "git+https://github.com/nodejs/undici.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/RyanZim/universalify.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2771,6 +6244,51 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "stream-utils/unpipe",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "unzipper",
+      "version": "0.12.5",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/ZJONSSON/node-unzipper.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.3.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/jprichardson/node-fs-extra",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "utf8-byte-length",
+      "version": "1.0.5",
+      "license": "(WTFPL OR MIT)",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/parshap/utf8-byte-length.git",
+      "licenseFiles": [
+        "LICENSE.MIT.txt",
+        "LICENSE.WTFPL.txt"
+      ]
+    },
+    {
+      "name": "util-deprecate",
+      "version": "1.0.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/TooTallNate/util-deprecate.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2806,6 +6324,28 @@
       "source": "jsdom/w3c-xmlserializer",
       "licenseFiles": [
         "LICENSE.md"
+      ]
+    },
+    {
+      "name": "web-streams-polyfill",
+      "version": "3.3.3",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/MattiasBuelens/web-streams-polyfill.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "webcrypto-core",
+      "version": "1.9.2",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/PeculiarVentures/webcrypto-core",
+      "licenseFiles": [
+        "LICENSE"
       ]
     },
     {
@@ -2853,12 +6393,34 @@
       ]
     },
     {
+      "name": "wrap-ansi",
+      "version": "7.0.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "chalk/wrap-ansi",
+      "licenseFiles": [
+        "license"
+      ]
+    },
+    {
       "name": "wrappy",
       "version": "1.0.2",
       "license": "ISC",
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/npm/wrappy",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "ws",
+      "version": "8.21.3",
+      "license": "MIT",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "git+https://github.com/websockets/ws.git",
       "licenseFiles": [
         "LICENSE"
       ]
@@ -2875,6 +6437,17 @@
       ]
     },
     {
+      "name": "xmlbuilder",
+      "version": "15.1.1",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "git://github.com/oozcitak/xmlbuilder-js.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
       "name": "xmlchars",
       "version": "2.2.0",
       "license": "MIT",
@@ -2883,6 +6456,72 @@
       "source": "https://github.com/lddubeau/xmlchars.git",
       "licenseFiles": [
         "LICENSE"
+      ]
+    },
+    {
+      "name": "y18n",
+      "version": "5.0.8",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "yargs/y18n",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "yallist",
+      "version": "5.0.0",
+      "license": "BlueOak-1.0.0",
+      "scope": "development",
+      "installed": true,
+      "source": "git+https://github.com/isaacs/yallist.git",
+      "licenseFiles": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "yaml",
+      "version": "2.9.0",
+      "license": "ISC",
+      "scope": "runtime/editor/server",
+      "installed": true,
+      "source": "github:eemeli/yaml",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "yargs",
+      "version": "17.7.3",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/yargs/yargs.git",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "yargs-parser",
+      "version": "21.1.1",
+      "license": "ISC",
+      "scope": "development",
+      "installed": true,
+      "source": "https://github.com/yargs/yargs-parser.git",
+      "licenseFiles": [
+        "LICENSE.txt"
+      ]
+    },
+    {
+      "name": "yocto-queue",
+      "version": "0.1.0",
+      "license": "MIT",
+      "scope": "development",
+      "installed": true,
+      "source": "sindresorhus/yocto-queue",
+      "licenseFiles": [
+        "license"
       ]
     },
     {
@@ -2908,5 +6547,13 @@
       ]
     }
   ],
-  "missingText": []
+  "missingText": [
+    "chromium-pickle-js",
+    "cross-dirname",
+    "lazy-val",
+    "node-api-version",
+    "proxy-agent-negotiate",
+    "temp-file",
+    "tmp-promise"
+  ]
 }

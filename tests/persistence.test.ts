@@ -32,6 +32,11 @@ test(
             "library-test.json",
           ),
           SW_PROJECTS_DIR: path.join(workspace, "projects"),
+          SW_AGENT_SETTINGS_PATH: path.join(
+            workspace,
+            ".scrollweave",
+            "agent-settings.json",
+          ),
         },
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,

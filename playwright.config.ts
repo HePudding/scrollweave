@@ -34,6 +34,7 @@ export default defineConfig({
       SW_WORKSPACE: path.join(testDirectory, "initial"),
       SW_PROJECTS_DIR: path.join(testDirectory, "projects"),
       SW_LIBRARY_PATH: path.join(testDirectory, "library.json"),
+      SW_AGENT_SETTINGS_PATH: path.join(testDirectory, "agent-settings.json"),
     },
   },
 });

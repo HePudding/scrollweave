@@ -15,6 +15,13 @@ const allowed = new Set([
   "BlueOak-1.0.0",
   "CC0-1.0",
   "(MPL-2.0 OR Apache-2.0)",
+  // Pi's transitive utilities; their original license texts ship in the notices.
+  "Python-2.0",
+  "Unlicense",
+  "WTFPL OR ISC",
+  "WTFPL",
+  "(MIT OR CC0-1.0)",
+  "(WTFPL OR MIT)",
 ]);
 type Entry = {
   name: string;
@@ -59,6 +66,19 @@ for (const [directory, value] of Object.entries<any>(lock.packages)) {
     keycon: "docs/licenses/keycon-MIT.txt",
     "@esbuild/win32-x64": "node_modules/esbuild/LICENSE.md",
     "@rolldown/binding-win32-x64-msvc": "node_modules/rolldown/LICENSE",
+    // These packages share the root license in their declared upstream monorepo.
+    "@aws-sdk/credential-provider-http": "node_modules/@aws-sdk/core/LICENSE",
+    "@aws-sdk/credential-provider-login": "node_modules/@aws-sdk/core/LICENSE",
+    "@aws-sdk/nested-clients": "node_modules/@aws-sdk/core/LICENSE",
+    "app-builder-lib": "node_modules/electron-builder/LICENSE",
+    "dmg-builder": "node_modules/electron-builder/LICENSE",
+    // Vendored upstream text includes the package version and immutable source.
+    "@earendil-works/chord": "docs/licenses/pi-MIT.txt",
+    "@earendil-works/pi-ai": "docs/licenses/pi-MIT.txt",
+    "@earendil-works/pi-agent-core": "docs/licenses/pi-MIT.txt",
+    standardwebhooks: "docs/licenses/standardwebhooks-MIT.txt",
+    filelist: "docs/licenses/filelist-Apache-2.0.txt",
+    "truncate-utf8-bytes": "docs/licenses/truncate-utf8-bytes-WTFPL.txt",
   };
   if (name.startsWith("@esbuild/"))
     upstreamFallbacks[name] = "node_modules/esbuild/LICENSE.md";
@@ -82,7 +102,11 @@ for (const [directory, value] of Object.entries<any>(lock.packages)) {
     const body = readme
       ? fs.readFileSync(path.join(directory, readme), "utf8")
       : "";
-    const match = body.match(/(?:^|\n)#+\s*(?:License|Copyright)[\s\S]*$/i);
+    // Recognize Markdown setext headings too; data-uri-to-buffer includes the
+    // complete MIT permission/copyright text under its underlined License title.
+    const match = body.match(
+      /(?:^|\n)(?:#+\s*(?:License|Copyright)|(?:License|Copyright)\r?\n[-=]+)[\s\S]*$/i,
+    );
     if (match) {
       text = match[0];
       files.push(`${readme}#license`);
@@ -103,6 +127,8 @@ for (const [directory, value] of Object.entries<any>(lock.packages)) {
       repository ?? `https://www.npmjs.com/package/${name}/v/${value.version}`,
     licenseFiles: files,
   });
+  // Normalize formatting only; preserve the complete upstream license wording.
+  text = text.replace(/\r\n/g, "\n").replace(/[\t ]+$/gm, "");
   if (text)
     texts[directory] =
       `${name}@${value.version}\nSource: ${repository ?? records.at(-1)!.source}\n${text}`;

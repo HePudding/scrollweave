@@ -493,6 +493,8 @@ test("真实视频普通播放含音频，分割后续播；滚动正向、反�
   const frameHandle = await page.locator("iframe").elementHandle(),
     content = await frameHandle!.contentFrame();
   expect(content).toBeTruthy();
+  // The parent restores its playhead after iframe load; seek only after that handshake.
+  await content!.waitForFunction(() => window.__SW_READY__);
   for (const t of [1, 6.5, 3.2, 7.5, 0.4, 5.8]) {
     await content!.evaluate(
       (t) => window.ScrollWeave.seek(t, "stage", true),
@@ -641,6 +643,14 @@ test("复合片段内部编辑与返回，关键帧画布联动；图片 SVG 单
   await page.getByTestId("clip-text").click();
   await seek(page, 0);
   await page.getByTitle("添加关键帧 位置 X").click();
+  await expect
+    .poll(
+      async () =>
+        (await current(request)).project.compositions.main.elements.find(
+          (element: any) => element.id === "text",
+        )?.tracks.x?.length ?? 0,
+    )
+    .toBe(1);
   await seek(page, 2);
   await page.getByLabel("位置 X", { exact: true }).fill("400");
   await page.getByLabel("位置 X", { exact: true }).press("Enter");
@@ -649,7 +659,7 @@ test("复合片段内部编辑与返回，关键帧画布联动；图片 SVG 单
       async () =>
         (await current(request)).project.compositions.main.elements.find(
           (e: any) => e.id === "text",
-        ).tracks.x.length,
+        )?.tracks.x?.length ?? 0,
     )
     .toBe(2);
   await seek(page, 1);
@@ -660,7 +670,7 @@ test("复合片段内部编辑与返回，关键帧画布联动；图片 SVG 单
         .evaluate((el) => el.style.transform),
     )
     .toContain("250px");
-  await page.getByLabel("关闭关键帧编辑").click();
+  // Keyframe editing is inline; selecting multiple clips leaves that inspector.
   await page.getByTestId("clip-image").click({ modifiers: ["Shift"] });
   await page.getByTitle("创建复合片段 Alt+G").click();
   await expect(page.locator(".timeline-clip")).toHaveCount(1);

@@ -9,8 +9,13 @@ import { EditorService, type ToolName } from "./service";
 import { createMcpServer } from "./mcp";
 import { exportHTML } from "./export";
 import { ProjectLibrary, canonicalDirectory } from "./library";
-import { DirectoryPicker } from "./directory-picker";
-const directoryPicker = new DirectoryPicker();
+import { DirectoryPicker, type systemDirectoryDialog } from "./directory-picker";
+import { registerAgentRoutes } from "./agent-routes";
+let directoryPicker = new DirectoryPicker();
+export function setDirectoryDialog(show: typeof systemDirectoryDialog) {
+  directoryPicker.close();
+  directoryPicker = new DirectoryPicker(show);
+}
 const port = Number(process.env.PORT ?? 4100);
 const projectsDirectory = path.resolve(
   process.env.SW_PROJECTS_DIR ??
@@ -21,17 +26,22 @@ const library = new ProjectLibrary(
     path.join(os.homedir(), ".scrollweave", "projects.json"),
   projectsDirectory,
 );
+const scratchWorkspace = process.env.SW_SCRATCH_WORKSPACE
+  ? path.resolve(process.env.SW_SCRATCH_WORKSPACE)
+  : undefined;
 const workspace = path.resolve(
   process.env.SW_WORKSPACE ??
     library.startupDirectory() ??
+    scratchWorkspace ??
     path.join(projectsDirectory, "My-first-work"),
 );
 const service = await EditorService.open(workspace, port),
   app = express();
 fs.mkdirSync(projectsDirectory, { recursive: true });
-library.remember(service.workspace, service.store.project.name, false);
+if (service.workspace !== scratchWorkspace)
+  library.remember(service.workspace, service.store.project.name, false);
 service.listeners.add((type) => {
-  if (type === "workspace")
+  if (type === "workspace" && service.workspace !== scratchWorkspace)
     library.remember(service.workspace, service.store.project.name);
 });
 app.disable("x-powered-by");
@@ -90,6 +100,7 @@ app.post(
   },
 );
 app.use(express.json({ limit: "60mb" }));
+const agent = registerAgentRoutes(app, service);
 app.get("/api/state", (_req, res) => res.json(service.store.snapshot()));
 app.get("/api/workspace", (_req, res) => res.json(service.info()));
 const listProjects = () => ({
@@ -329,13 +340,21 @@ const server = app.listen(port, "127.0.0.1", () =>
       workspace,
   ),
 );
+export const ready = new Promise<void>((resolve, reject) => {
+  server.once("listening", resolve);
+  server.once("error", reject);
+});
 let closing = false;
-const close = async () => {
+export const closeServer = async () => {
   if (closing) return;
   closing = true;
   directoryPicker.close();
+  await agent.close();
   server.close();
   await service.close();
+};
+const close = async () => {
+  await closeServer();
   process.exit();
 };
 process.on("SIGINT", () => void close());

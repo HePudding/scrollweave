@@ -1,0 +1,17 @@
+Package: truncate-utf8-bytes@1.0.2
+Source: https://raw.githubusercontent.com/parshap/truncate-utf8-bytes/4212839ea184e74fb81f1e4e633e1db794ebe4f4/LICENSE.WTFPL.txt
+Provenance: Upstream full WTFPL text at immutable commit; installed 1.0.2 declares WTFPL but omits the text.
+
+ DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                    Version 2, December 2004 
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+
+ Everyone is permitted to copy and distribute verbatim or modified 
+ copies of this license document, and changing it is allowed as long 
+ as the name is changed. 
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.

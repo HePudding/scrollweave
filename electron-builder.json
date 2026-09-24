@@ -1,0 +1,14 @@
+{
+  "appId": "org.scrollweave.editor",
+  "productName": "ScrollWeave",
+  "asar": false,
+  "directories": { "output": "release" },
+  "files": ["dist/**/*", "electron/main.cjs", "package.json", "LICENSE", "THIRD_PARTY*.txt", "THIRD_PARTY_NOTICES.md"],
+  "extraResources": [{ "from": "build/media-tools", "to": "media-tools" }],
+  "win": {
+    "target": [{ "target": "portable", "arch": ["x64"] }],
+    "signAndEditExecutable": false,
+    "artifactName": "ScrollWeave-${version}-portable-${arch}.${ext}"
+  },
+  "portable": { "requestExecutionLevel": "user" }
+}

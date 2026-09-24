@@ -231,6 +231,7 @@ export function sanitizeEmbedded(p: Project) {
 }
 export class EditorService {
   listeners = new Set<(type: string, data: unknown) => void>();
+  beforeWorkspaceChange?: () => Promise<void>;
   browser?: Browser;
   private captureQueue = Promise.resolve();
   private release: () => void = () => {};
@@ -436,6 +437,7 @@ export class EditorService {
     }
     this.switching = true;
     try {
+      await this.beforeWorkspaceChange?.();
       this.persist();
       await this.assets.close();
       this.release();
@@ -505,6 +507,16 @@ export class EditorService {
     return result;
   }
   async importProject(bytes: Buffer, asCompound = false) {
+    if (this.switching) throw Error("正在切换或导入作品，请稍候");
+    this.switching = true;
+    try {
+      await this.beforeWorkspaceChange?.();
+      return await this.importProjectContents(bytes, asCompound);
+    } finally {
+      this.switching = false;
+    }
+  }
+  private async importProjectContents(bytes: Buffer, asCompound: boolean) {
     const documentBefore = JSON.stringify({
       ...this.store.project,
       assets: undefined,
@@ -588,6 +600,8 @@ export class EditorService {
         ),
       () => this.persist(),
     );
+    if (!asCompound)
+      this.listeners.forEach((fn) => fn("workspace", this.info()));
     this.emit();
     return this.summary();
   }
@@ -599,7 +613,12 @@ export class EditorService {
       preview: this.store.preview,
     };
   }
-  async run(name: ToolName, input: unknown): Promise<any> {
+  async run(
+    name: ToolName,
+    input: unknown,
+    signal?: AbortSignal,
+  ): Promise<any> {
+    signal?.throwIfAborted();
     if (this.switching) throw Error("正在切换作品目录，请稍候");
     if (!Object.hasOwn(schemas, name)) throw Error("未知操作");
     const a: any = schemas[name].parse(input);
@@ -613,19 +632,23 @@ export class EditorService {
     };
     if (aliases[name]) {
       const { expectedRevision, ...args } = a;
-      return this.run("edit_project", {
-        expectedRevision,
-        label: descriptions[name].split("。")[0],
-        commands: [
-          {
-            type: aliases[name],
-            ...args,
-            ...(["split_clip", "create_compound"].includes(name)
-              ? { newId: uid(name === "split_clip" ? "clip" : "comp") }
-              : {}),
-          },
-        ],
-      });
+      return this.run(
+        "edit_project",
+        {
+          expectedRevision,
+          label: descriptions[name].split("。")[0],
+          commands: [
+            {
+              type: aliases[name],
+              ...args,
+              ...(["split_clip", "create_compound"].includes(name)
+                ? { newId: uid(name === "split_clip" ? "clip" : "comp") }
+                : {}),
+            },
+          ],
+        },
+        signal,
+      );
     }
     switch (name) {
       case "workspace_info":
@@ -671,7 +694,7 @@ export class EditorService {
         };
       }
       case "wait_for_asset": {
-        const { data, ...asset } = await this.assets.waitFor(a);
+        const { data, ...asset } = await this.assets.waitFor(a, signal);
         return { asset, revision: this.store.revision };
       }
       case "archive_asset": {
@@ -710,6 +733,12 @@ export class EditorService {
           () => this.store.commit(a.commands, a.expectedRevision, a.label),
           () => this.persist(),
         );
+        if (
+          a.commands.some(
+            (command: { type: string }) => command.type === "project.replace",
+          )
+        )
+          this.listeners.forEach((fn) => fn("workspace", this.info()));
         this.emit();
         return this.summary();
       }
@@ -720,24 +749,28 @@ export class EditorService {
           old = e?.tracks[a.property as "x"]?.find(
             (k) => Math.abs(k.at - a.at) < 1e-6,
           );
-        return this.run("edit_project", {
-          expectedRevision: a.expectedRevision,
-          label: "设置关键帧",
-          commands: [
-            {
-              type: "keyframe.set",
-              compositionId: a.compositionId,
-              elementId: a.elementId,
-              property: a.property,
-              keyframe: {
-                id: old?.id ?? uid("key"),
-                at: a.at,
-                value: a.value,
-                easing: a.easing,
+        return this.run(
+          "edit_project",
+          {
+            expectedRevision: a.expectedRevision,
+            label: "设置关键帧",
+            commands: [
+              {
+                type: "keyframe.set",
+                compositionId: a.compositionId,
+                elementId: a.elementId,
+                property: a.property,
+                keyframe: {
+                  id: old?.id ?? uid("key"),
+                  at: a.at,
+                  value: a.value,
+                  easing: a.easing,
+                },
               },
-            },
-          ],
-        });
+            ],
+          },
+          signal,
+        );
       }
       case "undo":
       case "redo":
@@ -772,11 +805,15 @@ export class EditorService {
         this.store.check(a.expectedRevision);
         const preset = presets.get(a.presetId);
         if (!preset) throw Error("预制不存在");
-        return this.run("edit_project", {
-          commands: preset.build({ project: this.store.project, ...a }),
-          expectedRevision: a.expectedRevision,
-          label: "应用预制：" + preset.name,
-        });
+        return this.run(
+          "edit_project",
+          {
+            commands: preset.build({ project: this.store.project, ...a }),
+            expectedRevision: a.expectedRevision,
+            label: "应用预制：" + preset.name,
+          },
+          signal,
+        );
       }
       case "validate_project":
         validateProject(this.store.project);
@@ -893,16 +930,18 @@ export class EditorService {
         };
       }
       case "get_preview_screenshot":
-        return this.screenshot(a);
+        return this.screenshot(a, signal);
     }
   }
-  private async screenshot(a: any) {
+  private async screenshot(a: any, signal?: AbortSignal) {
+    signal?.throwIfAborted();
     const revision = this.store.revision,
       compositionId = a.compositionId ?? this.store.preview.compositionId,
       progress = a.progress ?? this.store.preview.progress;
     const project = await this.portableProject(this.store.project, [
       compositionId,
     ]);
+    signal?.throwIfAborted();
     if (!project.compositions[compositionId]) throw Error("时间线不存在");
     let release!: () => void;
     const previous = this.captureQueue;
@@ -911,6 +950,7 @@ export class EditorService {
     });
     await previous;
     try {
+      signal?.throwIfAborted();
       if (!this.browser) {
         const executablePath =
           process.env.SW_BROWSER_PATH ||
@@ -923,12 +963,20 @@ export class EditorService {
           ...(executablePath ? { executablePath } : {}),
         });
       }
+      signal?.throwIfAborted();
       const page = await this.browser.newPage({
           viewport: { width: 1280, height: 720 },
         }),
         errors: string[] = [];
       page.on("pageerror", (e) => errors.push(e.message));
+      // Each capture owns its page. Closing it interrupts seek/load/screenshot
+      // waits without closing the shared browser or releasing the queue early.
+      const abortCapture = () => {
+        void page.close().catch(() => {});
+      };
+      signal?.addEventListener("abort", abortCapture, { once: true });
       try {
+        signal?.throwIfAborted();
         await page.setContent(
           await exportHTML({
             ...project,
@@ -984,6 +1032,7 @@ export class EditorService {
           errors,
         };
       } finally {
+        signal?.removeEventListener("abort", abortCapture);
         await page.close();
       }
     } finally {

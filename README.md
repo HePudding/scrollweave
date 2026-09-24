@@ -1,10 +1,20 @@
 # ScrollWeave 0.2 · 从素材到滚动作品
 
-本地、以素材为中心的滚动网页编辑器。图片、SVG、视频先进入素材库，再成为时间线上的独立片段；用秒编排，用播放检查，再把同一条时间线映射为网页滚动。无需账号或模型 API Key。
+本地、以素材为中心的滚动网页编辑器。图片、SVG、视频先进入素材库，再成为时间线上的独立片段；用秒编排，用播放检查，再把同一条时间线映射为网页滚动。手动编辑无需账号或模型 API Key；可选的内置 Pi 助手使用你配置的模型服务。
 
 ![项目管理主页](docs/screenshots/project-home.png)
 
 ## 启动
+
+### Windows 单文件便携版
+
+双击 `ScrollWeave-0.2.0-portable-x64.exe` 即可运行，无需安装 Node.js、FFmpeg 或 FFprobe。首次启动会解压运行文件到临时目录；项目、项目列表和桌面设置保存在 EXE 旁的 `ScrollWeave-data`，请将 EXE 放在可写目录，迁移时一起复制该数据文件夹。关闭窗口会保存并停止内置服务。
+
+从源码打包：`npm ci` 后执行 `npm run build:portable`，产物位于 `release/`。打包电脑需提供 `ffmpeg.exe`、`ffprobe.exe`（PATH 或 `SW_FFMPEG` / `SW_FFPROBE`），其上两级目录需有 `LICENSE.txt`。当前目标为 Windows x64，未配置代码签名。MCP 截图功能仍需本机 Chrome/Edge 或 Playwright Chromium；日常编辑和网页导出不需要额外浏览器。
+
+便携版首次启动显示空项目列表，不再自动登记“未命名作品”。内置服务的待用会话保存在 `ScrollWeave-data/.session`；点击新建或打开后才登记真实项目。桌面版使用绑定主窗口的 Electron 原生文件夹对话框。旧版已生成的项目仍保留，可在项目卡片菜单中“移出列表”。
+
+### Web 开发版
 
 需要 Node.js 22.12+、npm，以及位于 PATH 的 **FFmpeg 和 FFprobe**。媒体探测、真实缩略帧由本机 FFmpeg 处理；项目不捆绑其二进制。本轮环境实测 Node 26.5、FFmpeg 8.1.2、Windows Chrome。
 
@@ -36,6 +46,16 @@ npm run dev
 生产构建：`npm run build`，然后 `npm start`。先停止使用同一作品目录的旧服务；进程锁阻止同目录双写。服务只监听本机，拒绝非本机 Host 和跨站 Origin。
 
 `SW_FFMPEG`、`SW_FFPROBE` 可指定可执行文件。截图与验收自动检测 Windows Chrome/Edge，也可设置 `SW_BROWSER_PATH`；其他环境可安装 Playwright Chromium。
+
+## 内置 Pi 创作助手
+
+在主页或编辑器的“模型提供商”设置中选择提供商，填写 API 地址、密钥和模型，测试连接后保存。在编辑器右下角点击 **Pi 助手** 气泡展开对话，可直接描述“让选中的标题在两秒内淡入并向上移动”等修改。支持 OpenAI、Anthropic、Gemini、DeepSeek、OpenRouter、Ollama 以及自定义兼容接口；模型可手动输入或从服务端获取，聊天面板可快速切换提供商和模型。
+
+助手使用真正的 `@earendil-works/pi-agent-core` 执行工具循环，通过编辑器已有工具读取和修改当前作品。文字逐步输出，工具卡片显示执行、成功、失败及项目版本，画布和时间线同步更新。助手改动进入原有撤销历史；“停止生成”会停止后续工作，已提交的编辑可使用编辑器撤销。折叠面板不中断任务，页面刷新可恢复当前服务中的对话；切换作品会停止任务并清空上下文。对话保存在本次服务内存中，重启服务后清空。
+
+提供商设置与密钥保存在本机 `~/.scrollweave/agent-settings.json`，可用 `SW_AGENT_SETTINGS_PATH` 指定路径；便携版保存在 `ScrollWeave-data/settings/agent-settings.json`。密钥不会返回到浏览器或写入作品导出包，设置文件本身含本地明文密钥。留空保留已保存密钥，也可明确清除。更换服务地址时需重新填写或清除密钥。模型请求将当前作品上下文发送给所选服务，测试连接会发起一次小规模模型请求。
+
+内置助手的固定系统提示词位于 [server/prompts/AGENTS.md](server/prompts/AGENTS.md)，随应用打包，不读取作品目录中的自定义指令来覆盖它。提示词参考 [Claude 官方提示最佳实践](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)，包含当前项目结构、秒制与源时钟规则、版本冲突处理、实时进度报告、验证流程及具体示例。提供商设置不改变这些规则。
 
 ## 素材 → 片段 → 时间线
 

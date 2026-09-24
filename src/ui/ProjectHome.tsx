@@ -29,8 +29,10 @@ import {
   Monitor,
   Clapperboard,
   Sparkles,
+  Settings2,
 } from "lucide-react";
 import type { ProjectEntry, ProjectLibraryState } from "../core/library";
+import { AgentSettings } from "./AgentSettings";
 import "./projects.css";
 
 async function api<T>(
@@ -292,6 +294,7 @@ function ProjectCard({
 }
 
 export function ProjectHome({ onEnter }: { onEnter: () => void }) {
+  const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
   const [library, setLibrary] = useState<ProjectLibraryState | null>(null);
   const [query, setQuery] = useState(""),
     [filter, setFilter] = useState<"recent" | "favorites">("recent");
@@ -526,6 +529,14 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
           )}
         </div>
         <div className="home-sidebar-footer">
+          <button
+            onClick={() => setAgentSettingsOpen(true)}
+            aria-label="设置 · 模型服务商"
+          >
+            <Settings2 size={17} />
+            设置 · 模型服务商
+            <ChevronRight size={14} />
+          </button>
           <button onClick={() => setDialog("help")}>
             <CircleHelp size={17} />
             使用指南
@@ -794,13 +805,16 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               <span className="home-footer-mark">S</span>素材 → 时间线 →
               滚动网页
             </span>
-            <button onClick={() => setDialog("help")}>
+            <button onClick={() => setAgentSettingsOpen(true)}>
               <Sparkles size={14} />与 Agent 一起创作
               <ArrowRight size={13} />
             </button>
           </footer>
         </div>
       </main>
+      {agentSettingsOpen && (
+        <AgentSettings onClose={() => setAgentSettingsOpen(false)} />
+      )}
       {dialog === "new" && !picker && (
         <Modal title="新建项目" onClose={() => setDialog(null)} busy={busy}>
           <p className="dialog-description">
@@ -1056,8 +1070,8 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               <section>
                 <h3>和 Agent 一起创作</h3>
                 <p>
-                  在项目文件夹中打开 Codex，让它把素材写进
-                  assets。素材会自动入库；编辑器右上角的帮助提供 MCP 接入信息。
+                  在“设置 · 模型服务商”中连接模型，进入项目后展开右下角的 Pi
+                  助手。描述你想要的动效，即可实时查看编辑过程与画布变化。
                 </p>
               </section>
             </div>

@@ -1,5 +1,7 @@
 node_modules/
 dist/
+release/
+build/media-tools/
 .scrollweave/
 test-results/
 playwright-report/

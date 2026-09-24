@@ -1,5 +1,6 @@
 import { build as viteBuild } from "vite";
 import { build } from "esbuild";
+import fs from "node:fs";
 await viteBuild();
 await build({
   entryPoints: ["src/runtime/entry.ts"],
@@ -31,3 +32,5 @@ await build({
   target: "node22",
 });
 console.log("Built editor, shared runtime, local server and MCP stdio bridge.");
+fs.mkdirSync("dist/prompts", { recursive: true });
+fs.copyFileSync("server/prompts/AGENTS.md", "dist/prompts/AGENTS.md");

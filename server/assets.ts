@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { setTimeout as delay } from "node:timers/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
@@ -441,9 +442,13 @@ export class AssetManager {
       return this.ingest(file);
     });
   }
-  async waitFor(query: { path?: string; name?: string; timeoutMs: number }) {
+  async waitFor(
+    query: { path?: string; name?: string; timeoutMs: number },
+    signal?: AbortSignal,
+  ) {
     const end = Date.now() + query.timeoutMs;
     do {
+      signal?.throwIfAborted();
       const a = Object.values(this.store().project.assets).find(
         (a) =>
           !a.archived &&
@@ -451,7 +456,9 @@ export class AssetManager {
       );
       if (a && a.status === "ready") return a;
       if (a?.status === "error" && this.pending === 0) throw Error(a.error);
-      await new Promise((r) => setTimeout(r, 100));
+      await delay(Math.min(100, Math.max(1, end - Date.now())), undefined, {
+        signal,
+      });
     } while (Date.now() < end);
     throw Error("等待素材超时，请检查路径与素材错误");
   }
