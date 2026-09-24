@@ -287,6 +287,20 @@ function Editor({ onHome }: { onHome: () => void }) {
       next.revision < state.current.revision
     )
       return;
+    // A same-revision snapshot can be fetched before a local selection lands and
+    // arrive after it; keep the local selection and preview. Other clients'
+    // selection changes arrive through "session" events instead.
+    if (
+      !initial &&
+      state.current &&
+      next.project.id === state.current.project.id &&
+      next.revision === state.current.revision
+    )
+      next = {
+        ...next,
+        selection: state.current.selection,
+        preview: state.current.preview,
+      };
     const changed =
       next.project.id !== state.current?.project.id ||
       next.selection.compositionId !== state.current?.selection.compositionId;
@@ -341,7 +355,8 @@ function Editor({ onHome }: { onHome: () => void }) {
     let alive = true;
     void readJSON("/api/state")
       .then((s) => {
-        if (alive) accept(s, true);
+        // The SSE connection pushes its own snapshot and may win this race.
+        if (alive) accept(s, !state.current);
       })
       .catch((e) => report(e.message));
     void refreshWorkspace();

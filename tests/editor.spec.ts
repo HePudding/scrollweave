@@ -914,15 +914,19 @@ test("键盘可用：源预览 Esc 关闭并还原焦点，片段 Enter 选中�
   await expect(dialog).toHaveCount(0);
   await expect(preview).toBeFocused();
 
+  // The server keeps the previous test's playhead; insertion happens at the playhead.
+  await seek(page, 0);
   await page
     .getByRole("button", { name: "添加 " + asset.name + " 到时间线" })
     .click();
   const clip = page.locator(".timeline-clip");
-  await expect(clip).toHaveCount(1);
-  await page
-    .getByTestId("track-track_main")
-    .locator(".track-content")
-    .click({ position: { x: 700, y: 20 } });
+  // Insertion selects the new clip after its commit; deselect only once that has happened.
+  await expect(clip).toHaveClass(/selected/);
+  const row = page.locator(".track-content", { has: clip });
+  const [rowBox, clipBox] = [await row.boundingBox(), await clip.boundingBox()];
+  await row.click({
+    position: { x: clipBox!.x + clipBox!.width - rowBox!.x + 60, y: 20 },
+  });
   await expect(clip).not.toHaveClass(/selected/);
   await clip.focus();
   await page.keyboard.press("Enter");
@@ -954,4 +958,46 @@ test("键盘可用：源预览 Esc 关闭并还原焦点，片段 Enter 选中�
     .poll(async () => Number(await zoom.inputValue()))
     .toBeGreaterThan(before);
   expect(await page.evaluate(() => (window as any).wheelPrevented)).toBe(true);
+});
+
+test("刚打开编辑器就选中片段，晚到的同版本状态快照不会冲掉选中", async ({
+  page,
+  request,
+}) => {
+  await edit(request, [
+    {
+      type: "element.add",
+      compositionId: "main",
+      element: createElement({
+        id: "text",
+        type: "text",
+        trackId: "track_main",
+        text: "LATE SNAPSHOT",
+        start: 0,
+        end: 3,
+      }),
+    },
+  ]);
+  // Hold /api/state so the SSE snapshot renders first and these land after the click.
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  let fetched = 0,
+    delivered = 0;
+  await page.route("**/api/state", async (route) => {
+    const response = await route.fetch();
+    fetched++;
+    await held;
+    await route.fulfill({ response });
+    delivered++;
+  });
+  await page.goto("/editor");
+  const clip = page.getByTestId("clip-text");
+  await clip.click();
+  await expect(clip).toHaveClass(/selected/);
+  await expect.poll(() => fetched).toBeGreaterThan(0);
+  release();
+  await expect.poll(() => delivered).toBe(fetched);
+  await page.waitForTimeout(500);
+  await expect(clip).toHaveClass(/selected/);
+  await expect(page.getByTitle("添加关键帧 位置 X")).toBeVisible();
 });
