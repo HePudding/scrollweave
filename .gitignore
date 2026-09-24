@@ -18,6 +18,10 @@ tmp/
 
 # Local agent setup and installed helper skills
 /.agents/
+/.claude/
+/.codex/
+/.grok/
+/.pi/
 /AGENTS.md
 /.mcp.json
 /skills-lock.json
