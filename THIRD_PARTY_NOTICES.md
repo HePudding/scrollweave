@@ -37,6 +37,11 @@
 
 当前依赖树没有未识别许可证。生成脚本遇到新的未审阅许可证或缺失许可证文本会失败。该审阅针对当前锁定依赖，不代表未来任意升级自动适用。
 
-当前完整性检查仍未通过：`chromium-pickle-js`、`cross-dirname`、`lazy-val`、`node-api-version`、`proxy-agent-negotiate`、`temp-file`、`tmp-promise` 的安装包及核验的上游来源未提供完整许可证文本。它们的元数据与缺失状态保留在机器报告中，`npm run licenses` 继续返回非零状态；发行核验仍需补齐这些文本。Pi 及可取得的新增依赖原文已补入合集。
+`npm run licenses` 的完整性检查已通过，合集不再有缺失许可证文本。以下 7 个依赖的安装包不含许可证文件，处理方式如下，每个文件头部都注明了来源：
+
+- `proxy-agent-negotiate` 1.1.0（运行时，经 Pi AI 的 http-proxy-agent 引入）：同一发布标签提交 `04af2dd` 中，依赖它的 `http-proxy-agent@9.1.0` 作者与许可证相同，沿用其 MIT 原文，见 docs/licenses/proxy-agent-negotiate-MIT.txt。
+- `chromium-pickle-js`、`cross-dirname`、`lazy-val`、`node-api-version`、`temp-file`、`tmp-promise`（均为 electron-builder 的构建期依赖，不进入便携版或导出网页）：npm 包、发布时的 gitHead 以及上游默认分支都没有许可证文件，只在 package.json 中声明 `MIT`。因此按 [SPDX License List v3.29.0 的 MIT 全文](https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt) **重建**通知，版权行取自 npm 的 author 元数据（没有 author 的写作“贡献者”），不写年份。重建文本**未经上游确认**，文件头标记为 `RECONSTRUCTED NOTICE`。上游若日后发布许可证原文，应改用原文。
+
+Pi 及可取得的新增依赖原文已补入合集。
 
 - saxes 6.0.0 的安装包没有附完整许可证，从官方版本标签 https://raw.githubusercontent.com/lddubeau/saxes/v6.0.0/LICENSE 补入 docs/licenses/saxes-ISC.txt。新增传递依赖中的 MIT-0、BlueOak-1.0.0、CC0-1.0 已按安装包原文收录。

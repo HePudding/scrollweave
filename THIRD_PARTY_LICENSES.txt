@@ -10963,6 +10963,34 @@ software or this license, under any kind of legal claim.***
 
 ============================================================
 
+chromium-pickle-js@0.2.0
+Source: https://github.com/electron/node-chromium-pickle-js.git
+Package: chromium-pickle-js@0.2.0
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, its published gitHead 72ecd4d52d8e676a595636e1ec9ba74060344137 and the default branch of https://github.com/electron/node-chromium-pickle-js contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from no author field; npm maintainers are electron, kevinsawicki and zcbenz; the repository is archived, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) chromium-pickle-js contributors (https://github.com/electron/node-chromium-pickle-js)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+============================================================
+
 ci-info@4.4.0
 Source: github:watson/ci-info
 --- LICENSE ---
@@ -11369,6 +11397,34 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+============================================================
+
+cross-dirname@0.1.0
+Source: https://github.com/JumpLink/cross-dirname.git
+Package: cross-dirname@0.1.0
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, its published gitHead cf2a0674f338e21e53d752933e748849399cd104 and the default branch of https://github.com/JumpLink/cross-dirname contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from no author field; npm maintainer is jumplink, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) cross-dirname contributors (https://github.com/JumpLink/cross-dirname)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ============================================================
@@ -17520,6 +17576,34 @@ MIT © Jared Wray
 
 ============================================================
 
+lazy-val@1.0.5
+Source: develar/lazy-val
+Package: lazy-val@1.0.5
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, its published gitHead b69ad4119f1b19bdab13c61ee2fcc88d46b89071 and the default branch of https://github.com/develar/lazy-val contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from npm author, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) Vladimir Krivosheev
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+============================================================
+
 lightningcss@1.33.0
 Source: https://github.com/parcel-bundler/lightningcss.git
 --- LICENSE ---
@@ -19422,6 +19506,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+============================================================
+
+node-api-version@0.2.1
+Source: https://github.com/timfish/node-api-version
+Package: node-api-version@0.2.1
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, the published version and the default branch of https://github.com/timfish/node-api-version contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from npm author; the published version records no gitHead and the repository has no tags, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) Tim Fish <tim@timfish.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ============================================================
@@ -21463,6 +21575,38 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ============================================================
 
+proxy-agent-negotiate@1.1.0
+Source: https://github.com/TooTallNate/proxy-agents.git
+Package: proxy-agent-negotiate@1.1.0
+Source: https://raw.githubusercontent.com/TooTallNate/proxy-agents/04af2dd5365059650ad7209cc46457adca9b5ecb/packages/http-proxy-agent/LICENSE
+Provenance: The npm package and packages/negotiate at tag proxy-agent-negotiate@1.1.0 (04af2dd5365059650ad7209cc46457adca9b5ecb) ship no license file; package.json declares MIT with author Nathan Rajlich. The same monorepo commit's http-proxy-agent@9.1.0 (the dependent that installs it, same author and license) carries this full MIT text.
+
+(The MIT License)
+
+Copyright (c) 2013 Nathan Rajlich <nathan@tootallnate.net>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+============================================================
+
 pump@3.0.4
 Source: git://github.com/mafintosh/pump.git
 --- LICENSE ---
@@ -23471,6 +23615,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ============================================================
 
+temp-file@3.4.0
+Source: develar/temp-file
+Package: temp-file@3.4.0
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, its published gitHead 3534650dce58cb671fe3b4655e5eeeb036ff1839 and the default branch of https://github.com/develar/temp-file contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from npm author, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) Vladimir Krivosheev
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+============================================================
+
 tiny-async-pool@1.3.0
 Source: git@github.com:rxaviers/async-pool.git
 --- LICENSE-MIT ---
@@ -23614,6 +23786,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+============================================================
+
+tmp-promise@3.0.3
+Source: git://github.com/benjamingr/tmp-promise.git
+Package: tmp-promise@3.0.3
+Source: https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt (SPDX License List v3.29.0)
+Provenance: RECONSTRUCTED NOTICE. The npm package, its published gitHead 7a9d92612d24791664669596c2705313d459ce7f and the default branch of https://github.com/benjamingr/tmp-promise contain no license file; package.json declares SPDX "MIT". The permission text below is the SPDX MIT template. The copyright line comes from npm author, with no year because none is published; it is not confirmed by upstream. Build-time dependency of electron-builder only; not shipped in ScrollWeave.
+
+MIT License
+
+Copyright (c) Benjamin Gruenbaum and Collaborators.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ============================================================

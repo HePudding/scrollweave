@@ -2503,7 +2503,9 @@
       "scope": "development",
       "installed": true,
       "source": "https://github.com/electron/node-chromium-pickle-js.git",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/chromium-pickle-js-MIT.txt"
+      ]
     },
     {
       "name": "ci-info",
@@ -2688,7 +2690,9 @@
       "scope": "development",
       "installed": true,
       "source": "https://github.com/JumpLink/cross-dirname.git",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/cross-dirname-MIT.txt"
+      ]
     },
     {
       "name": "cross-spawn",
@@ -4357,7 +4361,9 @@
       "scope": "development",
       "installed": true,
       "source": "develar/lazy-val",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/lazy-val-MIT.txt"
+      ]
     },
     {
       "name": "lightningcss",
@@ -4775,7 +4781,9 @@
       "scope": "development",
       "installed": true,
       "source": "https://github.com/timfish/node-api-version",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/node-api-version-MIT.txt"
+      ]
     },
     {
       "name": "node-domexception",
@@ -5303,7 +5311,9 @@
       "scope": "runtime/editor/server",
       "installed": true,
       "source": "https://github.com/TooTallNate/proxy-agents.git",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/proxy-agent-negotiate-MIT.txt"
+      ]
     },
     {
       "name": "pump",
@@ -5994,7 +6004,9 @@
       "scope": "development",
       "installed": true,
       "source": "develar/temp-file",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/temp-file-MIT.txt"
+      ]
     },
     {
       "name": "tiny-async-pool",
@@ -6069,7 +6081,9 @@
       "scope": "development",
       "installed": true,
       "source": "git://github.com/benjamingr/tmp-promise.git",
-      "licenseFiles": []
+      "licenseFiles": [
+        "docs/licenses/tmp-promise-MIT.txt"
+      ]
     },
     {
       "name": "toidentifier",
@@ -6547,13 +6561,5 @@
       ]
     }
   ],
-  "missingText": [
-    "chromium-pickle-js",
-    "cross-dirname",
-    "lazy-val",
-    "node-api-version",
-    "proxy-agent-negotiate",
-    "temp-file",
-    "tmp-promise"
-  ]
+  "missingText": []
 }

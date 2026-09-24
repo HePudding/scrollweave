@@ -79,6 +79,16 @@ for (const [directory, value] of Object.entries<any>(lock.packages)) {
     standardwebhooks: "docs/licenses/standardwebhooks-MIT.txt",
     filelist: "docs/licenses/filelist-Apache-2.0.txt",
     "truncate-utf8-bytes": "docs/licenses/truncate-utf8-bytes-WTFPL.txt",
+    // Same author/license text from the dependent package in the same monorepo commit.
+    "proxy-agent-negotiate": "docs/licenses/proxy-agent-negotiate-MIT.txt",
+    // Upstream never published a license file; each text is labelled as a
+    // reconstructed SPDX MIT notice (electron-builder build-time only).
+    "chromium-pickle-js": "docs/licenses/chromium-pickle-js-MIT.txt",
+    "cross-dirname": "docs/licenses/cross-dirname-MIT.txt",
+    "lazy-val": "docs/licenses/lazy-val-MIT.txt",
+    "node-api-version": "docs/licenses/node-api-version-MIT.txt",
+    "temp-file": "docs/licenses/temp-file-MIT.txt",
+    "tmp-promise": "docs/licenses/tmp-promise-MIT.txt",
   };
   if (name.startsWith("@esbuild/"))
     upstreamFallbacks[name] = "node_modules/esbuild/LICENSE.md";
