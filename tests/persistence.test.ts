@@ -187,10 +187,14 @@ test(
         body: fs.readFileSync("tests/fixtures/test-image.png"),
       });
       assert.equal(importResponse.status, 200);
+      // Image import and its cover thumbnail need ffprobe/ffmpeg on PATH.
+      const imported = (await importResponse.json()).asset;
+      assert.equal(imported.status, "ready", imported.error);
       const withCover = await (await fetch(`${origin}/api/projects`)).json();
       const cover = withCover.projects.find(
         (p: { id: string }) => p.id === createdEntry.id,
       ).thumbnail;
+      assert.ok(cover, "imported image should become the project cover");
       const coverResponse = await fetch(origin + cover);
       assert.equal(coverResponse.status, 200);
       assert.match(coverResponse.headers.get("content-type")!, /image/);
