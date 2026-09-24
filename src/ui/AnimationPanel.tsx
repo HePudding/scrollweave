@@ -207,6 +207,7 @@ export function AnimationPanel(p: {
             ◆ 第 {index + 1} 帧 <span>{keys.length} 帧</span>
             <button
               title="删除此关键帧"
+              aria-label="删除此关键帧"
               disabled={locked}
               onClick={() => {
                 void p.onCommit(

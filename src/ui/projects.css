@@ -263,6 +263,7 @@
   margin-bottom: 15px;
 }
 .home-intro h1 {
+  text-wrap: balance;
   font-size: clamp(26px, 2.3vw, 34px);
   line-height: 1.35;
   font-weight: 600;

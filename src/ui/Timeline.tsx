@@ -198,6 +198,7 @@ function ClipKeys({ p, e, scale }: { p: Props; e: Element; scale: number }) {
   return (
     <div
       className="clip-key-overlay"
+      role={selected ? "group" : undefined}
       aria-label={selected ? "素材条关键帧" : undefined}
     >
       {selected &&
@@ -297,6 +298,19 @@ export function Timeline(p: Props) {
       observer.disconnect();
       node.removeEventListener("scroll", update);
     };
+  }, []);
+  useEffect(() => {
+    // React wheel listeners are passive, so Ctrl+wheel could not cancel page zoom.
+    const node = scroll.current!;
+    const wheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      setScale((s) =>
+        Math.max(12, Math.min(240, s * (e.deltaY > 0 ? 0.9 : 1.1))),
+      );
+    };
+    node.addEventListener("wheel", wheel, { passive: false });
+    return () => node.removeEventListener("wheel", wheel);
   }, []);
   useEffect(() => {
     const node = scroll.current;
@@ -538,6 +552,7 @@ export function Timeline(p: Props) {
         <span className="divider" />
         <button
           title="分割 Ctrl+B"
+          aria-label="分割"
           disabled={!p.selected.length}
           onClick={p.onSplit}
         >
@@ -545,6 +560,7 @@ export function Timeline(p: Props) {
         </button>
         <button
           title="复制 Ctrl+C"
+          aria-label="复制"
           disabled={!p.selected.length}
           onClick={p.onCopy}
         >
@@ -552,6 +568,7 @@ export function Timeline(p: Props) {
         </button>
         <button
           title="普通删除 · 保留空隙 Delete"
+          aria-label="删除 · 保留空隙"
           disabled={!p.selected.length}
           onClick={() => p.onDelete(false)}
         >
@@ -562,6 +579,7 @@ export function Timeline(p: Props) {
         </button>
         <button
           title="创建复合片段 Alt+G"
+          aria-label="创建复合片段"
           disabled={!p.selected.length}
           onClick={p.onCompound}
         >
@@ -570,6 +588,7 @@ export function Timeline(p: Props) {
         <span className="spacer" />
         <button
           className={p.snap ? "active" : ""}
+          aria-pressed={p.snap}
           onClick={p.onSnap}
           title="吸附只对齐边界，不移动其他片段"
         >
@@ -578,6 +597,7 @@ export function Timeline(p: Props) {
         </button>
         <button
           className={p.linked ? "active" : ""}
+          aria-pressed={p.linked}
           onClick={p.onLinked}
           title="仅波纹删除时联动其他轨道"
         >
@@ -594,6 +614,7 @@ export function Timeline(p: Props) {
         </select>
         <button
           title="缩小时间线"
+          aria-label="缩小时间线"
           onClick={() => setScale((s) => Math.max(12, s / 1.3))}
         >
           <Minus size={14} />
@@ -609,23 +630,13 @@ export function Timeline(p: Props) {
         />
         <button
           title="放大时间线"
+          aria-label="放大时间线"
           onClick={() => setScale((s) => Math.min(240, s * 1.3))}
         >
           <Plus size={14} />
         </button>
       </div>
-      <div
-        className="timeline-scroll"
-        ref={scroll}
-        onWheel={(e) => {
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            setScale((s) =>
-              Math.max(12, Math.min(240, s * (e.deltaY > 0 ? 0.9 : 1.1))),
-            );
-          }
-        }}
-      >
+      <div className="timeline-scroll" ref={scroll}>
         <div className="timeline-grid" style={{ width: width + TRACK_GUTTER }}>
           <div className="time-ruler">
             <div className="track-label" title="时间刻度：秒 · 30 fps">
@@ -723,6 +734,7 @@ export function Timeline(p: Props) {
             >
               <div
                 className="track-label track-controls"
+                role="group"
                 aria-label={`轨道 ${tracks.length - index}`}
               >
                 <span
@@ -740,6 +752,8 @@ export function Timeline(p: Props) {
                 <div className="track-actions">
                   <button
                     title={track.locked ? "解锁轨道" : "锁定轨道"}
+                    aria-label="锁定轨道"
+                    aria-pressed={track.locked}
                     className={track.locked ? "active" : ""}
                     onClick={() =>
                       void p.onCommit(
@@ -759,6 +773,8 @@ export function Timeline(p: Props) {
                   </button>
                   <button
                     title={track.hidden ? "显示轨道" : "隐藏轨道"}
+                    aria-label="隐藏轨道"
+                    aria-pressed={track.hidden}
                     className={track.hidden ? "active" : ""}
                     onClick={() =>
                       void p.onCommit(
@@ -778,6 +794,7 @@ export function Timeline(p: Props) {
                   </button>
                   <button
                     title="删除空轨道"
+                    aria-label="删除空轨道"
                     disabled={
                       c.tracks.length === 1 ||
                       c.elements.some((e) => e.trackId === track.id)
@@ -876,6 +893,29 @@ export function Timeline(p: Props) {
                           gestureRef.current = null;
                           setGesture(null);
                         }}
+                        onKeyDown={(event) => {
+                          if (event.key !== "Enter" && event.key !== " ")
+                            return;
+                          // Keep Space away from the global play shortcut.
+                          event.preventDefault();
+                          event.stopPropagation();
+                          if (
+                            event.key === "Enter" &&
+                            p.selected.includes(e.id)
+                          ) {
+                            if (e.type === "composition")
+                              p.onEnter(e.compositionId!);
+                            else p.onSeek(e.start, true);
+                            return;
+                          }
+                          p.onSelect(
+                            event.shiftKey
+                              ? p.selected.includes(e.id)
+                                ? p.selected.filter((id) => id !== e.id)
+                                : [...p.selected, e.id]
+                              : [e.id],
+                          );
+                        }}
                         onDoubleClick={() => {
                           if (e.type === "composition")
                             p.onEnter(e.compositionId!);
@@ -885,7 +925,13 @@ export function Timeline(p: Props) {
                         {asset &&
                           asset.kind !== "composition" &&
                           thumbnailURL(asset) && (
-                            <img src={thumbnailURL(asset)} draggable={false} />
+                            <img
+                              src={thumbnailURL(asset)}
+                              alt=""
+                              width={asset.width || undefined}
+                              height={asset.height || undefined}
+                              draggable={false}
+                            />
                           )}
                         <span className="clip-title">
                           {e.type === "composition" ? "◈ " : ""}
@@ -898,14 +944,15 @@ export function Timeline(p: Props) {
                             : ""}
                         </small>
                         {!active && <ClipKeys p={p} e={e} scale={scale} />}
+                        {/* Pointer-only trim; the inspector start/end fields are the keyboard path. */}
                         <div
                           className="clip-handle left"
-                          aria-label="裁剪左边界"
+                          aria-hidden="true"
                           onPointerDown={(event) => start(event, e, "left")}
                         />
                         <div
                           className="clip-handle right"
-                          aria-label="裁剪右边界"
+                          aria-hidden="true"
                           onPointerDown={(event) => start(event, e, "right")}
                         />
                       </div>

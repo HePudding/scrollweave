@@ -84,38 +84,39 @@ export function EasingEditor({
   };
   return (
     <div className="easing-editor">
-      <div className="easing-presets" aria-label="动画曲线预设">
-        {easingPresets.map((preset) => (
-          <button
-            key={preset.name}
-            className={
-              JSON.stringify(value) === JSON.stringify(preset.value)
-                ? "active"
-                : ""
-            }
-            title={preset.name}
-            onClick={() => {
-              setMode("curve");
-              save(preset.value);
-            }}
-          >
-            <svg viewBox="0 0 30 22" aria-hidden="true">
-              <path
-                d={easingPoints(preset.value, 16)
-                  .map(
-                    ([x, y], i) =>
-                      `${i ? "L" : "M"}${2 + x * 26},${19 - y * 14}`,
-                  )
-                  .join(" ")}
-              />
-            </svg>
-            {preset.name}
-          </button>
-        ))}
+      <div className="easing-presets" role="group" aria-label="动画曲线预设">
+        {easingPresets.map((preset) => {
+          const active = JSON.stringify(value) === JSON.stringify(preset.value);
+          return (
+            <button
+              key={preset.name}
+              className={active ? "active" : ""}
+              aria-pressed={active}
+              title={preset.name}
+              onClick={() => {
+                setMode("curve");
+                save(preset.value);
+              }}
+            >
+              <svg viewBox="0 0 30 22" aria-hidden="true">
+                <path
+                  d={easingPoints(preset.value, 16)
+                    .map(
+                      ([x, y], i) =>
+                        `${i ? "L" : "M"}${2 + x * 26},${19 - y * 14}`,
+                    )
+                    .join(" ")}
+                />
+              </svg>
+              {preset.name}
+            </button>
+          );
+        })}
       </div>
-      <div className="curve-mode">
+      <div className="curve-mode" role="group" aria-label="曲线编辑方式">
         <button
           className={mode === "curve" ? "active" : ""}
+          aria-pressed={mode === "curve"}
           onClick={() => {
             setMode("curve");
             if (typeof draft === "object" && !Array.isArray(draft))
@@ -126,6 +127,7 @@ export function EasingEditor({
         </button>
         <button
           className={mode === "expression" ? "active" : ""}
+          aria-pressed={mode === "expression"}
           onClick={() => {
             formulaRevision.current = revision;
             setMode("expression");
@@ -337,7 +339,7 @@ export function EasingEditor({
             ^、sin、cos、pow、sqrt、min、max、clamp、pi。
           </p>
           {error && (
-            <p className="formula-error" role="alert">
+            <p className="formula-error" role="status">
               {error}
             </p>
           )}

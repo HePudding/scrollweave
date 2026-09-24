@@ -132,6 +132,59 @@ function NumberField({
     />
   );
 }
+const megabytes = new Intl.NumberFormat("zh-CN", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+/** Native modal dialog: focus trap, Escape and inert background come from the platform. */
+function EditorDialog({
+  className,
+  label,
+  onClose,
+  closeOnBackdrop = false,
+  children,
+}: {
+  className: string;
+  label: string;
+  onClose: () => void;
+  closeOnBackdrop?: boolean;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const node = ref.current!,
+      previous = document.activeElement as HTMLElement | null;
+    node.showModal();
+    return () => {
+      node.close();
+      previous?.focus();
+    };
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      className={className}
+      aria-label={label}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onMouseDown={(event) => {
+        if (!closeOnBackdrop || event.target !== event.currentTarget) return;
+        const r = event.currentTarget.getBoundingClientRect();
+        if (
+          event.clientX < r.left ||
+          event.clientX > r.right ||
+          event.clientY < r.top ||
+          event.clientY > r.bottom
+        )
+          onClose();
+      }}
+    >
+      {children}
+    </dialog>
+  );
+}
 export function App() {
   const [route, setRoute] = useState(location.pathname);
   useEffect(() => {
@@ -167,7 +220,9 @@ function Editor({ onHome }: { onHome: () => void }) {
   const [query, setQuery] = useState(""),
     [filter, setFilter] = useState("all"),
     [assetId, setAssetId] = useState<string | null>(null),
+    [confirmArchive, setConfirmArchive] = useState(false),
     [tab, setTab] = useState<"library" | "page">("library");
+  useEffect(() => setConfirmArchive(false), [assetId]);
   const [autoKey, setAutoKey] = useState(false),
     [snap, setSnap] = useState(true),
     [linked, setLinked] = useState(false),
@@ -829,6 +884,14 @@ function Editor({ onHome }: { onHome: () => void }) {
       )
         return;
       if (!state.current) return;
+      // Space activates focused controls; only unfocused Space toggles playback.
+      if (
+        event.code === "Space" &&
+        (event.target as HTMLElement)?.closest(
+          "button,a[href],summary,[role=button],[role=menuitem]",
+        )
+      )
+        return;
       const mod = event.ctrlKey || event.metaKey;
       if (!mod && !event.altKey && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -970,7 +1033,7 @@ function Editor({ onHome }: { onHome: () => void }) {
     return (
       <div className="loading">
         <LoaderCircle className="spin" />
-        正在打开作品{error && <p>{error}</p>}
+        正在打开作品…{error && <p>{error}</p>}
       </div>
     );
   const { project, revision, selection } = snapshot,
@@ -1048,6 +1111,7 @@ function Editor({ onHome }: { onHome: () => void }) {
     );
   return (
     <div className="editor-shell">
+      <h1 className="sr-only">{project.name} · ScrollWeave 编辑器</h1>
       <header className="app-header">
         <button aria-label="返回项目主页" title="返回项目主页" onClick={onHome}>
           <ArrowLeft size={18} />
@@ -1072,7 +1136,7 @@ function Editor({ onHome }: { onHome: () => void }) {
         />
         <span className="save-state">
           <span className={connected ? "live-dot" : "offline-dot"} />
-          {connected ? "已自动保存" : "连接中"} · r{revision}
+          {connected ? "已自动保存" : "连接中…"} · r{revision}
         </span>
         <div className="spacer" />
         <button
@@ -1084,6 +1148,7 @@ function Editor({ onHome }: { onHome: () => void }) {
         </button>
         <button
           title="撤销 Ctrl+Z"
+          aria-label="撤销"
           disabled={!snapshot.canUndo}
           onClick={() => void history("undo")}
         >
@@ -1091,6 +1156,7 @@ function Editor({ onHome }: { onHome: () => void }) {
         </button>
         <button
           title="重做 Ctrl+Shift+Z"
+          aria-label="重做"
           disabled={!snapshot.canRedo}
           onClick={() => void history("redo")}
         >
@@ -1115,7 +1181,11 @@ function Editor({ onHome }: { onHome: () => void }) {
         >
           <Settings2 size={17} />
         </button>
-        <button title="Agent 接入与快捷键" onClick={() => setDialog("help")}>
+        <button
+          title="Agent 接入与快捷键"
+          aria-label="Agent 接入与快捷键"
+          onClick={() => setDialog("help")}
+        >
           <CircleHelp size={18} />
         </button>
       </header>
@@ -1159,6 +1229,7 @@ function Editor({ onHome }: { onHome: () => void }) {
           <div className="panel-tabs">
             <button
               className={tab === "library" ? "active" : ""}
+              aria-pressed={tab === "library"}
               onClick={() => setTab("library")}
             >
               <Boxes size={16} />
@@ -1166,6 +1237,7 @@ function Editor({ onHome }: { onHome: () => void }) {
             </button>
             <button
               className={tab === "page" ? "active" : ""}
+              aria-pressed={tab === "page"}
               onClick={() => setTab("page")}
             >
               <Settings2 size={16} />
@@ -1187,10 +1259,18 @@ function Editor({ onHome }: { onHome: () => void }) {
                   )}
                   导入素材
                 </button>
-                <button title="创建文字片段" onClick={() => create("text")}>
+                <button
+                  title="创建文字片段"
+                  aria-label="创建文字片段"
+                  onClick={() => create("text")}
+                >
                   <Type size={18} />
                 </button>
-                <button title="创建形状片段" onClick={() => create("shape")}>
+                <button
+                  title="创建形状片段"
+                  aria-label="创建形状片段"
+                  onClick={() => create("shape")}
+                >
                   <Square size={16} />
                 </button>
               </div>
@@ -1198,7 +1278,8 @@ function Editor({ onHome }: { onHome: () => void }) {
                 <Search size={15} />
                 <input
                   aria-label="搜索素材"
-                  placeholder="搜索素材"
+                  placeholder="搜索素材…"
+                  autoComplete="off"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
@@ -1214,6 +1295,7 @@ function Editor({ onHome }: { onHome: () => void }) {
                   <button
                     key={id}
                     className={filter === id ? "active" : ""}
+                    aria-pressed={filter === id}
                     onClick={() => setFilter(id)}
                   >
                     {label}
@@ -1232,9 +1314,6 @@ function Editor({ onHome }: { onHome: () => void }) {
                 {assets.map((a) => (
                   <div
                     key={a.id}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={"预览素材 " + a.name}
                     draggable={a.status === "ready"}
                     data-testid={"asset-" + a.id}
                     className={
@@ -1248,52 +1327,57 @@ function Editor({ onHome }: { onHome: () => void }) {
                       );
                       event.dataTransfer.effectAllowed = "copy";
                     }}
-                    onClick={() => {
-                      setPlaying(false);
-                      setAssetId(a.id);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") setAssetId(a.id);
-                    }}
                   >
-                    <div className="asset-thumb">
-                      {a.kind === "composition" ? (
-                        <Layers size={30} />
-                      ) : thumbnailURL(a) ? (
-                        <img
-                          src={thumbnailURL(a)}
-                          alt=""
-                          loading="lazy"
-                          draggable={false}
-                        />
-                      ) : (
-                        <Film size={28} />
-                      )}
-                      <span className="asset-kind">{names[a.kind]}</span>
-                      {a.duration !== undefined && (
-                        <span className="asset-duration">
-                          {a.duration.toFixed(1)}s
-                        </span>
-                      )}
-                      <button
-                        title={"添加 " + a.name + " 到时间线"}
-                        disabled={a.status !== "ready"}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          void insert(a.id);
-                        }}
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                    <strong title={a.name}>{a.name}</strong>
-                    <small>
-                      {a.status === "ready"
-                        ? a.width + " × " + a.height
-                        : a.status === "missing"
-                          ? "素材缺失 · 重新关联"
-                          : "导入失败 · 查看原因"}
-                    </small>
+                    <button
+                      type="button"
+                      className="asset-open"
+                      aria-label={"预览素材 " + a.name}
+                      onClick={() => {
+                        setPlaying(false);
+                        setAssetId(a.id);
+                      }}
+                    >
+                      <span className="asset-thumb">
+                        {a.kind === "composition" ? (
+                          <Layers size={30} />
+                        ) : thumbnailURL(a) ? (
+                          <img
+                            src={thumbnailURL(a)}
+                            alt=""
+                            width={a.width || undefined}
+                            height={a.height || undefined}
+                            loading="lazy"
+                            draggable={false}
+                          />
+                        ) : (
+                          <Film size={28} />
+                        )}
+                        <span className="asset-kind">{names[a.kind]}</span>
+                        {a.duration !== undefined && (
+                          <span className="asset-duration">
+                            {a.duration.toFixed(1)}s
+                          </span>
+                        )}
+                      </span>
+                      <strong title={a.name}>{a.name}</strong>
+                      <small>
+                        {a.status === "ready"
+                          ? a.width + " × " + a.height
+                          : a.status === "missing"
+                            ? "素材缺失 · 重新关联"
+                            : "导入失败 · 查看原因"}
+                      </small>
+                    </button>
+                    <button
+                      type="button"
+                      className="asset-add"
+                      title={"添加 " + a.name + " 到时间线"}
+                      aria-label={"添加 " + a.name + " 到时间线"}
+                      disabled={a.status !== "ready"}
+                      onClick={() => void insert(a.id)}
+                    >
+                      <Plus size={14} />
+                    </button>
                   </div>
                 ))}
                 {!assets.length && (
@@ -1348,6 +1432,7 @@ function Editor({ onHome }: { onHome: () => void }) {
                   : "连接素材文件夹"}
                 <button
                   title="查看作品目录"
+                  aria-label="查看作品目录"
                   onClick={() => {
                     void refreshWorkspace();
                     setDialog("workspace");
@@ -1427,6 +1512,7 @@ function Editor({ onHome }: { onHome: () => void }) {
                     {project.sections.length > 1 && (
                       <button
                         title="移除滚动区间"
+                        aria-label="移除滚动区间"
                         onClick={() =>
                           sections(
                             project.sections.filter((s) => s.id !== section.id),
@@ -1600,6 +1686,7 @@ function Editor({ onHome }: { onHome: () => void }) {
               {navigation.length > 0 && (
                 <button
                   title="返回外层时间线"
+                  aria-label="返回外层时间线"
                   onClick={() => {
                     const next = [...navigation],
                       id = next.pop()!;
@@ -1618,6 +1705,7 @@ function Editor({ onHome }: { onHome: () => void }) {
             <div className="mode-switch">
               <button
                 className={previewMode === "edit" ? "active" : ""}
+                aria-pressed={previewMode === "edit"}
                 onClick={() => {
                   setPreviewMode("edit");
                   setPlaying(false);
@@ -1628,6 +1716,7 @@ function Editor({ onHome }: { onHome: () => void }) {
               </button>
               <button
                 className={previewMode === "scroll" ? "active" : ""}
+                aria-pressed={previewMode === "scroll"}
                 onClick={() => {
                   setPreviewMode("scroll");
                   setPlaying(false);
@@ -1693,7 +1782,11 @@ function Editor({ onHome }: { onHome: () => void }) {
               {previewMode === "scroll" ? " · 滚动默认静音" : ""}
             </span>
             <div>
-              <button title="回到开始" onClick={() => seek(0, true)}>
+              <button
+                title="回到开始"
+                aria-label="回到开始"
+                onClick={() => seek(0, true)}
+              >
                 ↤
               </button>
               <button
@@ -1958,6 +2051,7 @@ function Editor({ onHome }: { onHome: () => void }) {
                     画面变换
                     <button
                       className={autoKey ? "active" : ""}
+                      aria-pressed={autoKey}
                       onClick={() => setAutoKey((v) => !v)}
                       title="开启后，修改属性在播放头自动建立关键帧"
                     >
@@ -1983,6 +2077,7 @@ function Editor({ onHome }: { onHome: () => void }) {
                           />
                           <button
                             title={"添加关键帧 " + propertyNames[property]}
+                            aria-label={"添加关键帧 " + propertyNames[property]}
                             disabled={!value.visible}
                             className={
                               e.tracks[property]?.some(
@@ -2297,23 +2392,6 @@ function Editor({ onHome }: { onHome: () => void }) {
         }}
       />
       <input
-        ref={replaceInput}
-        data-testid="media-relink"
-        type="file"
-        accept=".png,.jpg,.jpeg,.webp,.svg,.mp4,.webm"
-        hidden
-        onChange={(event) => {
-          if (assetId)
-            void importFiles(
-              Array.from(event.target.files ?? []),
-              undefined,
-              0,
-              assetId,
-            );
-          event.target.value = "";
-        }}
-      />
-      <input
         ref={projectInput}
         data-testid="project-import"
         type="file"
@@ -2349,246 +2427,297 @@ function Editor({ onHome }: { onHome: () => void }) {
         }}
       />
       {asset && (
-        <div
-          className="modal-backdrop"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setAssetId(null);
-          }}
+        <EditorDialog
+          className="asset-modal"
+          label="源素材预览"
+          closeOnBackdrop
+          onClose={() => setAssetId(null)}
         >
-          <section
-            className="asset-modal"
-            role="dialog"
-            aria-label="源素材预览"
-          >
-            <div className="modal-heading">
-              <div>
-                <small>源素材预览 · 独立于作品播放头</small>
-                <h3>{asset.name}</h3>
-              </div>
-              <button aria-label="关闭源素材" onClick={() => setAssetId(null)}>
-                <X size={19} />
-              </button>
+          {/* Lives inside the modal so it is not inert while the dialog is open. */}
+          <input
+            ref={replaceInput}
+            data-testid="media-relink"
+            type="file"
+            accept=".png,.jpg,.jpeg,.webp,.svg,.mp4,.webm"
+            hidden
+            onChange={(event) => {
+              void importFiles(
+                Array.from(event.target.files ?? []),
+                undefined,
+                0,
+                asset.id,
+              );
+              event.target.value = "";
+            }}
+          />
+          <div className="modal-heading">
+            <div>
+              <small>源素材预览 · 独立于作品播放头</small>
+              <h3>{asset.name}</h3>
             </div>
-            <div className="source-preview">
-              {asset.kind === "video" ? (
-                <video
-                  key={asset.hash}
-                  controls
-                  src={assetURL(asset)}
-                  playsInline
-                />
-              ) : asset.kind === "composition" ? (
-                <SourceComposition
-                  project={project}
-                  compositionId={asset.compositionId!}
-                />
-              ) : (
-                <img key={asset.hash} src={assetURL(asset)} alt={asset.name} />
-              )}
-            </div>
-            <div className="asset-meta">
-              <span>{names[asset.kind]}</span>
-              <span>
-                {asset.width} × {asset.height}
-              </span>
-              {asset.duration !== undefined && (
-                <span>{asset.duration.toFixed(3)} 秒</span>
-              )}
-              {asset.codec && (
-                <span>
-                  {asset.codec}
-                  {asset.hasAudio ? " / " + asset.audioCodec : ""}
-                </span>
-              )}
-              <span>{(asset.size / 1024 / 1024).toFixed(2)} MB</span>
-            </div>
-            {asset.status !== "ready" && (
-              <p className="error-text">{asset.error}</p>
+            <button aria-label="关闭源素材" onClick={() => setAssetId(null)}>
+              <X size={19} />
+            </button>
+          </div>
+          <div className="source-preview">
+            {asset.kind === "video" ? (
+              <video
+                key={asset.hash}
+                controls
+                src={assetURL(asset)}
+                playsInline
+              />
+            ) : asset.kind === "composition" ? (
+              <SourceComposition
+                project={project}
+                compositionId={asset.compositionId!}
+              />
+            ) : (
+              <img key={asset.hash} src={assetURL(asset)} alt={asset.name} />
             )}
-            {asset.warnings.map((w, i) => (
-              <p key={i} className="warning-text">
-                {w}
-              </p>
-            ))}
-            <div className="references">
-              <b>引用 · {references(project, asset.id).length} 个片段</b>
-              <p>
-                {references(project, asset.id)
-                  .map((r) => r.compositionName + " / " + r.name)
-                  .join("、") || "尚未用于时间线"}
-              </p>
-              {asset.path && <code>{asset.path}</code>}
-              <p>重新关联会更新以上所有引用；位置、剪辑与关键帧保留。</p>
-            </div>
-            <div className="modal-actions">
-              <button
-                disabled={asset.kind === "composition"}
-                onClick={() => replaceInput.current?.click()}
-              >
-                替换 / 重新关联源文件
-              </button>
-              <button
-                disabled={references(project, asset.id).length > 0}
-                title="仅移出素材库，保留源文件"
-                onClick={async () => {
-                  const result = await action("archive_asset", {
-                    assetId: asset.id,
-                    expectedRevision: revision,
-                  });
-                  if (result) setAssetId(null);
-                }}
-              >
-                移出素材库
-              </button>
-              <span className="spacer" />
-              <button
-                className="primary"
-                disabled={asset.status !== "ready"}
-                onClick={() => {
-                  void insert(asset.id);
-                  setAssetId(null);
-                }}
-              >
-                放到播放头
-              </button>
-            </div>
-          </section>
-        </div>
+          </div>
+          <div className="asset-meta">
+            <span>{names[asset.kind]}</span>
+            <span>
+              {asset.width} × {asset.height}
+            </span>
+            {asset.duration !== undefined && (
+              <span>{asset.duration.toFixed(3)} 秒</span>
+            )}
+            {asset.codec && (
+              <span>
+                {asset.codec}
+                {asset.hasAudio ? " / " + asset.audioCodec : ""}
+              </span>
+            )}
+            <span>
+              {megabytes.format(asset.size / 1024 / 1024)}
+              {" "}MB
+            </span>
+          </div>
+          {asset.status !== "ready" && (
+            <p className="error-text">{asset.error}</p>
+          )}
+          {asset.warnings.map((w, i) => (
+            <p key={i} className="warning-text">
+              {w}
+            </p>
+          ))}
+          <div className="references">
+            <b>引用 · {references(project, asset.id).length} 个片段</b>
+            <p>
+              {references(project, asset.id)
+                .map((r) => r.compositionName + " / " + r.name)
+                .join("、") || "尚未用于时间线"}
+            </p>
+            {asset.path && <code>{asset.path}</code>}
+            <p>重新关联会更新以上所有引用；位置、剪辑与关键帧保留。</p>
+          </div>
+          <div className="modal-actions">
+            <button
+              disabled={asset.kind === "composition"}
+              onClick={() => replaceInput.current?.click()}
+            >
+              替换 / 重新关联源文件
+            </button>
+            <button
+              className={confirmArchive ? "danger" : ""}
+              disabled={references(project, asset.id).length > 0 || busy}
+              title="仅移出素材库，保留源文件"
+              onClick={async () => {
+                if (!confirmArchive) {
+                  setConfirmArchive(true);
+                  return;
+                }
+                setBusy(true);
+                const result = await action("archive_asset", {
+                  assetId: asset.id,
+                  expectedRevision: revision,
+                });
+                setBusy(false);
+                if (result) setAssetId(null);
+              }}
+            >
+              {confirmArchive ? "确认移出素材库" : "移出素材库"}
+            </button>
+            <span className="spacer" />
+            <button
+              className="primary"
+              disabled={asset.status !== "ready"}
+              onClick={() => {
+                void insert(asset.id);
+                setAssetId(null);
+              }}
+            >
+              放到播放头
+            </button>
+          </div>
+          {confirmArchive && (
+            <p className="warning-text" role="status">
+              再次点击确认移出。源文件会保留在磁盘上。
+            </p>
+          )}
+          {error && (
+            <p className="error-text" role="alert">
+              {error}
+            </p>
+          )}
+        </EditorDialog>
       )}
       {dialog && (
-        <div className="modal-backdrop">
-          <section
-            className="workspace-modal"
-            role="dialog"
-            aria-label={dialog === "workspace" ? "作品目录" : "Agent 接入"}
-          >
-            <div className="modal-heading">
-              <h3>
-                {dialog === "workspace" ? "作品文件夹" : "与 Agent 一起创作"}
-              </h3>
-              <button aria-label="关闭对话框" onClick={() => setDialog(null)}>
-                <X size={18} />
-              </button>
-            </div>
-            <p>
-              当前作品：<code>{workspace?.directory}</code>
-            </p>
-            <p>
-              素材入口：<code>{workspace?.assetDirectory}</code>
-            </p>
-            {dialog === "workspace" ? (
-              <>
-                <p>
-                  作品目录与编辑器源码分开。把素材写入
-                  assets，编辑器会自动发现。
-                </p>
-                <label>
-                  作品目录
-                  <input
-                    aria-label="作品目录路径"
-                    value={directory}
-                    onChange={(e) => setDirectory(e.target.value)}
-                  />
-                </label>
-                <label>
-                  新作品名称
-                  <input
-                    aria-label="新作品名称"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                  />
-                </label>
-                <div className="modal-actions">
+        <EditorDialog
+          className="workspace-modal"
+          label={dialog === "workspace" ? "作品目录" : "Agent 接入"}
+          onClose={() => setDialog(null)}
+        >
+          <div className="modal-heading">
+            <h3>
+              {dialog === "workspace" ? "作品文件夹" : "与 Agent 一起创作"}
+            </h3>
+            <button aria-label="关闭对话框" onClick={() => setDialog(null)}>
+              <X size={18} />
+            </button>
+          </div>
+          <p>
+            当前作品：<code>{workspace?.directory}</code>
+          </p>
+          <p>
+            素材入口：<code>{workspace?.assetDirectory}</code>
+          </p>
+          {dialog === "workspace" ? (
+            <>
+              <p>
+                作品目录与编辑器源码分开。把素材写入 assets，编辑器会自动发现。
+              </p>
+              <label>
+                作品目录
+                <input
+                  aria-label="作品目录路径"
+                  name="directory"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={directory}
+                  onChange={(e) => setDirectory(e.target.value)}
+                />
+              </label>
+              <label>
+                新作品名称
+                <input
+                  aria-label="新作品名称"
+                  name="projectName"
+                  autoComplete="off"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                />
+              </label>
+              <div className="modal-actions">
+                {(
+                  [
+                    ["open_project", "打开目录", FolderOpen],
+                    ["new_project", "在此新建", FilePlus2],
+                  ] as const
+                ).map(([name, label, Icon]) => (
                   <button
+                    key={name}
+                    disabled={busy}
                     onClick={async () => {
-                      const result = await action("open_project", {
-                        directory,
-                      });
-                      if (result) {
-                        await refreshWorkspace();
-                        accept(await (await fetch("/api/state")).json(), true);
-                        setDialog(null);
+                      setBusy(true);
+                      try {
+                        const result = await action(
+                          name,
+                          name === "open_project"
+                            ? { directory }
+                            : { directory, name: newName },
+                        );
+                        if (result) {
+                          await refreshWorkspace();
+                          accept(
+                            await (await fetch("/api/state")).json(),
+                            true,
+                          );
+                          setDialog(null);
+                        }
+                      } catch (e) {
+                        report((e as Error).message);
+                      } finally {
+                        setBusy(false);
                       }
                     }}
                   >
-                    <FolderOpen size={15} />
-                    打开目录
+                    {busy ? (
+                      <LoaderCircle className="spin" size={15} />
+                    ) : (
+                      <Icon size={15} />
+                    )}
+                    {label}
                   </button>
-                  <button
-                    onClick={async () => {
-                      const result = await action("new_project", {
-                        directory,
-                        name: newName,
-                      });
-                      if (result) {
-                        await refreshWorkspace();
-                        accept(await (await fetch("/api/state")).json(), true);
-                        setDialog(null);
-                      }
-                    }}
-                  >
-                    <FilePlus2 size={15} />
-                    在此新建
-                  </button>
-                </div>
-                <hr />
-                <p>可编辑项目包包含完整结构和 assets，支持在其他目录打开。</p>
-                <div className="modal-actions">
-                  <button
-                    onClick={() => {
-                      importAsCompound.current = false;
-                      projectInput.current?.click();
-                      setDialog(null);
-                    }}
-                  >
-                    打开项目包 / 旧版 JSON
-                  </button>
-                  <button
-                    onClick={() => {
-                      importAsCompound.current = true;
-                      projectInput.current?.click();
-                      setDialog(null);
-                    }}
-                  >
-                    导入为复合素材
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p>
-                  在当前作品目录打开 Codex，按 AGENTS.md 将 SVG 写入 assets。用
-                  MCP 负责时间线编辑。
+                ))}
+              </div>
+              {error && (
+                <p className="error-text" role="alert">
+                  {error}
                 </p>
-                <label>
-                  MCP · Streamable HTTP
-                  <code className="code-block">{workspace?.mcpUrl}</code>
-                </label>
-                <code className="code-block">
-                  codex mcp add scrollweave --url {workspace?.mcpUrl}
-                </code>
-                <p>
-                  建议顺序：workspace_info → wait_for_asset → insert_asset →
-                  set_keyframe → get_preview_screenshot → save_project。
-                </p>
-                <p>
-                  例如：“生成 SVG 箭头，等待入库，放到第二轨第 3 秒，显示 2
-                  秒，添加淡入上移。”
-                </p>
-                <p>
-                  外部文件修改不参与时间线撤销。复合片段默认共享，可在属性面板创建独立副本。
-                </p>
-                <hr />
-                <p>
-                  K 添加位置关键帧 · Shift+K 自动记录 · [ / ] 前后关键帧 · Space
-                  播放 / 暂停 · Ctrl+B 分割 · Ctrl+C/V 复制粘贴 · Shift 多选 ·
-                  Ctrl+A 全选 · Delete 留空 · Shift+Delete 波纹删除 · Alt+G
-                  复合片段 · Ctrl+Z / Ctrl+Shift+Z 撤销重做。
-                </p>
-              </>
-            )}
-          </section>
-        </div>
+              )}
+              <hr />
+              <p>可编辑项目包包含完整结构和 assets，支持在其他目录打开。</p>
+              <div className="modal-actions">
+                <button
+                  onClick={(event) => {
+                    importAsCompound.current = false;
+                    // The file input sits outside the modal; close first so it is not inert.
+                    event.currentTarget.closest("dialog")?.close();
+                    projectInput.current?.click();
+                    setDialog(null);
+                  }}
+                >
+                  打开项目包 / 旧版 JSON
+                </button>
+                <button
+                  onClick={(event) => {
+                    importAsCompound.current = true;
+                    event.currentTarget.closest("dialog")?.close();
+                    projectInput.current?.click();
+                    setDialog(null);
+                  }}
+                >
+                  导入为复合素材
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p>
+                在当前作品目录打开 Codex，按 AGENTS.md 将 SVG 写入 assets。用
+                MCP 负责时间线编辑。
+              </p>
+              <label>
+                MCP · Streamable HTTP
+                <code className="code-block">{workspace?.mcpUrl}</code>
+              </label>
+              <code className="code-block">
+                codex mcp add scrollweave --url {workspace?.mcpUrl}
+              </code>
+              <p>
+                建议顺序：workspace_info → wait_for_asset → insert_asset →
+                set_keyframe → get_preview_screenshot → save_project。
+              </p>
+              <p>
+                例如：“生成 SVG 箭头，等待入库，放到第二轨第 3 秒，显示 2
+                秒，添加淡入上移。”
+              </p>
+              <p>
+                外部文件修改不参与时间线撤销。复合片段默认共享，可在属性面板创建独立副本。
+              </p>
+              <hr />
+              <p>
+                K 添加位置关键帧 · Shift+K 自动记录 · [ / ] 前后关键帧 · Space
+                播放 / 暂停 · Ctrl+B 分割 · Ctrl+C/V 复制粘贴 · Shift 多选 ·
+                Ctrl+A 全选 · Delete 留空 · Shift+Delete 波纹删除 · Alt+G
+                复合片段 · Ctrl+Z / Ctrl+Shift+Z 撤销重做。
+              </p>
+            </>
+          )}
+        </EditorDialog>
       )}
     </div>
   );

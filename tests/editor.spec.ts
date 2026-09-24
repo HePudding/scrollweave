@@ -895,3 +895,63 @@ test("嵌套视频与横向动画共用秒制求值，滚动区间距离与平�
     fullPage: true,
   });
 });
+
+test("键盘可用：源预览 Esc 关闭并还原焦点，片段 Enter 选中，Space 激活按钮不触发播放，Ctrl+滚轮只缩放时间线", async ({
+  page,
+  request,
+}) => {
+  const asset = await upload(request, "tests/fixtures/test-image.png");
+  await page.goto("/editor");
+  const preview = page.getByRole("button", {
+    name: "预览素材 " + asset.name,
+    exact: true,
+  });
+  await preview.focus();
+  await page.keyboard.press("Enter");
+  const dialog = page.getByRole("dialog", { name: "源素材预览" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(preview).toBeFocused();
+
+  await page
+    .getByRole("button", { name: "添加 " + asset.name + " 到时间线" })
+    .click();
+  const clip = page.locator(".timeline-clip");
+  await expect(clip).toHaveCount(1);
+  await page
+    .getByTestId("track-track_main")
+    .locator(".track-content")
+    .click({ position: { x: 700, y: 20 } });
+  await expect(clip).not.toHaveClass(/selected/);
+  await clip.focus();
+  await page.keyboard.press("Enter");
+  await expect(clip).toHaveClass(/selected/);
+
+  const snap = page.getByRole("button", { name: "吸附" });
+  await expect(snap).toHaveAttribute("aria-pressed", "true");
+  await snap.focus();
+  await page.keyboard.press("Space");
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  await expect(
+    page.getByRole("button", { name: "播放", exact: true }),
+  ).toBeVisible();
+
+  const zoom = page.getByLabel("时间线缩放");
+  const before = Number(await zoom.inputValue());
+  await page.evaluate(() => {
+    window.addEventListener(
+      "wheel",
+      (e) => ((window as any).wheelPrevented = e.defaultPrevented),
+      { passive: true },
+    );
+  });
+  await page.locator(".timeline-scroll").hover();
+  await page.keyboard.down("Control");
+  await page.mouse.wheel(0, -100);
+  await page.keyboard.up("Control");
+  await expect
+    .poll(async () => Number(await zoom.inputValue()))
+    .toBeGreaterThan(before);
+  expect(await page.evaluate(() => (window as any).wheelPrevented)).toBe(true);
+});

@@ -74,44 +74,45 @@ function Entry({ entry }: { entry: AgentEntry }) {
       : undefined;
   if (entry.kind === "tool")
     return (
-      <details className={`agent-tool ${entry.status ?? "done"}`}>
-        <summary>
-          {entry.status === "running" ? (
-            <LoaderCircle size={14} className="agent-spin" />
-          ) : entry.status === "error" ? (
-            <CircleAlert size={14} />
-          ) : (
-            <Check size={14} />
-          )}
-          <span>
-            {toolNames[entry.toolName ?? ""] ?? entry.text ?? "项目操作"}
-            <small>{entry.detail || entry.text}</small>
-          </span>
-          <span className="agent-tool-result">
-            {entry.status === "running"
-              ? "执行中"
-              : entry.status === "error"
-                ? "失败"
-                : entry.revision !== undefined
-                  ? `r${entry.revision}`
-                  : "完成"}
-          </span>
-          {download && (
-            <a
-              className="agent-download"
-              href={download}
-              download
-              aria-label="下载 Agent 生成的作品"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Download size={13} />
-              下载
-            </a>
-          )}
-          <ChevronDown size={13} />
-        </summary>
-        {entry.detail && <pre>{entry.detail}</pre>}
-      </details>
+      <div className={`agent-tool ${entry.status ?? "done"}`}>
+        <details>
+          <summary>
+            {entry.status === "running" ? (
+              <LoaderCircle size={14} className="agent-spin" />
+            ) : entry.status === "error" ? (
+              <CircleAlert size={14} />
+            ) : (
+              <Check size={14} />
+            )}
+            <span>
+              {toolNames[entry.toolName ?? ""] ?? entry.text ?? "项目操作"}
+              <small>{entry.detail || entry.text}</small>
+            </span>
+            <span className="agent-tool-result">
+              {entry.status === "running"
+                ? "执行中…"
+                : entry.status === "error"
+                  ? "失败"
+                  : entry.revision !== undefined
+                    ? `r${entry.revision}`
+                    : "完成"}
+            </span>
+            <ChevronDown size={13} />
+          </summary>
+          {entry.detail && <pre>{entry.detail}</pre>}
+        </details>
+        {download && (
+          <a
+            className="agent-download"
+            href={download}
+            download
+            aria-label="下载 Agent 生成的作品"
+          >
+            <Download size={13} />
+            下载
+          </a>
+        )}
+      </div>
     );
   if (entry.kind === "status")
     return (
@@ -307,7 +308,7 @@ export function AgentPanel({
     }
   };
   const stateLabel = !connected
-    ? "正在连接"
+    ? "正在连接…"
     : running
       ? snapshot?.status || "正在编辑"
       : !ready
@@ -384,6 +385,7 @@ export function AgentPanel({
               aria-label="Agent 实时编辑记录"
               aria-live="polite"
               aria-relevant="additions text"
+              aria-busy={running}
               onScroll={(e) => {
                 const node = e.currentTarget;
                 nearBottom.current =
@@ -430,7 +432,9 @@ export function AgentPanel({
                 <div className="agent-running" role="status">
                   <LoaderCircle size={14} className="agent-spin" />
                   <span>{snapshot?.status || "Pi 正在编辑项目…"}</span>
-                  <span className="agent-working-dots">···</span>
+                  <span className="agent-working-dots" aria-hidden="true">
+                    ···
+                  </span>
                 </div>
               )}
             </div>

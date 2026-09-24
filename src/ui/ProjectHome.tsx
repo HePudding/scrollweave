@@ -55,17 +55,21 @@ async function api<T>(
   if (!response.ok) throw Error(result.error || "操作失败，请重试");
   return result;
 }
-const timeLabel = (value: string) => {
-  const elapsed = Math.max(0, Date.now() - Date.parse(value));
-  if (elapsed < 60000) return "刚刚打开";
-  if (elapsed < 3600000) return `${Math.floor(elapsed / 60000)} 分钟前打开`;
-  if (elapsed < 86400000) return `${Math.floor(elapsed / 3600000)} 小时前打开`;
-  if (elapsed < 7 * 86400000)
-    return `${Math.floor(elapsed / 86400000)} 天前打开`;
-  return new Date(value).toLocaleDateString("zh-CN", {
+const relativeTime = new Intl.RelativeTimeFormat("zh-CN", { numeric: "auto" }),
+  shortDate = new Intl.DateTimeFormat("zh-CN", {
     month: "short",
     day: "numeric",
   });
+const timeLabel = (value: string) => {
+  const elapsed = Math.max(0, Date.now() - Date.parse(value));
+  if (elapsed < 60000) return "刚刚打开";
+  if (elapsed < 3600000)
+    return `${relativeTime.format(-Math.floor(elapsed / 60000), "minute")}打开`;
+  if (elapsed < 86400000)
+    return `${relativeTime.format(-Math.floor(elapsed / 3600000), "hour")}打开`;
+  if (elapsed < 7 * 86400000)
+    return `${relativeTime.format(-Math.floor(elapsed / 86400000), "day")}打开`;
+  return shortDate.format(new Date(value));
 };
 const durationLabel = (duration = 0) =>
   `${Math.floor(duration / 60)
@@ -135,14 +139,24 @@ function ProjectCard({
 }) {
   const [menu, setMenu] = useState(false),
     [imageFailed, setImageFailed] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null),
+    trigger = useRef<HTMLButtonElement>(null);
+  const menuItems = () => [
+    ...(menuRef.current?.querySelectorAll<HTMLButtonElement>(
+      "[role=menuitem]:not(:disabled)",
+    ) ?? []),
+  ];
   useEffect(() => {
     if (!menu) return;
+    menuItems()[0]?.focus();
     const close = (e: PointerEvent) => {
       if (!menuRef.current?.contains(e.target as Node)) setMenu(false);
     };
     const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenu(false);
+      if (e.key === "Escape") {
+        setMenu(false);
+        trigger.current?.focus();
+      }
     };
     document.addEventListener("pointerdown", close);
     document.addEventListener("keydown", key);
@@ -176,6 +190,8 @@ function ProjectCard({
             <img
               src={project.thumbnail}
               alt=""
+              width={320}
+              height={180}
               loading="lazy"
               onError={() => setImageFailed(true)}
             />
@@ -240,6 +256,7 @@ function ProjectCard({
         </button>
         <div ref={menuRef} className="project-menu-anchor">
           <button
+            ref={trigger}
             aria-label={`项目操作 ${project.name}`}
             aria-expanded={menu}
             aria-haspopup="menu"
@@ -253,12 +270,34 @@ function ProjectCard({
               className="project-menu"
               role="menu"
               aria-label={`${project.name} 的操作`}
+              onKeyDown={(e) => {
+                const items = menuItems(),
+                  index = items.indexOf(
+                    document.activeElement as HTMLButtonElement,
+                  );
+                const next =
+                  e.key === "ArrowDown"
+                    ? items[(index + 1) % items.length]
+                    : e.key === "ArrowUp"
+                      ? items[(index - 1 + items.length) % items.length]
+                      : e.key === "Home"
+                        ? items[0]
+                        : e.key === "End"
+                          ? items.at(-1)
+                          : undefined;
+                if (next) {
+                  e.preventDefault();
+                  next.focus();
+                } else if (e.key === "Tab") setMenu(false);
+              }}
             >
               <button
                 role="menuitem"
+                tabIndex={-1}
                 disabled={!usable}
                 onClick={() => {
                   setMenu(false);
+                  trigger.current?.focus();
                   onRename();
                 }}
               >
@@ -267,8 +306,10 @@ function ProjectCard({
               </button>
               <button
                 role="menuitem"
+                tabIndex={-1}
                 onClick={() => {
                   setMenu(false);
+                  trigger.current?.focus();
                   onCopy();
                 }}
               >
@@ -277,8 +318,10 @@ function ProjectCard({
               </button>
               <button
                 role="menuitem"
+                tabIndex={-1}
                 onClick={() => {
                   setMenu(false);
+                  trigger.current?.focus();
                   onRemove();
                 }}
               >
@@ -481,6 +524,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
         <nav className="home-navigation" aria-label="项目导航">
           <button
             className={filter === "recent" ? "selected" : ""}
+            aria-pressed={filter === "recent"}
             onClick={() => {
               setFilter("recent");
               setQuery("");
@@ -491,6 +535,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
           </button>
           <button
             className={filter === "favorites" ? "selected" : ""}
+            aria-pressed={filter === "favorites"}
             onClick={() => {
               setFilter("favorites");
               setQuery("");
@@ -520,7 +565,10 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 <span
                   className={`recent-project-dot ${p.active ? "current" : ""}`}
                 />
-                <span>{p.name}</span>
+                <span>
+                  {p.name}
+                  {p.active && <span className="sr-only">（当前项目）</span>}
+                </span>
                 <ChevronRight size={13} />
               </button>
             ))
@@ -646,7 +694,8 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 <input
                   ref={search}
                   aria-label="搜索项目"
-                  placeholder="搜索名称或路径"
+                  placeholder="搜索名称或路径…"
+                  autoComplete="off"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
@@ -655,7 +704,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                     <X size={14} />
                   </button>
                 ) : (
-                  <kbd>Ctrl K</kbd>
+                  <kbd>Ctrl{" "}K</kbd>
                 )}
               </label>
             </div>
@@ -663,6 +712,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               <div className="home-project-tabs">
                 <button
                   className={filter === "recent" ? "selected" : ""}
+                  aria-pressed={filter === "recent"}
                   onClick={() => setFilter("recent")}
                 >
                   <Clock3 size={14} />
@@ -670,6 +720,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 </button>
                 <button
                   className={filter === "favorites" ? "selected" : ""}
+                  aria-pressed={filter === "favorites"}
                   onClick={() => setFilter("favorites")}
                 >
                   <Star size={14} />
@@ -708,7 +759,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
             {!library ? (
               <div className="home-empty">
                 <LoaderCircle size={27} className="home-spinner" />
-                <h3>{error ? "暂时无法连接工作台" : "正在读取项目"}</h3>
+                <h3>{error ? "暂时无法连接工作台" : "正在读取项目…"}</h3>
                 {error && (
                   <button className="primary" onClick={() => void refresh()}>
                     重新连接
@@ -823,6 +874,17 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if (!name.trim()) {
+                setError("请填写项目名称。");
+                e.currentTarget
+                  .querySelector<HTMLInputElement>("input[name=projectName]")
+                  ?.focus();
+                return;
+              }
+              if (!parentDirectory) {
+                setError("请先选择保存位置。");
+                return;
+              }
               void operate(async () => {
                 await api("/api/projects", "POST", { name, parentDirectory });
                 onEnter();
@@ -834,7 +896,9 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               <input
                 autoFocus
                 aria-label="项目名称"
-                placeholder="给新故事起个名字"
+                name="projectName"
+                autoComplete="off"
+                placeholder="给新故事起个名字…"
                 maxLength={200}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -842,8 +906,12 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 required
               />
             </label>
-            <label className="home-field">
-              保存位置
+            <div
+              className="home-field"
+              role="group"
+              aria-labelledby="new-project-location"
+            >
+              <span id="new-project-location">保存位置</span>
               <div className="home-folder-field">
                 <Folder size={18} />
                 <span title={parentDirectory}>{parentDirectory}</span>
@@ -856,7 +924,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                   更改
                 </button>
               </div>
-            </label>
+            </div>
             <div className="new-project-spec">
               <Monitor size={20} />
               <div>
@@ -877,11 +945,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               >
                 取消
               </button>
-              <button
-                type="submit"
-                className="primary"
-                disabled={busy || !name.trim() || !parentDirectory}
-              >
+              <button type="submit" className="primary" disabled={busy}>
                 {busy ? (
                   <LoaderCircle size={16} className="home-spinner" />
                 ) : (
@@ -908,6 +972,10 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if (!directoryDraft.trim()) {
+                  setPickerError("请填写文件夹的完整路径。");
+                  return;
+                }
                 setPickerBusy(true);
                 setPickerError("");
                 void useDirectory(picker, directoryDraft.trim())
@@ -924,6 +992,9 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 文件夹的完整路径
                 <input
                   aria-label="文件夹路径"
+                  name="directory"
+                  autoComplete="off"
+                  spellCheck={false}
                   value={directoryDraft}
                   onChange={(e) => setDirectoryDraft(e.target.value)}
                   required
@@ -936,11 +1007,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
                 >
                   重试系统选择器
                 </button>
-                <button
-                  type="submit"
-                  className="primary"
-                  disabled={!directoryDraft.trim()}
-                >
+                <button type="submit" className="primary">
                   {picker === "open" ? "打开项目" : "使用此位置"}
                 </button>
               </div>
@@ -958,6 +1025,10 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if (!name.trim()) {
+                setError("请填写项目名称。");
+                return;
+              }
               void operate(async () => {
                 setLibrary(
                   await api<ProjectLibraryState>(
@@ -976,6 +1047,8 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               <input
                 autoFocus
                 aria-label="新的项目名称"
+                name="projectName"
+                autoComplete="off"
                 required
                 maxLength={200}
                 value={name}
@@ -998,7 +1071,7 @@ export function ProjectHome({ onEnter }: { onEnter: () => void }) {
               >
                 取消
               </button>
-              <button className="primary" disabled={busy || !name.trim()}>
+              <button className="primary" disabled={busy}>
                 保存名称
               </button>
             </div>

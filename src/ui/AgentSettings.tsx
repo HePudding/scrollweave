@@ -120,10 +120,24 @@ export function AgentSettings({
   const [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [addOpen, setAddOpen] = useState(false),
-    [modelDraft, setModelDraft] = useState("");
+    [modelDraft, setModelDraft] = useState(""),
+    [confirmDiscard, setConfirmDiscard] = useState(false);
   const mounted = useRef(true),
-    request = useRef<AbortController | null>(null);
+    request = useRef<AbortController | null>(null),
+    saved = useRef("");
   const selected = providers.find((p) => p.id === selectedId);
+  const fingerprint = (list: DraftProvider[], id: string) =>
+    JSON.stringify({ providers: list, activeId: id });
+  const dirty = !loading && fingerprint(providers, activeId) !== saved.current;
+  useEffect(() => setConfirmDiscard(false), [providers, activeId]);
+  const requestClose = () => {
+    if (busy) return;
+    if (dirty && !confirmDiscard) {
+      setConfirmDiscard(true);
+      return;
+    }
+    onClose();
+  };
   useEffect(() => {
     mounted.current = true;
     const previous = document.activeElement as HTMLElement | null;
@@ -131,6 +145,10 @@ export function AgentSettings({
     const controller = new AbortController();
     void agentApi<Settings>("/settings", "GET", undefined, controller.signal)
       .then((settings) => {
+        saved.current = fingerprint(
+          settings.providers,
+          settings.activeProviderId,
+        );
         setProviders(settings.providers);
         setActiveId(settings.activeProviderId);
         setSelectedId(
@@ -209,6 +227,10 @@ export function AgentSettings({
         signal,
       );
       if (!mounted.current) return;
+      saved.current = fingerprint(
+        settings.providers,
+        settings.activeProviderId,
+      );
       setProviders(settings.providers);
       setActiveId(settings.activeProviderId);
       setNotice("设置已保存，可以回到项目开始创作。");
@@ -234,7 +256,7 @@ export function AgentSettings({
       onKeyDown={(e) => e.stopPropagation()}
       onCancel={(e) => {
         e.preventDefault();
-        if (!busy) onClose();
+        requestClose();
       }}
     >
       <header className="agent-settings-header">
@@ -249,7 +271,7 @@ export function AgentSettings({
           className="agent-icon-button"
           aria-label="关闭模型设置"
           disabled={!!busy}
-          onClick={onClose}
+          onClick={requestClose}
         >
           <X size={20} />
         </button>
@@ -260,7 +282,7 @@ export function AgentSettings({
             <Search size={14} />
             <input
               aria-label="搜索服务商"
-              placeholder="搜索服务商"
+              placeholder="搜索服务商…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -379,7 +401,7 @@ export function AgentSettings({
                     value={selected.name}
                     onChange={(e) => update({ name: e.target.value })}
                     maxLength={100}
-                    placeholder="例如：我的 OpenAI"
+                    placeholder="例如：我的 OpenAI…"
                   />
                 </label>
                 <label className="agent-field">
@@ -427,7 +449,7 @@ export function AgentSettings({
                           ? "保存后将清除密钥"
                           : selected.hasApiKey
                             ? "已保存密钥，留空保留"
-                            : "输入 API Key（本地服务可留空）"
+                            : "输入 API Key（本地服务可留空）…"
                       }
                       autoComplete="off"
                       spellCheck={false}
@@ -500,11 +522,15 @@ export function AgentSettings({
                     aria-label="当前模型"
                     value={selected.model}
                     onChange={(e) => update({ model: e.target.value })}
-                    placeholder="填写模型 ID，或在下方选择"
+                    placeholder="填写模型 ID，或在下方选择…"
                     spellCheck={false}
                   />
                 </label>
-                <div className="agent-model-list" aria-label="已添加模型">
+                <div
+                  className="agent-model-list"
+                  role="group"
+                  aria-label="已添加模型"
+                >
                   {[
                     ...new Set(
                       [selected.model.trim(), ...selected.models].filter(
@@ -519,6 +545,7 @@ export function AgentSettings({
                       <button
                         type="button"
                         className="agent-model-choice"
+                        aria-pressed={model === selected.model}
                         onClick={() => update({ model })}
                         title={model}
                       >
@@ -549,7 +576,7 @@ export function AgentSettings({
                 <div className="agent-model-add">
                   <input
                     aria-label="添加模型 ID"
-                    placeholder="输入其他模型 ID"
+                    placeholder="输入其他模型 ID…"
                     value={modelDraft}
                     onChange={(e) => setModelDraft(e.target.value)}
                     onKeyDown={(e) => {
@@ -671,16 +698,22 @@ export function AgentSettings({
       </div>
       <footer className="agent-settings-footer">
         <div
-          role={error ? "alert" : "status"}
-          className={error ? "agent-error-text" : "agent-settings-notice"}
+          role={error || confirmDiscard ? "alert" : "status"}
+          className={
+            error || confirmDiscard
+              ? "agent-error-text"
+              : "agent-settings-notice"
+          }
         >
           {error ||
-            (locked
-              ? "Agent 正在执行，请先停止任务再修改设置。"
-              : notice || "设置对本机所有项目生效")}
+            (confirmDiscard
+              ? "有未保存的修改。保存设置，或再次关闭以放弃修改。"
+              : locked
+                ? "Agent 正在执行，请先停止任务再修改设置。"
+                : notice || "设置对本机所有项目生效")}
         </div>
-        <button disabled={!!busy} onClick={onClose}>
-          关闭
+        <button disabled={!!busy} onClick={requestClose}>
+          {confirmDiscard ? "放弃修改并关闭" : "关闭"}
         </button>
         <button
           className="primary"

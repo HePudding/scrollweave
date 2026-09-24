@@ -251,11 +251,17 @@
   color: #eab096;
 }
 .agent-tool {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   margin: 0 0 9px;
   border: 1px solid #3d4835;
   background: #222a1f;
   border-radius: 7px;
   overflow: hidden;
+}
+.agent-tool > .agent-download {
+  align-self: start;
+  margin: 14px 10px 0 0;
 }
 .agent-tool summary {
   display: flex;
